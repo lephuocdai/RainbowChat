@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F0688B95190CF1AA00E933F8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B94190CF1AA00E933F8 /* Foundation.framework */; };
+		F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */; };
+		F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B98190CF1AA00E933F8 /* UIKit.framework */; };
+		F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B9A190CF1AA00E933F8 /* CoreData.framework */; };
+		F0688BA1190CF1AA00E933F8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */; };
+		F0688BA3190CF1AB00E933F8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BA2190CF1AB00E933F8 /* main.m */; };
+		F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */; };
+		F0688BAA190CF1AB00E933F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0688BA8190CF1AB00E933F8 /* Main.storyboard */; };
+		F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */; };
+		F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */; };
+		F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */; };
+		F0688BB5190CF1AB00E933F8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0688BB4190CF1AB00E933F8 /* Images.xcassets */; };
+		F0688BBC190CF1AB00E933F8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688BBB190CF1AB00E933F8 /* XCTest.framework */; };
+		F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B94190CF1AA00E933F8 /* Foundation.framework */; };
+		F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B98190CF1AA00E933F8 /* UIKit.framework */; };
+		F0688BBF190CF1AB00E933F8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B9A190CF1AA00E933F8 /* CoreData.framework */; };
+		F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */; };
+		F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F0688BC0190CF1AB00E933F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F0688B89190CF1AA00E933F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F0688B90190CF1AA00E933F8;
+			remoteInfo = RainbowChat;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F0688B91190CF1AA00E933F8 /* RainbowChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainbowChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0688B94190CF1AA00E933F8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F0688B98190CF1AA00E933F8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F0688B9A190CF1AA00E933F8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F0688B9E190CF1AA00E933F8 /* RainbowChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RainbowChat-Info.plist"; sourceTree = "<group>"; };
+		F0688BA0190CF1AA00E933F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F0688BA2190CF1AB00E933F8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F0688BA4190CF1AB00E933F8 /* RainbowChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RainbowChat-Prefix.pch"; sourceTree = "<group>"; };
+		F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCAppDelegate.h; sourceTree = "<group>"; };
+		F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCAppDelegate.m; sourceTree = "<group>"; };
+		F0688BA9190CF1AB00E933F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RainbowChat.xcdatamodel; sourceTree = "<group>"; };
+		F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCMasterViewController.h; sourceTree = "<group>"; };
+		F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCMasterViewController.m; sourceTree = "<group>"; };
+		F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCDetailViewController.h; sourceTree = "<group>"; };
+		F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCDetailViewController.m; sourceTree = "<group>"; };
+		F0688BB4190CF1AB00E933F8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RainbowChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0688BBB190CF1AB00E933F8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		F0688BC4190CF1AB00E933F8 /* RainbowChatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RainbowChatTests-Info.plist"; sourceTree = "<group>"; };
+		F0688BC6190CF1AB00E933F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowChatTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F0688B8E190CF1AA00E933F8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
+				F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */,
+				F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */,
+				F0688B95190CF1AA00E933F8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0688BB7190CF1AB00E933F8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688BBC190CF1AB00E933F8 /* XCTest.framework in Frameworks */,
+				F0688BBF190CF1AB00E933F8 /* CoreData.framework in Frameworks */,
+				F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */,
+				F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F0688B88190CF1AA00E933F8 = {
+			isa = PBXGroup;
+			children = (
+				F0688B9C190CF1AA00E933F8 /* RainbowChat */,
+				F0688BC2190CF1AB00E933F8 /* RainbowChatTests */,
+				F0688B93190CF1AA00E933F8 /* Frameworks */,
+				F0688B92190CF1AA00E933F8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F0688B92190CF1AA00E933F8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F0688B91190CF1AA00E933F8 /* RainbowChat.app */,
+				F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F0688B94190CF1AA00E933F8 /* Foundation.framework */,
+				F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */,
+				F0688B98190CF1AA00E933F8 /* UIKit.framework */,
+				F0688B9A190CF1AA00E933F8 /* CoreData.framework */,
+				F0688BBB190CF1AB00E933F8 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F0688B9C190CF1AA00E933F8 /* RainbowChat */ = {
+			isa = PBXGroup;
+			children = (
+				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
+				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
+				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
+				F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */,
+				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
+				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
+				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
+				F0688BB4190CF1AB00E933F8 /* Images.xcassets */,
+				F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */,
+				F0688B9D190CF1AA00E933F8 /* Supporting Files */,
+			);
+			path = RainbowChat;
+			sourceTree = "<group>";
+		};
+		F0688B9D190CF1AA00E933F8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F0688B9E190CF1AA00E933F8 /* RainbowChat-Info.plist */,
+				F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */,
+				F0688BA2190CF1AB00E933F8 /* main.m */,
+				F0688BA4190CF1AB00E933F8 /* RainbowChat-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F0688BC2190CF1AB00E933F8 /* RainbowChatTests */ = {
+			isa = PBXGroup;
+			children = (
+				F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */,
+				F0688BC3190CF1AB00E933F8 /* Supporting Files */,
+			);
+			path = RainbowChatTests;
+			sourceTree = "<group>";
+		};
+		F0688BC3190CF1AB00E933F8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F0688BC4190CF1AB00E933F8 /* RainbowChatTests-Info.plist */,
+				F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F0688B90190CF1AA00E933F8 /* RainbowChat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0688BCC190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChat" */;
+			buildPhases = (
+				F0688B8D190CF1AA00E933F8 /* Sources */,
+				F0688B8E190CF1AA00E933F8 /* Frameworks */,
+				F0688B8F190CF1AA00E933F8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RainbowChat;
+			productName = RainbowChat;
+			productReference = F0688B91190CF1AA00E933F8 /* RainbowChat.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F0688BB9190CF1AB00E933F8 /* RainbowChatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0688BCF190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChatTests" */;
+			buildPhases = (
+				F0688BB6190CF1AB00E933F8 /* Sources */,
+				F0688BB7190CF1AB00E933F8 /* Frameworks */,
+				F0688BB8190CF1AB00E933F8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F0688BC1190CF1AB00E933F8 /* PBXTargetDependency */,
+			);
+			name = RainbowChatTests;
+			productName = RainbowChatTests;
+			productReference = F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F0688B89190CF1AA00E933F8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = RC;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = lephuocdai;
+				TargetAttributes = {
+					F0688BB9190CF1AB00E933F8 = {
+						TestTargetID = F0688B90190CF1AA00E933F8;
+					};
+				};
+			};
+			buildConfigurationList = F0688B8C190CF1AA00E933F8 /* Build configuration list for PBXProject "RainbowChat" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F0688B88190CF1AA00E933F8;
+			productRefGroup = F0688B92190CF1AA00E933F8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F0688B90190CF1AA00E933F8 /* RainbowChat */,
+				F0688BB9190CF1AB00E933F8 /* RainbowChatTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F0688B8F190CF1AA00E933F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688BB5190CF1AB00E933F8 /* Images.xcassets in Resources */,
+				F0688BA1190CF1AA00E933F8 /* InfoPlist.strings in Resources */,
+				F0688BAA190CF1AB00E933F8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0688BB8190CF1AB00E933F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F0688B8D190CF1AA00E933F8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
+				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
+				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
+				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
+				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0688BB6190CF1AB00E933F8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F0688BC1190CF1AB00E933F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F0688B90190CF1AA00E933F8 /* RainbowChat */;
+			targetProxy = F0688BC0190CF1AB00E933F8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F0688BA0190CF1AA00E933F8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F0688BA8190CF1AB00E933F8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F0688BA9190CF1AB00E933F8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F0688BC6190CF1AB00E933F8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F0688BCA190CF1AB00E933F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F0688BCB190CF1AB00E933F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F0688BCD190CF1AB00E933F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
+				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F0688BCE190CF1AB00E933F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
+				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		F0688BD0190CF1AB00E933F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "RainbowChatTests/RainbowChatTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		F0688BD1190CF1AB00E933F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
+				INFOPLIST_FILE = "RainbowChatTests/RainbowChatTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F0688B8C190CF1AA00E933F8 /* Build configuration list for PBXProject "RainbowChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0688BCA190CF1AB00E933F8 /* Debug */,
+				F0688BCB190CF1AB00E933F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0688BCC190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0688BCD190CF1AB00E933F8 /* Debug */,
+				F0688BCE190CF1AB00E933F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F0688BCF190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0688BD0190CF1AB00E933F8 /* Debug */,
+				F0688BD1190CF1AB00E933F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */,
+			);
+			currentVersion = F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */;
+			path = RainbowChat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F0688B89190CF1AA00E933F8 /* Project object */;
+}
