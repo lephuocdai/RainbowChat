@@ -1,501 +1,1220 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 46;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		F0688B95190CF1AA00E933F8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B94190CF1AA00E933F8 /* Foundation.framework */; };
-		F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */; };
-		F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B98190CF1AA00E933F8 /* UIKit.framework */; };
-		F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B9A190CF1AA00E933F8 /* CoreData.framework */; };
-		F0688BA1190CF1AA00E933F8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */; };
-		F0688BA3190CF1AB00E933F8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BA2190CF1AB00E933F8 /* main.m */; };
-		F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */; };
-		F0688BAA190CF1AB00E933F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0688BA8190CF1AB00E933F8 /* Main.storyboard */; };
-		F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */; };
-		F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */; };
-		F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */; };
-		F0688BB5190CF1AB00E933F8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0688BB4190CF1AB00E933F8 /* Images.xcassets */; };
-		F0688BBC190CF1AB00E933F8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688BBB190CF1AB00E933F8 /* XCTest.framework */; };
-		F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B94190CF1AA00E933F8 /* Foundation.framework */; };
-		F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B98190CF1AA00E933F8 /* UIKit.framework */; };
-		F0688BBF190CF1AB00E933F8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0688B9A190CF1AA00E933F8 /* CoreData.framework */; };
-		F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */; };
-		F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F0688BC0190CF1AB00E933F8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F0688B89190CF1AA00E933F8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F0688B90190CF1AA00E933F8;
-			remoteInfo = RainbowChat;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXFileReference section */
-		F0688B91190CF1AA00E933F8 /* RainbowChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainbowChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0688B94190CF1AA00E933F8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		F0688B98190CF1AA00E933F8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		F0688B9A190CF1AA00E933F8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		F0688B9E190CF1AA00E933F8 /* RainbowChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RainbowChat-Info.plist"; sourceTree = "<group>"; };
-		F0688BA0190CF1AA00E933F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F0688BA2190CF1AB00E933F8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F0688BA4190CF1AB00E933F8 /* RainbowChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RainbowChat-Prefix.pch"; sourceTree = "<group>"; };
-		F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCAppDelegate.h; sourceTree = "<group>"; };
-		F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCAppDelegate.m; sourceTree = "<group>"; };
-		F0688BA9190CF1AB00E933F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RainbowChat.xcdatamodel; sourceTree = "<group>"; };
-		F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCMasterViewController.h; sourceTree = "<group>"; };
-		F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCMasterViewController.m; sourceTree = "<group>"; };
-		F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCDetailViewController.h; sourceTree = "<group>"; };
-		F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCDetailViewController.m; sourceTree = "<group>"; };
-		F0688BB4190CF1AB00E933F8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RainbowChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0688BBB190CF1AB00E933F8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		F0688BC4190CF1AB00E933F8 /* RainbowChatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RainbowChatTests-Info.plist"; sourceTree = "<group>"; };
-		F0688BC6190CF1AB00E933F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowChatTests.m; sourceTree = "<group>"; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		F0688B8E190CF1AA00E933F8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
-				F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */,
-				F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */,
-				F0688B95190CF1AA00E933F8 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F0688BB7190CF1AB00E933F8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688BBC190CF1AB00E933F8 /* XCTest.framework in Frameworks */,
-				F0688BBF190CF1AB00E933F8 /* CoreData.framework in Frameworks */,
-				F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */,
-				F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		F0688B88190CF1AA00E933F8 = {
-			isa = PBXGroup;
-			children = (
-				F0688B9C190CF1AA00E933F8 /* RainbowChat */,
-				F0688BC2190CF1AB00E933F8 /* RainbowChatTests */,
-				F0688B93190CF1AA00E933F8 /* Frameworks */,
-				F0688B92190CF1AA00E933F8 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		F0688B92190CF1AA00E933F8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F0688B91190CF1AA00E933F8 /* RainbowChat.app */,
-				F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F0688B94190CF1AA00E933F8 /* Foundation.framework */,
-				F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */,
-				F0688B98190CF1AA00E933F8 /* UIKit.framework */,
-				F0688B9A190CF1AA00E933F8 /* CoreData.framework */,
-				F0688BBB190CF1AB00E933F8 /* XCTest.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F0688B9C190CF1AA00E933F8 /* RainbowChat */ = {
-			isa = PBXGroup;
-			children = (
-				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
-				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
-				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
-				F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */,
-				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
-				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
-				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
-				F0688BB4190CF1AB00E933F8 /* Images.xcassets */,
-				F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */,
-				F0688B9D190CF1AA00E933F8 /* Supporting Files */,
-			);
-			path = RainbowChat;
-			sourceTree = "<group>";
-		};
-		F0688B9D190CF1AA00E933F8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				F0688B9E190CF1AA00E933F8 /* RainbowChat-Info.plist */,
-				F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */,
-				F0688BA2190CF1AB00E933F8 /* main.m */,
-				F0688BA4190CF1AB00E933F8 /* RainbowChat-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		F0688BC2190CF1AB00E933F8 /* RainbowChatTests */ = {
-			isa = PBXGroup;
-			children = (
-				F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */,
-				F0688BC3190CF1AB00E933F8 /* Supporting Files */,
-			);
-			path = RainbowChatTests;
-			sourceTree = "<group>";
-		};
-		F0688BC3190CF1AB00E933F8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				F0688BC4190CF1AB00E933F8 /* RainbowChatTests-Info.plist */,
-				F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		F0688B90190CF1AA00E933F8 /* RainbowChat */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F0688BCC190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChat" */;
-			buildPhases = (
-				F0688B8D190CF1AA00E933F8 /* Sources */,
-				F0688B8E190CF1AA00E933F8 /* Frameworks */,
-				F0688B8F190CF1AA00E933F8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = RainbowChat;
-			productName = RainbowChat;
-			productReference = F0688B91190CF1AA00E933F8 /* RainbowChat.app */;
-			productType = "com.apple.product-type.application";
-		};
-		F0688BB9190CF1AB00E933F8 /* RainbowChatTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F0688BCF190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChatTests" */;
-			buildPhases = (
-				F0688BB6190CF1AB00E933F8 /* Sources */,
-				F0688BB7190CF1AB00E933F8 /* Frameworks */,
-				F0688BB8190CF1AB00E933F8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F0688BC1190CF1AB00E933F8 /* PBXTargetDependency */,
-			);
-			name = RainbowChatTests;
-			productName = RainbowChatTests;
-			productReference = F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		F0688B89190CF1AA00E933F8 /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				CLASSPREFIX = RC;
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = lephuocdai;
-				TargetAttributes = {
-					F0688BB9190CF1AB00E933F8 = {
-						TestTargetID = F0688B90190CF1AA00E933F8;
-					};
-				};
-			};
-			buildConfigurationList = F0688B8C190CF1AA00E933F8 /* Build configuration list for PBXProject "RainbowChat" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = F0688B88190CF1AA00E933F8;
-			productRefGroup = F0688B92190CF1AA00E933F8 /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				F0688B90190CF1AA00E933F8 /* RainbowChat */,
-				F0688BB9190CF1AB00E933F8 /* RainbowChatTests */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		F0688B8F190CF1AA00E933F8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688BB5190CF1AB00E933F8 /* Images.xcassets in Resources */,
-				F0688BA1190CF1AA00E933F8 /* InfoPlist.strings in Resources */,
-				F0688BAA190CF1AB00E933F8 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F0688BB8190CF1AB00E933F8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		F0688B8D190CF1AA00E933F8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
-				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
-				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
-				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
-				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F0688BB6190CF1AB00E933F8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F0688BC1190CF1AB00E933F8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F0688B90190CF1AA00E933F8 /* RainbowChat */;
-			targetProxy = F0688BC0190CF1AB00E933F8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		F0688B9F190CF1AA00E933F8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F0688BA0190CF1AA00E933F8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		F0688BA8190CF1AB00E933F8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F0688BA9190CF1AB00E933F8 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F0688BC6190CF1AB00E933F8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
-/* Begin XCBuildConfiguration section */
-		F0688BCA190CF1AB00E933F8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-			};
-			name = Debug;
-		};
-		F0688BCB190CF1AB00E933F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		F0688BCD190CF1AB00E933F8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
-				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		F0688BCE190CF1AB00E933F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
-				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		F0688BD0190CF1AB00E933F8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "RainbowChatTests/RainbowChatTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		F0688BD1190CF1AB00E933F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
-				INFOPLIST_FILE = "RainbowChatTests/RainbowChatTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		F0688B8C190CF1AA00E933F8 /* Build configuration list for PBXProject "RainbowChat" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F0688BCA190CF1AB00E933F8 /* Debug */,
-				F0688BCB190CF1AB00E933F8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F0688BCC190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChat" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F0688BCD190CF1AB00E933F8 /* Debug */,
-				F0688BCE190CF1AB00E933F8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-		F0688BCF190CF1AB00E933F8 /* Build configuration list for PBXNativeTarget "RainbowChatTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F0688BD0190CF1AB00E933F8 /* Debug */,
-				F0688BD1190CF1AB00E933F8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
-/* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */,
-			);
-			currentVersion = F0688BAC190CF1AB00E933F8 /* RainbowChat.xcdatamodel */;
-			path = RainbowChat.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
-	};
-	rootObject = F0688B89190CF1AA00E933F8 /* Project object */;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>46</string>
+	<key>objects</key>
+	<dict>
+		<key>1B0DCF6B15064A5EAC9DC14B</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Pods.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4C92F7F57B5146B6AF3559C1</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>55A0B03D680A4613B49E5F4C</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>576EF8A33F6F4D85B12AF477</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Pods-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>BE1DE700214E48528F84B761</key>
+		<dict>
+			<key>fileRef</key>
+			<string>55A0B03D680A4613B49E5F4C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688B88190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688B9C190CF1AA00E933F8</string>
+				<string>F0688BC2190CF1AB00E933F8</string>
+				<string>F0688B93190CF1AA00E933F8</string>
+				<string>F0688B92190CF1AA00E933F8</string>
+				<string>1B0DCF6B15064A5EAC9DC14B</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B89190CF1AA00E933F8</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>CLASSPREFIX</key>
+				<string>RC</string>
+				<key>LastUpgradeCheck</key>
+				<string>0510</string>
+				<key>ORGANIZATIONNAME</key>
+				<string>lephuocdai</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>F0688BB9190CF1AB00E933F8</key>
+					<dict>
+						<key>TestTargetID</key>
+						<string>F0688B90190CF1AA00E933F8</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>F0688B8C190CF1AA00E933F8</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 3.2</string>
+			<key>developmentRegion</key>
+			<string>English</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>F0688B88190CF1AA00E933F8</string>
+			<key>productRefGroup</key>
+			<string>F0688B92190CF1AA00E933F8</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectReferences</key>
+			<array/>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>F0688B90190CF1AA00E933F8</string>
+				<string>F0688BB9190CF1AB00E933F8</string>
+			</array>
+		</dict>
+		<key>F0688B8C190CF1AA00E933F8</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>F0688BCA190CF1AB00E933F8</string>
+				<string>F0688BCB190CF1AB00E933F8</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>F0688B8D190CF1AA00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688BA3190CF1AB00E933F8</string>
+				<string>F0688BA7190CF1AB00E933F8</string>
+				<string>F0688BAD190CF1AB00E933F8</string>
+				<string>F0688BB3190CF1AB00E933F8</string>
+				<string>F0688BB0190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688B8E190CF1AA00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688B97190CF1AA00E933F8</string>
+				<string>F0688B9B190CF1AA00E933F8</string>
+				<string>F0688B99190CF1AA00E933F8</string>
+				<string>F0688B95190CF1AA00E933F8</string>
+				<string>BE1DE700214E48528F84B761</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688B8F190CF1AA00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688BB5190CF1AB00E933F8</string>
+				<string>F0688BA1190CF1AA00E933F8</string>
+				<string>F0688BAA190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688B90190CF1AA00E933F8</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>F0688BCC190CF1AB00E933F8</string>
+			<key>buildPhases</key>
+			<array>
+				<string>4C92F7F57B5146B6AF3559C1</string>
+				<string>F0688B8D190CF1AA00E933F8</string>
+				<string>F0688B8E190CF1AA00E933F8</string>
+				<string>F0688B8F190CF1AA00E933F8</string>
+				<string>576EF8A33F6F4D85B12AF477</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>RainbowChat</string>
+			<key>productName</key>
+			<string>RainbowChat</string>
+			<key>productReference</key>
+			<string>F0688B91190CF1AA00E933F8</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>F0688B91190CF1AA00E933F8</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>RainbowChat.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>F0688B92190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688B91190CF1AA00E933F8</string>
+				<string>F0688BBA190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B93190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688B94190CF1AA00E933F8</string>
+				<string>F0688B96190CF1AA00E933F8</string>
+				<string>F0688B98190CF1AA00E933F8</string>
+				<string>F0688B9A190CF1AA00E933F8</string>
+				<string>F0688BBB190CF1AB00E933F8</string>
+				<string>55A0B03D680A4613B49E5F4C</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B94190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Foundation.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Foundation.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>F0688B95190CF1AA00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B94190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688B96190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>CoreGraphics.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/CoreGraphics.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>F0688B97190CF1AA00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B96190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688B98190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>UIKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/UIKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>F0688B99190CF1AA00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B98190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688B9A190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>CoreData.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/CoreData.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>F0688B9B190CF1AA00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B9A190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688B9C190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688D0419125F0A00E933F8</string>
+				<string>F0688D0319125F0300E933F8</string>
+				<string>F0688D0219125EFD00E933F8</string>
+				<string>F0688BA5190CF1AB00E933F8</string>
+				<string>F0688BA6190CF1AB00E933F8</string>
+				<string>F0688BA8190CF1AB00E933F8</string>
+				<string>F0688BB4190CF1AB00E933F8</string>
+				<string>F0688BAB190CF1AB00E933F8</string>
+				<string>F0688B9D190CF1AA00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>RainbowChat</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B9D190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688B9E190CF1AA00E933F8</string>
+				<string>F0688B9F190CF1AA00E933F8</string>
+				<string>F0688BA2190CF1AB00E933F8</string>
+				<string>F0688BA4190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B9E190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>RainbowChat-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688B9F190CF1AA00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BA0190CF1AA00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA0190CF1AA00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA1190CF1AA00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B9F190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BA2190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>main.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA3190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BA2190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BA4190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>RainbowChat-Prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA5190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>RCAppDelegate.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA6190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>RCAppDelegate.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA7190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BA6190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BA8190CF1AB00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BA9190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>Main.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BA9190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file.storyboard</string>
+			<key>name</key>
+			<string>Base</string>
+			<key>path</key>
+			<string>Base.lproj/Main.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BAA190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BA8190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BAB190CF1AB00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BAC190CF1AB00E933F8</string>
+			</array>
+			<key>currentVersion</key>
+			<string>F0688BAC190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>XCVersionGroup</string>
+			<key>path</key>
+			<string>RainbowChat.xcdatamodeld</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+			<key>versionGroupType</key>
+			<string>wrapper.xcdatamodel</string>
+		</dict>
+		<key>F0688BAC190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>RainbowChat.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BAD190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BAB190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BAE190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>RCMasterViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BAF190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>RCMasterViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BB0190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BAF190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BB1190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>RCDetailViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BB2190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>RCDetailViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BB3190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BB2190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BB4190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Images.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BB5190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BB4190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BB6190CF1AB00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688BC9190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688BB7190CF1AB00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688BBC190CF1AB00E933F8</string>
+				<string>F0688BBF190CF1AB00E933F8</string>
+				<string>F0688BBE190CF1AB00E933F8</string>
+				<string>F0688BBD190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688BB8190CF1AB00E933F8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>F0688BC7190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F0688BB9190CF1AB00E933F8</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>F0688BCF190CF1AB00E933F8</string>
+			<key>buildPhases</key>
+			<array>
+				<string>F0688BB6190CF1AB00E933F8</string>
+				<string>F0688BB7190CF1AB00E933F8</string>
+				<string>F0688BB8190CF1AB00E933F8</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>F0688BC1190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>RainbowChatTests</string>
+			<key>productName</key>
+			<string>RainbowChatTests</string>
+			<key>productReference</key>
+			<string>F0688BBA190CF1AB00E933F8</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle.unit-test</string>
+		</dict>
+		<key>F0688BBA190CF1AB00E933F8</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>RainbowChatTests.xctest</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>F0688BBB190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>XCTest.framework</string>
+			<key>path</key>
+			<string>Library/Frameworks/XCTest.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>F0688BBC190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BBB190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BBD190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B94190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BBE190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B98190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BBF190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688B9A190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BC0190CF1AB00E933F8</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>F0688B89190CF1AA00E933F8</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>F0688B90190CF1AA00E933F8</string>
+			<key>remoteInfo</key>
+			<string>RainbowChat</string>
+		</dict>
+		<key>F0688BC1190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>F0688B90190CF1AA00E933F8</string>
+			<key>targetProxy</key>
+			<string>F0688BC0190CF1AB00E933F8</string>
+		</dict>
+		<key>F0688BC2190CF1AB00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BC8190CF1AB00E933F8</string>
+				<string>F0688BC3190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>RainbowChatTests</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC3190CF1AB00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BC4190CF1AB00E933F8</string>
+				<string>F0688BC5190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC4190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>RainbowChatTests-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC5190CF1AB00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BC6190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC6190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC7190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BC5190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BC8190CF1AB00E933F8</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>RainbowChatTests.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688BC9190CF1AB00E933F8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F0688BC8190CF1AB00E933F8</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F0688BCA190CF1AB00E933F8</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
+				<string>NO</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.1</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>F0688BCB190CF1AB00E933F8</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>YES</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.1</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>F0688BCC190CF1AB00E933F8</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>F0688BCD190CF1AB00E933F8</string>
+				<string>F0688BCE190CF1AB00E933F8</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>F0688BCD190CF1AB00E933F8</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>1B0DCF6B15064A5EAC9DC14B</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>RainbowChat/RainbowChat-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>RainbowChat/RainbowChat-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>F0688BCE190CF1AB00E933F8</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>1B0DCF6B15064A5EAC9DC14B</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>RainbowChat/RainbowChat-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>RainbowChat/RainbowChat-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>F0688BCF190CF1AB00E933F8</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>F0688BD0190CF1AB00E933F8</string>
+				<string>F0688BD1190CF1AB00E933F8</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>F0688BD0190CF1AB00E933F8</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>RainbowChat/RainbowChat-Prefix.pch</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>INFOPLIST_FILE</key>
+				<string>RainbowChatTests/RainbowChatTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>F0688BD1190CF1AB00E933F8</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/RainbowChat.app/RainbowChat</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>RainbowChat/RainbowChat-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>RainbowChatTests/RainbowChatTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>F0688D0219125EFD00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Model</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688D0319125F0300E933F8</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F0688BAE190CF1AB00E933F8</string>
+				<string>F0688BAF190CF1AB00E933F8</string>
+				<string>F0688BB1190CF1AB00E933F8</string>
+				<string>F0688BB2190CF1AB00E933F8</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Controller</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F0688D0419125F0A00E933F8</key>
+		<dict>
+			<key>children</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>View</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>F0688B89190CF1AA00E933F8</string>
+</dict>
+</plist>
