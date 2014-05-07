@@ -193,10 +193,10 @@
             </objects>
             <point key="canvasLocation" x="898" y="-463"/>
         </scene>
-        <!--Signup View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="McG-xC-vsb">
             <objects>
-                <viewController id="8WP-ne-N5O" customClass="RCSignupViewController" sceneMemberID="viewController">
+                <viewController id="8WP-ne-N5O" customClass="RCLoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9IV-3e-D05">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -248,10 +248,10 @@
             </objects>
             <point key="canvasLocation" x="731" y="1126"/>
         </scene>
-        <!--Login View Controller-->
+        <!--Signup View Controller-->
         <scene sceneID="ddG-R8-0uT">
             <objects>
-                <viewController id="dNd-H0-ggH" customClass="RCLoginViewController" sceneMemberID="viewController">
+                <viewController id="dNd-H0-ggH" customClass="RCSignupViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XUD-Zq-qbH">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

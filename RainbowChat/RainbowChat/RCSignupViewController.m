@@ -10,10 +10,13 @@
 
 @interface RCSignupViewController ()
 
+@property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet UITextField *passwordAgainTextField;
 
 @end
+
 
 @implementation RCSignupViewController
 
@@ -45,8 +48,13 @@
     
 }
 
+- (BOOL)isEmailValid:(NSString*)email {
+#warning Need to implement
+    return YES;
+}
+
 - (void)handleSuccessfulSignup {
-    
+
 }
 
 
@@ -54,7 +62,7 @@
 - (IBAction)cancelButtonPressed:(id)sender {
 }
 
-- (IBAction)onLogin:(id)sender {
+- (IBAction)onSignup:(id)sender {
 }
 
 

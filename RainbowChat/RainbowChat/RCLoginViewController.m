@@ -10,12 +10,11 @@
 
 @interface RCLoginViewController ()
 
-@property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (strong, nonatomic) IBOutlet UITextField *passwordAgainTextField;
 
 @end
+
 
 @implementation RCLoginViewController
 
@@ -58,13 +57,13 @@
     
 }
 
+
 #pragma mark - Navigation
 - (IBAction)cancelButtonPressed:(id)sender {
 }
 
-- (IBAction)onSignup:(id)sender {
+- (IBAction)onLogin:(id)sender {
 }
-
 
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
