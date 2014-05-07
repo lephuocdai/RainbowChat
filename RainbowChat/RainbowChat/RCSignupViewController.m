@@ -60,6 +60,7 @@
 
 #pragma mark - Navigation
 - (IBAction)cancelButtonPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onSignup:(id)sender {
