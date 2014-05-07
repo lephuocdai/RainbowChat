@@ -1,0 +1,40 @@
+#
+# Application configuration
+#
+SET ActivateUsersOnReg          true
+SET AllowAutoRegistration       true
+SET AllowNewCollections         true
+SET AllowNewObjectTypes         true
+SET AllowNewMembers             true
+SET AllowSystemUserToLogin      true
+SET AndroidPushAuthToken        YOUR_ANDROID_AUTH_TOKEN_GOES_HERE
+SET ApplePushKeystorePassword   YOUR_KEYSTORE_PASSWORD_GOES_HERE
+SET ApplePushUsingProduction    false
+SET LogLevel                    INFO
+SET PushIsInactive              true
+SET ETaggingEnabled             true
+# Remove the following CORS setting if you don't wish to be able to use the data browser from the FatFractal Console
+SET CORS https://system.fatfractal.com
+
+#
+# Object Types
+#
+CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID)
+CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
+CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
+CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
+
+#
+# Collection Resources
+#
+CREATE COLLECTION /FFUser OBJECTTYPE FFUser
+CREATE COLLECTION /FFUserGroup OBJECTTYPE FFUserGroup
+CREATE COLLECTION /FFNotificationID OBJECTTYPE FFNotificationID
+
+#
+# Event Handlers
+#
+
+#
+# Extension Resources
+#

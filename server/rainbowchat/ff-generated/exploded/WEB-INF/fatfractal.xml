@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fatfractal-app>
+    <display-name>rainbowchat</display-name>
+    <description>rainbowchat application</description>
+
+    <default-application-type>application.type.noserver</default-application-type>
+    
+    <onload>
+        <onload-name>NoServerAppLoader</onload-name>
+        <description>Initialize the NoServer application framework</description>
+        <onload-class>com.fatfractal.noserver.pub.NoServerAppLoader</onload-class>
+    </onload>
+
+    <database>
+        <database-name>rainbowchat</database-name>
+        <database-user>foo</database-user>
+        <database-password>bar</database-password>
+        <database-collection>__app_config</database-collection>
+    </database>
+
+    <externs>
+        <extern>file://./extern/fatfractal-noserver-0.1.0.jar</extern>
+        <extern>file://./extern/fatfractal-scribe-0.1.0.jar</extern>
+        <extern>file://./extern/ringojs-20120824.jar</extern>
+        <extern>file://./extern/rhino-1_7R5-20120824.jar</extern>
+        <extern>file://./extern/antlr-runtime-3.4.jar</extern>
+        <extern>file://./extern/mail-1.4.4.jar</extern>
+        <extern>file://./extern/JavaPNS-2.2.jar</extern>
+        <extern>file://./extern/bcprov-jdk16-1.46.jar</extern>
+        <extern>file://./extern/log4j-1.2.16.jar</extern>
+        <extern>file://./extern/fatfractal-common-0.1.0.jar</extern>
+        <extern>file://./extern/fatfractal-nio-0.1.0.jar</extern>
+        <extern>file://./extern/fatfractal-pay-0.1.0.jar</extern>
+        <extern>file://./extern/mysql-connector-java-5.1.6.jar</extern>
+        <extern>file://./extern/imgscalr-lib-4.2.jar</extern>
+        <extern>file://./extern/scribe-1.3.2.jar</extern>
+        <extern>file://./extern/cron4j-2.2.5.jar</extern>
+    </externs>
+
+    <action>
+        <action-name>register</action-name>
+        <description>user registration resources</description>
+        <action-class>com.fatfractal.noserver.pub.RegisterAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>register</action-name>
+        <url-pattern>/ff/register</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>login</action-name>
+        <description>user login resources</description>
+        <action-class>com.fatfractal.noserver.pub.LoginAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>login</action-name>
+        <url-pattern>/ff/login</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>logout</action-name>
+        <description>user logout resources</description>
+        <action-class>com.fatfractal.noserver.pub.LogoutAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>logout</action-name>
+        <url-pattern>/ff/logout</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>auth</action-name>
+        <description>auth actions</description>
+        <action-class>com.fatfractal.noserver.pub.AuthAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>auth</action-name>
+        <url-pattern>/ff/auth</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>metadata</action-name>
+        <description>noserver metadata resources</description>
+        <action-class>com.fatfractal.noserver.pub.MetaDataAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>metadata</action-name>
+        <url-pattern>/ff/metadata</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>data</action-name>
+        <description>noserver data resources</description>
+        <action-class>com.fatfractal.noserver.pub.CrudAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>data</action-name>
+        <url-pattern>/ff/resources</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>extensions</action-name>
+        <description>noserver extension resources</description>
+        <action-class>com.fatfractal.noserver.pub.ExtensionAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>extensions</action-name>
+        <url-pattern>/ff/ext</url-pattern>
+    </action-mapping>
+
+    <action>
+        <action-name>catchall</action-name>
+        <description>noserver catchall for dynamic routing</description>
+        <action-class>com.fatfractal.noserver.pub.CatchAllAction</action-class>
+    </action>
+    <action-mapping>
+        <action-name>catchall</action-name>
+        <url-pattern>/</url-pattern>
+    </action-mapping>
+
+</fatfractal-app>

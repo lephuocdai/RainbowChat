@@ -1,0 +1,31 @@
+<html>
+<head>
+  <script type="text/javascript">
+    function httpsRedirect() {
+      var httpURL = window.location.hostname + window.location.pathname;
+      var httpsURL = "https://" + httpURL;
+      window.location = httpsURL;
+    }
+    console.log(window.location.href);
+    if (!window.location.href.match('^https://') && !window.location.href.match('^http://localhost'))
+      httpsRedirect();
+  </script>
+  <script type="text/javascript" src="//www.fatfractal.com/prod/js/FatFractal.latest.js"></script>
+</head>
+<body>
+  <h1 id="baseurl"></h1>
+  <p id="explain"></p>
+</body>
+<script type='text/javascript'>
+  var baseEl = document.getElementById('baseurl');
+  var re = /\/index.html$/;
+  var app = window.location.pathname.replace(re, "");
+  var appName = app.slice(1);
+  var host = window.location.hostname + (window.location.port ? ":" + window.location.port : "");
+  baseEl.innerHTML = host + app;
+  var explainEl = document.getElementById('explain');
+  explainEl.innerHTML = "Application: " + appName + " is running on " + host;
+  window.document.title = "Application: " + appName + " default index.html page"
+  var ff = new FatFractal();
+</script>
+</html>
