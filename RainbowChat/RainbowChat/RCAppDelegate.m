@@ -7,21 +7,36 @@
 //
 
 #import "RCAppDelegate.h"
+#import "RCFatFractal.h"
 
 #import "RCMasterViewController.h"
+
+static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
+static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
+
+@interface RCAppDelegate ()
+
+@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
+
+@end
+
 
 @implementation RCAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize ffInstance = _ffInstance;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     RCMasterViewController *controller = (RCMasterViewController *)navigationController.topViewController;
     controller.managedObjectContext = self.managedObjectContext;
-
+    controller.ffInstance = self.ffInstance;
     return YES;
 }
 							
@@ -59,6 +74,22 @@
             abort();
         } 
     }
+}
+
+#pragma mark - FatFractal
+
+- (RCFatFractal *) ffInstance {
+    if (_ffInstance != nil) {
+        return _ffInstance;
+    }
+    
+    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL];
+    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"TaggedLocationsFFStorage"];
+    
+    _ffInstance.managedObjectContext = self.managedObjectContext;
+    _ffInstance.managedObjectModel = self.managedObjectModel;
+    
+    return _ffInstance;
 }
 
 #pragma mark - Core Data stack

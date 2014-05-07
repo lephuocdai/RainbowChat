@@ -27,6 +27,10 @@
 		F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F0688BC5190CF1AB00E933F8 /* InfoPlist.strings */; };
 		F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */; };
 		F0B2DADC191A33BE00226963 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B2DADB191A33BE00226963 /* FFEF.framework */; };
+		F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DADF191A3A1300226963 /* RCFatFractal.m */; };
+		F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE5191A3FE000226963 /* RCWelcomeViewController.m */; };
+		F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE8191A400900226963 /* RCSignupViewController.m */; };
+		F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAEB191A401D00226963 /* RCLoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +70,14 @@
 		F0688BC6190CF1AB00E933F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F0688BC8190CF1AB00E933F8 /* RainbowChatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowChatTests.m; sourceTree = "<group>"; };
 		F0B2DADB191A33BE00226963 /* FFEF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFEF.framework; sourceTree = "<group>"; };
+		F0B2DADE191A3A1300226963 /* RCFatFractal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFatFractal.h; sourceTree = "<group>"; };
+		F0B2DADF191A3A1300226963 /* RCFatFractal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFatFractal.m; sourceTree = "<group>"; };
+		F0B2DAE4191A3FE000226963 /* RCWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCWelcomeViewController.h; sourceTree = "<group>"; };
+		F0B2DAE5191A3FE000226963 /* RCWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCWelcomeViewController.m; sourceTree = "<group>"; };
+		F0B2DAE7191A400900226963 /* RCSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCSignupViewController.h; sourceTree = "<group>"; };
+		F0B2DAE8191A400900226963 /* RCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSignupViewController.m; sourceTree = "<group>"; };
+		F0B2DAEA191A401D00226963 /* RCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLoginViewController.h; sourceTree = "<group>"; };
+		F0B2DAEB191A401D00226963 /* RCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,12 +145,12 @@
 		F0688B9C190CF1AA00E933F8 /* RainbowChat */ = {
 			isa = PBXGroup;
 			children = (
+				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
+				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
+				F0B2DADD191A39F800226963 /* API */,
 				F0688D0419125F0A00E933F8 /* View */,
 				F0688D0319125F0300E933F8 /* Controller */,
 				F0688D0219125EFD00E933F8 /* Model */,
-				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
-				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
-				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
 				F0688BB4190CF1AB00E933F8 /* Images.xcassets */,
 				F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */,
 				F0688B9D190CF1AA00E933F8 /* Supporting Files */,
@@ -185,10 +197,8 @@
 		F0688D0319125F0300E933F8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */,
-				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
-				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
-				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
+				F0B2DAEE191A404200226963 /* Main */,
+				F0B2DAED191A402C00226963 /* Auth */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -196,8 +206,42 @@
 		F0688D0419125F0A00E933F8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		F0B2DADD191A39F800226963 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				F0B2DADE191A3A1300226963 /* RCFatFractal.h */,
+				F0B2DADF191A3A1300226963 /* RCFatFractal.m */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		F0B2DAED191A402C00226963 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				F0B2DAE4191A3FE000226963 /* RCWelcomeViewController.h */,
+				F0B2DAE5191A3FE000226963 /* RCWelcomeViewController.m */,
+				F0B2DAE7191A400900226963 /* RCSignupViewController.h */,
+				F0B2DAE8191A400900226963 /* RCSignupViewController.m */,
+				F0B2DAEA191A401D00226963 /* RCLoginViewController.h */,
+				F0B2DAEB191A401D00226963 /* RCLoginViewController.m */,
+			);
+			name = Auth;
+			sourceTree = "<group>";
+		};
+		F0B2DAEE191A404200226963 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */,
+				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
+				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
+				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
+			);
+			name = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,6 +381,10 @@
 				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
+				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
+				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
+				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
+				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
 				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

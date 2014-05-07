@@ -10,10 +10,13 @@
 
 #import <CoreData/CoreData.h>
 
+#import "RCFatFractal.h"
+
 #warning - We do not need a fetchedResultsController since we have the managedObjectContext
 @interface RCMasterViewController : UITableViewController //<NSFetchedResultsControllerDelegate>
 
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end
