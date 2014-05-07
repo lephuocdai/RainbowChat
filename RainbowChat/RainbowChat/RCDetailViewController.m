@@ -49,8 +49,7 @@
     }
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
@@ -76,11 +75,11 @@
 - (void)startRecord {
     
 }
-
+#warning Need to implement
 - (void)stopRecord {
     
 }
-
+#warning Need to implement
 - (void)playVideoAtIndex:(NSInteger)indexPath {
     
 }
@@ -106,7 +105,7 @@
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
+    #warning Need to implement
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

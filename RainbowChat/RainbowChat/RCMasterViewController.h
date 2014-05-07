@@ -10,9 +10,10 @@
 
 #import <CoreData/CoreData.h>
 
-@interface RCMasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+#warning - We do not need a fetchedResultsController since we have the managedObjectContext
+@interface RCMasterViewController : UITableViewController //<NSFetchedResultsControllerDelegate>
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
