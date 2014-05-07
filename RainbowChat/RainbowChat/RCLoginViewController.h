@@ -8,6 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RCLoginViewController : UIViewController
+@class RCLoginViewController;
+
+
+@protocol RCLoginViewControllerDelegate <NSObject>
+
+- (void)loginViewControllerDidLoginUser;
+
+@end
+
+
+@interface RCLoginViewController : UIViewController <UITextFieldDelegate>
+
+@property (nonatomic, assign) id <RCLoginViewControllerDelegate> delegate;
 
 @end

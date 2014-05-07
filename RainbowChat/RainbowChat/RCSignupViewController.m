@@ -10,12 +10,14 @@
 
 @interface RCSignupViewController ()
 
+@property (strong, nonatomic) IBOutlet UITextField *emailTextField;
+@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
+
 @end
 
 @implementation RCSignupViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -23,27 +25,44 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+#pragma mark - View lifecycle
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
+#pragma mark - Helper
+-(void)saveUserCredentialsInKeyChain {
+    
+}
+
+- (void)checkEmail:(NSString*)email {
+    
+}
+
+- (void)handleSuccessfulSignup {
+    
+}
+
+
 #pragma mark - Navigation
+- (IBAction)cancelButtonPressed:(id)sender {
+}
+
+- (IBAction)onLogin:(id)sender {
+}
+
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 @end

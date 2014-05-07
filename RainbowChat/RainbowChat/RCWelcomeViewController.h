@@ -7,7 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RCSignupViewController.h"
+#import "RCLoginViewController.h"
 
-@interface RCWelcomeViewController : UIViewController
+@class RCWelComeViewController;
+
+
+@protocol WelcomeViewControllerDelegate <NSObject>
+
+- (void)userDidAuthenticate;
+
+@end
+
+
+@interface RCWelcomeViewController : UIViewController <RCSignupViewControllerDelegate, RCLoginViewControllerDelegate>
+
+@property (nonatomic, assign) id <WelcomeViewControllerDelegate> delegate;
 
 @end

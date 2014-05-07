@@ -8,6 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RCSignupViewController : UIViewController
+@class RCSignupViewController;
+
+
+@protocol RCSignupViewControllerDelegate <NSObject>
+
+- (void)signupViewControllerDidSignupUser;
+
+@end
+
+
+@interface RCSignupViewController : UIViewController <UITextFieldDelegate>
+
+@property (nonatomic, assign) id <RCSignupViewControllerDelegate> delegate;
 
 @end
