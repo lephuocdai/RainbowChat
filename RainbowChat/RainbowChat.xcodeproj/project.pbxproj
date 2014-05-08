@@ -31,6 +31,7 @@
 		F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE5191A3FE000226963 /* RCWelcomeViewController.m */; };
 		F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE8191A400900226963 /* RCSignupViewController.m */; };
 		F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAEB191A401D00226963 /* RCLoginViewController.m */; };
+		F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		F0B2DAE8191A400900226963 /* RCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSignupViewController.m; sourceTree = "<group>"; };
 		F0B2DAEA191A401D00226963 /* RCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLoginViewController.h; sourceTree = "<group>"; };
 		F0B2DAEB191A401D00226963 /* RCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLoginViewController.m; sourceTree = "<group>"; };
+		F0B2DAF0191B9AD100226963 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,12 +148,13 @@
 		F0688B9C190CF1AA00E933F8 /* RainbowChat */ = {
 			isa = PBXGroup;
 			children = (
-				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
-				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
 				F0B2DADD191A39F800226963 /* API */,
 				F0688D0419125F0A00E933F8 /* View */,
 				F0688D0319125F0300E933F8 /* Controller */,
 				F0688D0219125EFD00E933F8 /* Model */,
+				F0B2DAF3191B9AD600226963 /* Helper */,
+				F0688BA5190CF1AB00E933F8 /* RCAppDelegate.h */,
+				F0688BA6190CF1AB00E933F8 /* RCAppDelegate.m */,
 				F0688BB4190CF1AB00E933F8 /* Images.xcassets */,
 				F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */,
 				F0688B9D190CF1AA00E933F8 /* Supporting Files */,
@@ -242,6 +246,15 @@
 				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
 			);
 			name = Main;
+			sourceTree = "<group>";
+		};
+		F0B2DAF3191B9AD600226963 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				F0B2DAF0191B9AD100226963 /* MBProgressHUD.h */,
+				F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,6 +397,7 @@
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
+				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
 				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
 			);
