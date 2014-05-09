@@ -10,6 +10,7 @@
 #import "RCAppDelegate.h"
 #import "RCDetailViewController.h"
 #import "RCWelcomeViewController.h"
+#import "KeychainItemWrapper.h"
 
 
 
@@ -188,7 +189,7 @@
 #pragma mark - Public Methods
 - (void)refresh {
     if ([[FatFractal main] loggedInUser]) {
-        self.currentUser = [[FatFractal main] loggedInUser];
+        self.currentUser = (FFUser*)[[FatFractal main] loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -200,6 +201,23 @@
 - (void)refreshTableAndLoadData {
     #warning Need to implement
 }
+
+- (IBAction)logoutButtonPressed:(id)sender {
+    NSLog(@"On log out");
+    [[FatFractal main] logout];
+    // Clear keychain
+    KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
+    if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil) {
+        [keychainItem setObject:nil forKey:(__bridge id)(kSecAttrAccount)];
+        [keychainItem setObject:nil forKey:(__bridge id)(kSecValueData)];
+    }
+    // Navigate to Welcome View Controller
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
+    welcomeViewController.delegate = self;
+    [self presentViewController:welcomeViewController animated:YES completion:nil];
+}
+
 
 /* We do not need a fetchedResultsController since we have the managedObjectContext
 - (NSFetchedResultsController *)fetchedResultsController {
