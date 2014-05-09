@@ -34,13 +34,8 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    
-    /* Do not need this add button now since we do not allow user to edit the table
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
-     */
+	
+    [self refresh];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -177,8 +172,8 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
-    NSManagedObject *friend = [_friends objectAtIndex:indexPath.row];
-    cell.textLabel.text = [[friend valueForKey:@"timeStamp"] description];
+    FFUser *friend = [_friends objectAtIndex:indexPath.row];
+    cell.textLabel.text = friend.firstName;
 }
 
 #pragma mark - WelcomeViewControllerDelegate Methods
@@ -199,7 +194,20 @@
 }
 
 - (void)refreshTableAndLoadData {
-    #warning Need to implement
+    // Clean friends array
+    if (_friends) {
+        [_friends removeAllObjects];
+        _friends = nil;
+    }
+    
+    // Load from back end
+    _friends = [NSMutableArray array];
+    [[FatFractal main] getArrayFromUri:@"/FFUser" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        if (theObj) {
+            _friends = (NSMutableArray*)theObj;
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
