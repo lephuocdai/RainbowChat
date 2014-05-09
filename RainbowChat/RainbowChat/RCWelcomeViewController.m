@@ -35,6 +35,7 @@
 
 #pragma mark - SignupViewController delegate
 - (void)signupViewControllerDidSignupUser {
+    DBGMSG(@"%s", __func__);
     [self dismissViewControllerAnimated:YES completion:nil];
     
     [self userSuccessfullyAuthenticated];
@@ -43,12 +44,18 @@
 
 #pragma mark - LoginViewController delegate
 - (void)loginViewControllerDidLoginUser {
+    DBGMSG(@"%s", __func__);
+    // Dismiss WelcomeViewController
+    [self dismissViewControllerAnimated:NO completion:nil];
     
+    // Announce user has successfully authenticated
+    [self userSuccessfullyAuthenticated];
 }
 
 
 #pragma mark - Helper
 - (void)userSuccessfullyAuthenticated {
+    DBGMSG(@"%s", __func__);
     if ([self.delegate respondsToSelector:@selector(userDidAuthenticate)]) {
         [self.delegate userDidAuthenticate];
     }
@@ -57,15 +64,23 @@
 
 #pragma mark - Navigation
 - (IBAction)signupButtonPressed:(id)sender {
+    DBGMSG(@"%s", __func__);
 }
 
 - (IBAction)loginButtonPressed:(id)sender {
+    DBGMSG(@"%s", __func__);
 }
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    DBGMSG(@"%s", __func__);
+    if ([[segue identifier] isEqualToString:@"presentSignupView"]) {
+        RCSignupViewController *signupVC = [segue destinationViewController];
+        signupVC.delegate = self;
+    } else if ([[segue identifier] isEqualToString:@"presentLoginView"]) {
+        RCLoginViewController *loginVC = [segue destinationViewController];
+        loginVC.delegate = self;
+    }
 }
 
 
