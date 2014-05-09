@@ -7,6 +7,9 @@
 //
 
 #import "RCSignupViewController.h"
+#import "MBProgressHUD.h"
+#import "KeychainItemWrapper.h"
+#import "RCAppDelegate.h"
 
 @interface RCSignupViewController ()
 
@@ -52,7 +55,6 @@
     NSString *password = _passwordTextField.text;
     NSString *passwordAgain = _passwordAgainTextField.text;
     
-    
     // Check input email and password
     if (![self isPassword:password validWithPasswordAgain:passwordAgain]) {
         [self callAlertPasswordInvalid];
@@ -63,7 +65,11 @@
         return;
     }
     
-    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = @"Signing up...";
+    hud.dimBackground = YES;
+    hud.yOffset = -77;
     
     // Create new FFUser and registerUser then save to keychain if successful
     FFUser *newUser = [[FFUser alloc] initWithFF:[FatFractal main]];
@@ -78,7 +84,8 @@
         } else {
             if (theObj) {
                 [self saveUserCredentialsInKeyChain];
-#warning Implement MBProgressHUD here
+                
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
                 
                 [self dismissViewControllerAnimated:YES completion:^{
                     [self handleSuccessfulSignup];
@@ -95,10 +102,16 @@
     // Pass the selected object to the new view controller.
 }
 
-
 #pragma mark - Helper
 -(void)saveUserCredentialsInKeyChain {
+    NSString *username = [self usernameFromEmail:_emailTextField.text];;
+    NSString *password = _passwordAgainTextField.text;
     
+    KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
+    [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
+    [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
+    
+    NSLog(@"Successfully saved user %@ to keychain after signup in SignupViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
 }
 
 - (void)checkEmail:(NSString*)email {

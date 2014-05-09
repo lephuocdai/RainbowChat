@@ -35,7 +35,9 @@
 
 #pragma mark - SignupViewController delegate
 - (void)signupViewControllerDidSignupUser {
+    [self dismissViewControllerAnimated:YES completion:nil];
     
+    [self userSuccessfullyAuthenticated];
 }
 
 
@@ -47,7 +49,9 @@
 
 #pragma mark - Helper
 - (void)userSuccessfullyAuthenticated {
-    
+    if ([self.delegate respondsToSelector:@selector(userDidAuthenticate)]) {
+        [self.delegate userDidAuthenticate];
+    }
 }
 
 
