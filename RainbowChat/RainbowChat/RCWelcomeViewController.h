@@ -12,7 +12,6 @@
 
 @class RCWelComeViewController;
 
-
 @protocol WelcomeViewControllerDelegate <NSObject>
 
 - (void)userDidAuthenticate;

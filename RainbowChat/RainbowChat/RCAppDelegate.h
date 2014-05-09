@@ -7,14 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KeychainItemWrapper.h"
+#import "RCFatFractal.h"
 
 @interface RCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-//@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-//@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-//@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+// The static method for the KeychainItemWrapper class
++ (KeychainItemWrapper *)keychainItem;
++ (RCFatFractal *)ffInstance;
++ (BOOL)checkForAuthentication;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

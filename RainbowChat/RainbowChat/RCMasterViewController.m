@@ -7,11 +7,15 @@
 //
 
 #import "RCMasterViewController.h"
-
+#import "RCAppDelegate.h"
 #import "RCDetailViewController.h"
+#import "RCWelcomeViewController.h"
+
+
 
 @interface RCMasterViewController ()
 
+@property (strong, nonatomic) FFUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
 @property (nonatomic) NSNumber *lastRefreshTime;
 
@@ -41,6 +45,22 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self checkForAuthentication];
+}
+
+- (void)checkForAuthentication {
+    if ([RCAppDelegate checkForAuthentication]) {
+        
+    } else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
+        welcomeViewController.delegate = self;
+        [self presentViewController:welcomeViewController animated:YES completion:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -158,6 +178,27 @@
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
     NSManagedObject *friend = [_friends objectAtIndex:indexPath.row];
     cell.textLabel.text = [[friend valueForKey:@"timeStamp"] description];
+}
+
+#pragma mark - WelcomeViewControllerDelegate Methods
+-(void)userDidAuthenticate {
+    NSLog(@"Main View Controller refreshTableAndLoadData");
+}
+
+#pragma mark - Public Methods
+- (void)refresh {
+    if ([[FatFractal main] loggedInUser]) {
+        self.currentUser = [[FatFractal main] loggedInUser];
+        [self refreshTableAndLoadData];
+    }
+}
+
+- (void)userIsAuthenticatedFromAppDelegateOnLaunch {
+    [self refresh];
+}
+
+- (void)refreshTableAndLoadData {
+    #warning Need to implement
 }
 
 /* We do not need a fetchedResultsController since we have the managedObjectContext

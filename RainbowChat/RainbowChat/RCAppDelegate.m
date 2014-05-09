@@ -7,19 +7,29 @@
 //
 
 #import "RCAppDelegate.h"
-#import "RCFatFractal.h"
-
+#import "RCWelcomeViewController.h"
 #import "RCMasterViewController.h"
 
 static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
 static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
+static RCFatFractal *_ffInstance;
+
+// Instantiating KeychainItemWrapper class as a singleton through AppDelegate
+static KeychainItemWrapper *_keychainItem;
+
+// Keychain Identifier
+static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
 @interface RCAppDelegate ()
+
+@property RCWelcomeViewController *welcomeViewController;
+@property RCMasterViewController *masterViewController;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
+
+//@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
 
 @end
 
@@ -29,15 +39,98 @@ static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+
+#pragma mark - FatFractal
++ (RCFatFractal *) ffInstance {
+    return _ffInstance;
+}
+
++ (BOOL)checkForAuthentication {
+    if ([_ffInstance loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])){
+        NSLog(@"checkForAuthentication: FFUser logged in.");
+        return YES;
+    } else {
+        NSLog(@"checkForAuthentication: No user logged in.");
+        return NO;
+    }
+}
+/*
 @synthesize ffInstance = _ffInstance;
+- (RCFatFractal *) ffInstance {
+    if (_ffInstance != nil) {
+        return _ffInstance;
+    }
+    
+    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL];
+    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+    
+    _ffInstance.managedObjectContext = self.managedObjectContext;
+    _ffInstance.managedObjectModel = self.managedObjectModel;
+    
+    return _ffInstance;
+}
+*/
+
++ (KeychainItemWrapper*)keychainItem {
+    return _keychainItem;
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // Initiate the RCFatFractal instance that your application will use
+    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+#ifdef DEBUG
+    _ffInstance.debug = YES;
+#endif
+    _ffInstance.managedObjectContext = self.managedObjectContext;
+    _ffInstance.managedObjectModel = self.managedObjectModel;
+    
+    
+    // Create the KeychainItem singleton
+    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+    
+    // If Keychain item exists, attempt login
+    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
+        NSLog(@"_keychainItem username exists, attempting login in background.");
+        
+        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
+        
+        // Login with FatFractal by initiating connection with server
+        [_ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+            if (theErr) {
+                NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
+                // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
+                // Better error handling can be done in a production application
+                [_keychainItem resetKeychainItem];
+                return;
+            }
+            if (theObj) {
+                NSLog(@"Login from AppDelegate using keychain successful!");
+                [self userSuccessfullyAuthenticated];
+            }
+        }];
+    }
+    
+    
+    
     // Override point for customization after application launch.
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-    RCMasterViewController *controller = (RCMasterViewController *)navigationController.topViewController;
-    controller.managedObjectContext = self.managedObjectContext;
-    controller.ffInstance = self.ffInstance;
+//    RCMasterViewController *controller = (RCMasterViewController *)navigationController.topViewController;
+//    controller.managedObjectContext = self.managedObjectContext;
+//    controller.ffInstance = _ffInstance;
+    self.masterViewController = (RCMasterViewController *)navigationController.topViewController;
+    self.masterViewController.managedObjectContext = self.managedObjectContext;
+    self.masterViewController.ffInstance = _ffInstance;
+    
     return YES;
+}
+
+#pragma mark - Helper Methods
+- (void)userSuccessfullyAuthenticated {
+    [self.masterViewController userIsAuthenticatedFromAppDelegateOnLaunch];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -74,22 +167,6 @@ static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
             abort();
         } 
     }
-}
-
-#pragma mark - FatFractal
-
-- (RCFatFractal *) ffInstance {
-    if (_ffInstance != nil) {
-        return _ffInstance;
-    }
-    
-    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL];
-    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"TaggedLocationsFFStorage"];
-    
-    _ffInstance.managedObjectContext = self.managedObjectContext;
-    _ffInstance.managedObjectModel = self.managedObjectModel;
-    
-    return _ffInstance;
 }
 
 #pragma mark - Core Data stack

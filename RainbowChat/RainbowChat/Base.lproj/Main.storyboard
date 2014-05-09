@@ -22,7 +22,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="OkS-hg-Df5">
             <objects>
-                <viewController id="xJl-1G-ku3" customClass="RCWelcomeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xJl-1G-ku3" customClass="RCWelcomeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3vO-Dv-HIh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
