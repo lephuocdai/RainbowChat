@@ -12,8 +12,6 @@
 #import "RCWelcomeViewController.h"
 #import "KeychainItemWrapper.h"
 
-
-
 @interface RCMasterViewController ()
 
 @property (strong, nonatomic) FFUser *currentUser;
@@ -21,7 +19,6 @@
 @property (nonatomic) NSNumber *lastRefreshTime;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-
 
 @end
 
@@ -34,28 +31,26 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
-    [self refresh];
+    
+	[self checkForAuthentication];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self checkForAuthentication];
 }
 
 - (void)checkForAuthentication {
-    if ([RCAppDelegate checkForAuthentication]) {
-        
-    } else {
+    if (![RCAppDelegate checkForAuthentication]) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
         welcomeViewController.delegate = self;
         [self presentViewController:welcomeViewController animated:YES completion:nil];
+    } else {
+        [self.tableView reloadData];
     }
 }
 
@@ -99,6 +94,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
 //    return [sectionInfo numberOfObjects];
+    NSLog(@"Number of row = %d", _friends.count);
     return _friends.count;
 }
 
@@ -154,7 +150,7 @@
 #pragma mark - Data fetch
 
 - (void)fetchFromCoreData {
-    #warning Need to implement
+#warning Need to implement
     /*
      Fetch existing friends.
      Create a fetch request for the Event entity; add a sort descriptor; then execute the fetch.
@@ -162,7 +158,7 @@
 }
 
 - (void)fetchChangesFromBackEnd {
-    #warning Need to implement
+#warning Need to implement
     // Fetch any friends that have been updated on the backend
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
@@ -183,6 +179,7 @@
 
 #pragma mark - Public Methods
 - (void)refresh {
+    DBGMSG(@"%s", __func__);
     if ([[FatFractal main] loggedInUser]) {
         self.currentUser = (FFUser*)[[FatFractal main] loggedInUser];
         [self refreshTableAndLoadData];
@@ -190,10 +187,12 @@
 }
 
 - (void)userIsAuthenticatedFromAppDelegateOnLaunch {
+    DBGMSG(@"%s", __func__);
     [self refresh];
 }
 
 - (void)refreshTableAndLoadData {
+    DBGMSG(@"%s", __func__);
     // Clean friends array
     if (_friends) {
         [_friends removeAllObjects];
@@ -211,7 +210,7 @@
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
-    NSLog(@"On log out");
+    DBGMSG(@"%s", __func__);
     [[FatFractal main] logout];
     // Clear keychain
     KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
