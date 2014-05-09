@@ -2,7 +2,7 @@
 # Application configuration
 #
 SET ActivateUsersOnReg          true
-SET AllowAutoRegistration       true
+SET AllowAutoRegistration       false
 SET AllowNewCollections         true
 SET AllowNewObjectTypes         true
 SET AllowNewMembers             true
