@@ -201,7 +201,7 @@
     
     // Load from back end
     _friends = [NSMutableArray array];
-    [[FatFractal main] getArrayFromUri:@"/FFUser" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] getArrayFromUri:@"/FFUser/(not(userName contains_any 'anonymous system'))" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
             [self.tableView reloadData];
