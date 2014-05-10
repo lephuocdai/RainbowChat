@@ -209,6 +209,9 @@
         }
     }];
 }
+- (IBAction)refreshButtonPressed:(id)sender {
+    [self refreshTableAndLoadData];
+}
 
 - (IBAction)logoutButtonPressed:(id)sender {
     DBGMSG(@"%s", __func__);
