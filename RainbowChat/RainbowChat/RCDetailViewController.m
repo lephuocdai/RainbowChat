@@ -32,22 +32,24 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem {
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
+- (void)setToUser:(FFUser *)toUser {
+    if (_toUser != toUser) {
+        _toUser = toUser;
         
         // Update the view.
         [self configureView];
     }
 }
 
+
 - (void)configureView {
     // Update the user interface for the detail item.
 
-    if (self.detailItem) {
-        self.detailDescriptionLabel.text = [[self.detailItem valueForKey:@"timeStamp"] description];
+    if (_toUser) {
+        self.title = _toUser.firstName;
     }
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];

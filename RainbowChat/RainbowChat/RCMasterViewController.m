@@ -142,8 +142,8 @@
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 //        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        NSManagedObject *toFriend = [_friends objectAtIndex:indexPath.row];
-        [[segue destinationViewController] setDetailItem:toFriend];
+        FFUser *toFriend = [_friends objectAtIndex:indexPath.row];
+        [[segue destinationViewController] setToUser:toFriend];
     }
 }
 
@@ -169,7 +169,7 @@
     //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
     FFUser *friend = [_friends objectAtIndex:indexPath.row];
-    cell.textLabel.text = friend.email;
+    cell.textLabel.text = friend.firstName;
 }
 
 #pragma mark - WelcomeViewControllerDelegate Methods
@@ -200,7 +200,7 @@
     }
     
     // Load from back end
-    NSString *uri = [NSString stringWithFormat:@"/FFUser/(not(email contains_any 'anonymous@example.com system@example.com %@'))", self.currentUser.email];
+    NSString *uri = [NSString stringWithFormat:@"/FFUser/(not(guid contains_any 'anonymous system@example.com %@'))", self.currentUser.guid];
     _friends = [NSMutableArray array];
     [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {

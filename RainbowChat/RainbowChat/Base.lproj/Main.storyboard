@@ -94,7 +94,7 @@
                             <outlet property="delegate" destination="pGg-6v-bdr" id="Y6K-Cp-Qkv"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Master" id="tQt-TN-PWz">
+                    <navigationItem key="navigationItem" title="Friends" id="tQt-TN-PWz">
                         <barButtonItem key="rightBarButtonItem" style="plain" id="qBH-qQ-hwY">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ngk-Ds-dTE">
                                 <rect key="frame" x="233" y="5" width="71" height="33"/>
