@@ -169,7 +169,7 @@
     //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
     FFUser *friend = [_friends objectAtIndex:indexPath.row];
-    cell.textLabel.text = friend.firstName;
+    cell.textLabel.text = friend.email;
 }
 
 #pragma mark - WelcomeViewControllerDelegate Methods

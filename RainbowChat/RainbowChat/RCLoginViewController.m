@@ -51,6 +51,7 @@
     } else if (textField == _passwordTextField) {
         [self loginUserWithEmail:_emailTextField.text andPassword:_passwordTextField.text];
     }
+    [textField resignFirstResponder];
     return NO;
 }
 
