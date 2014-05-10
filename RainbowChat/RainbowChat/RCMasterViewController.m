@@ -200,8 +200,9 @@
     }
     
     // Load from back end
+    NSString *uri = [NSString stringWithFormat:@"/FFUser/(not(email contains_any 'anonymous@example.com system@example.com %@'))", self.currentUser.email];
     _friends = [NSMutableArray array];
-    [[FatFractal main] getArrayFromUri:@"/FFUser/(not(userName contains_any 'anonymous system'))" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
             [self.tableView reloadData];
