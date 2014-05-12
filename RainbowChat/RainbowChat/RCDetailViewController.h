@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "RCUser.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-
-//@property (strong, nonatomic) id detailItem;
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 
 #warning Need to change the type of this class
 @property (strong, nonatomic) RCUser *toUser;
