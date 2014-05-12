@@ -32,7 +32,7 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setToUser:(FFUser *)toUser {
+- (void)setToUser:(RCUser *)toUser {
     if (_toUser != toUser) {
         _toUser = toUser;
         

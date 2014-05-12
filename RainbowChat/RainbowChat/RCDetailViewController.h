@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RCUser.h"
 
 @interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
@@ -14,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 
 #warning Need to change the type of this class
-@property (strong, nonatomic) FFUser *toUser;
+@property (strong, nonatomic) RCUser *toUser;
 
 @end

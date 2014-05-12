@@ -33,6 +33,8 @@
 		F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAEB191A401D00226963 /* RCLoginViewController.m */; };
 		F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */; };
 		F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */; };
+		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
+		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,8 @@
 		F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		F0B2DAF4191CA2DE00226963 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
+		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,8 @@
 		F0688D0219125EFD00E933F8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F0D02F6B19209704005F3422 /* RCUser.h */,
+				F0D02F6C19209704005F3422 /* RCUser.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -402,6 +408,7 @@
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */,
+				F0D02F6D19209704005F3422 /* RCUser.m in Sources */,
 				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
 				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
@@ -414,6 +421,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
+				F0D02F6E19209704005F3422 /* RCUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

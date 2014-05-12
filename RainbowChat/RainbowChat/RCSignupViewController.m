@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import "KeychainItemWrapper.h"
 #import "RCAppDelegate.h"
+#import "RCUser.h"
 
 @interface RCSignupViewController ()
 
@@ -48,7 +49,7 @@
     return NO;
 }
 
-#pragma mark - Navigation
+#pragma mark - NavigationX
 - (IBAction)cancelButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -71,17 +72,24 @@
         return;
     }
     
+    
+    FFGeoLocation *place = [[FFGeoLocation alloc] initWithLatitude:33.5 longitude:-112];
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeIndeterminate;
     hud.labelText = @"Signing up...";
     hud.dimBackground = YES;
     hud.yOffset = -77;
     
+    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+    
     // Create new FFUser and registerUser then save to keychain if successful
-    FFUser *newUser = [[FFUser alloc] initWithFF:[FatFractal main]];
+    RCUser *newUser = [[RCUser alloc] init];
     newUser.firstName = fullname;
     newUser.userName = [self usernameFromEmail:email];
     newUser.email = email;
+    newUser.place = place;
+    newUser.nickname = fullname;
     
     [[FatFractal main] registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr) {

@@ -11,10 +11,11 @@
 #import "RCDetailViewController.h"
 #import "RCWelcomeViewController.h"
 #import "KeychainItemWrapper.h"
+#import "RCUser.h"
 
 @interface RCMasterViewController ()
 
-@property (strong, nonatomic) FFUser *currentUser;
+@property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
 @property (nonatomic) NSNumber *lastRefreshTime;
 
@@ -94,7 +95,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
 //    return [sectionInfo numberOfObjects];
-    NSLog(@"Number of row = %d", _friends.count);
+    NSLog(@"Number of row = %lu", (unsigned long)_friends.count);
     return _friends.count;
 }
 
@@ -142,7 +143,7 @@
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 //        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        FFUser *toFriend = [_friends objectAtIndex:indexPath.row];
+        RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
     }
 }
@@ -168,8 +169,8 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
 # warning - Need to send a specific class of toFriend ( maybe RCUser?)
-    FFUser *friend = [_friends objectAtIndex:indexPath.row];
-    cell.textLabel.text = friend.firstName;
+    RCUser *friend = (RCUser*)[_friends objectAtIndex:indexPath.row];
+    cell.textLabel.text = friend.nickname;
 }
 
 #pragma mark - WelcomeViewControllerDelegate Methods
@@ -181,7 +182,7 @@
 - (void)refresh {
     DBGMSG(@"%s", __func__);
     if ([[FatFractal main] loggedInUser]) {
-        self.currentUser = (FFUser*)[[FatFractal main] loggedInUser];
+        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -200,11 +201,13 @@
     }
     
     // Load from back end
-    NSString *uri = [NSString stringWithFormat:@"/FFUser/(not(guid contains_any 'anonymous system@example.com %@'))", self.currentUser.guid];
+    NSString *uri = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
     _friends = [NSMutableArray array];
+    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
     [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
+            NSLog(@"first friend = %@", (RCUser*)[_friends firstObject]);
             [self.tableView reloadData];
         }
     }];

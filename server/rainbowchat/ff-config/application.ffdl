@@ -19,7 +19,7 @@ SET CORS https://system.fatfractal.com
 #
 # Object Types
 #
-CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID)
+CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID, profilePicture BYTEARRAY, place GEOLOCATION, nickname STRING)
 CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
 CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
