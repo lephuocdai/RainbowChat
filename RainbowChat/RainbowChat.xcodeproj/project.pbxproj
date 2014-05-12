@@ -35,6 +35,7 @@
 		F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */; };
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
+		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
+		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */,
 				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
 				F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */,
 				F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */,
@@ -141,6 +144,7 @@
 		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0D02F6F1920B76B005F3422 /* AVFoundation.framework */,
 				F0B2DADB191A33BE00226963 /* FFEF.framework */,
 				F0688B94190CF1AA00E933F8 /* Foundation.framework */,
 				F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */,
