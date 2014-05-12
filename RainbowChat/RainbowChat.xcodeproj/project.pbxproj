@@ -36,6 +36,9 @@
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
+		F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */; };
+		F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */; };
+		F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +93,8 @@
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F0FCCCCB192116B300B9CF7D /* RCCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCamPreviewView.h; sourceTree = "<group>"; };
+		F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCamPreviewView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
+				F0FCCCCB192116B300B9CF7D /* RCCamPreviewView.h */,
+				F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -410,6 +417,7 @@
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
+				F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */,
 				F0D02F6D19209704005F3422 /* RCUser.m in Sources */,
@@ -424,7 +432,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
+				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
 				F0D02F6E19209704005F3422 /* RCUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,6 +7,12 @@
 //
 
 #import "RCDetailViewController.h"
+#import "RCCamPreviewView.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+
+static void * CapturingStillImageContext = &CapturingStillImageContext;
+static void * RecordingContext = &RecordingContext;
 
 @class ToUserCell;
 @class CurrentUserCell;
@@ -24,7 +30,8 @@
 @interface CurrentUserCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *userProfilePicture;
 @property (weak, nonatomic) IBOutlet UIView *videoView;
-@property (weak, nonatomic) IBOutlet UIView *videoPreview;
+@property (weak, nonatomic) IBOutlet RCCamPreviewView *videoPreview;
+
 @end
 
 @implementation CurrentUserCell
@@ -32,20 +39,39 @@
 @end
 
 
-@interface RCDetailViewController ()
+@interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
+
 - (void)configureView;
+
+// Session Management
+@property (nonatomic) dispatch_queue_t sessionQueue;
+@property (nonatomic) AVCaptureSession *session;
+@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
+@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
+@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
+
+#warning - Need to implement these properties
+// Utilities.
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
+@property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
+@property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
+@property (nonatomic) BOOL lockInterfaceRotation;
+@property (nonatomic) id runtimeErrorHandlingObserver;
+
 @end
 
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
     NSMutableArray *chats; // every chat contains one movie controller
-    BOOL isRecording;
+//    BOOL isRecording;
     BOOL isFrontCamera;
 }
 
-#pragma mark - Managing the detail item
+#pragma mark - View life cycle
 
 - (void)setToUser:(RCUser *)toUser {
     if (_toUser != toUser) {
@@ -61,6 +87,17 @@
     if (_toUser) {
         self.title = _toUser.firstName;
     }
+    
+    // Create the AVCaptureSession
+    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    [self setSession:session];
+    self.session.sessionPreset = AVCaptureSessionPresetLow;
+    self.captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    [self.captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+    // Set up session queue
+    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+	[self setSessionQueue:sessionQueue];
 }
 
 
@@ -71,9 +108,37 @@
     
     [self configureView];
     
-    isRecording = NO;
     isFrontCamera = YES;
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    dispatch_async(self.sessionQueue, ^{
+        
+        [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
+        [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
+        
+        __weak RCDetailViewController *weakSelf = self;
+		[self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
+			RCDetailViewController *strongSelf = weakSelf;
+			dispatch_async(strongSelf.sessionQueue, ^{
+				// Manually restarting the session since it must have been stopped due to an error.
+				[strongSelf.session startRunning];
+			});
+		}]];
+		[[self session] startRunning];
+    });
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	dispatch_async([self sessionQueue], ^{
+		[self.session stopRunning];
+		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
+		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+	});
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -81,11 +146,26 @@
 }
 
 - (IBAction)recordButtonPushed:(id)sender {
-    if (isRecording) {
-        [self stopRecord];
-    } else {
-        [self startRecord];
-    }
+    
+    [self.recordButton setEnabled:NO];
+    
+    dispatch_async(self.sessionQueue, ^{
+        if (![self.movieFileOutput isRecording]) {
+            if ([[UIDevice currentDevice] isMultitaskingSupported]) {
+                // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
+                [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
+            }
+            
+            // Turning OFF flash for video recording
+#warning - Need to implement
+            
+            // Start recording to a temporary file
+            NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview" stringByAppendingPathExtension:@"mov"]];
+            [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+        } else {
+            [self.movieFileOutput stopRecording];
+        }
+    });
 }
 
 #pragma mark - AVFoundation
@@ -94,32 +174,19 @@
     DBGMSG(@"%s", __func__);
     cell.videoView.hidden = YES;
     
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    session.sessionPreset = AVCaptureSessionPresetLow;
+    self.captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
+    [cell.videoPreview.layer addSublayer:self.captureVideoPreviewLayer];
     
-    AVCaptureVideoPreviewLayer *captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
-    [cell.videoPreview.layer addSublayer:captureVideoPreviewLayer];
-    
-    UIView *view = [cell videoPreview];
-    CALayer *viewLayer = [view layer];
-    [viewLayer setMasksToBounds:YES];
-    
-    CGRect bounds = [view bounds];
-    [captureVideoPreviewLayer setFrame:bounds];
+    [cell.videoPreview.layer setMasksToBounds:YES];
+
     
     NSArray *devices = [AVCaptureDevice devices];
     AVCaptureDevice *frontCamera;
     AVCaptureDevice *backCamera;
     
     for (AVCaptureDevice *device in devices) {
-        
         NSLog(@"Device name: %@", [device localizedName]);
-        
         if ([device hasMediaType:AVMediaTypeVideo]) {
-            
             if ([device position] == AVCaptureDevicePositionBack) {
                 NSLog(@"Device position : back");
                 backCamera = device;
@@ -131,34 +198,48 @@
         }
     }
     
+    // Set device input
+    if (self.videoDeviceInput) {
+        [self.session removeInput:self.videoDeviceInput];
+        self.videoDeviceInput = nil;
+    }
     NSError *error = nil;
     if (!isFrontCamera) {
-        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-        if (!input) {
+        self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
+        if (!self.videoDeviceInput) {
             NSLog(@"ERROR: trying to open camera: %@", error);
         }
-        [session addInput:input];
+        [self.session addInput:self.videoDeviceInput];
     } else {
-        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
-        if (!input) {
+        self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
+        if (!self.videoDeviceInput) {
             NSLog(@"ERROR: trying to open camera: %@", error);
         }
-        [session addInput:input];
+        [self.session addInput:self.videoDeviceInput];
     }
     
-    AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-    [stillImageOutput setOutputSettings:outputSettings];
+    // Init deviceOutput
+    if (!self.stillImageOutput) {
+        self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+        [self.stillImageOutput setOutputSettings:outputSettings];
+        
+        [self.session addOutput:self.stillImageOutput];
+    }
     
-    [session addOutput:stillImageOutput];
-    
-    [session startRunning];
+    if (!self.movieFileOutput) {
+        self.movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+        AVCaptureConnection *connection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+        if ([connection isVideoStabilizationSupported])
+            [connection setEnablesVideoStabilizationWhenAvailable:YES];
+        [self.session addOutput:self.movieFileOutput];
+    }
 }
+
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
     if (_cameraSwitch.isOn) {
         isFrontCamera = YES;
-//        [self initializeCamera];
         [threadTableView reloadData];
     }
     else {
@@ -166,8 +247,6 @@
         [threadTableView reloadData];
     }
 }
-
-
 
 #warning Need to implement
 - (void)startRecord {
@@ -229,6 +308,44 @@
 
 - (void)fetchFromBackend {
     chats = [NSMutableArray arrayWithObject:@{@"name": @"test name"}];
+}
+
+#pragma mark - File output delegate
+
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
+    if (error)
+		NSLog(@"%@", error);
+    
+    // Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
+	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
+	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+	
+	[[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+		if (error)
+			NSLog(@"%@", error);
+		
+		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+		
+		if (backgroundRecordingID != UIBackgroundTaskInvalid)
+			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+	}];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == RecordingContext) {
+		BOOL isRecording = [change[NSKeyValueChangeNewKey] boolValue];
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (isRecording) {
+				[self.recordButton setEnabled:YES];
+                [self.recordButton setTintColor:[UIColor redColor]];
+			}
+			else {
+				[self.recordButton setEnabled:YES];
+                [self.recordButton setTintColor:[UIColor blueColor]];
+			}
+		});
+	}
 }
 
 

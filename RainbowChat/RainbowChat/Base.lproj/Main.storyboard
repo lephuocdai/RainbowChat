@@ -173,7 +173,7 @@
                                                     <rect key="frame" x="275" y="5" width="40" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
-                                                <view contentMode="scaleToFill" id="uJB-h7-ihb">
+                                                <view contentMode="scaleToFill" id="uJB-h7-ihb" customClass="RCCamPreviewView">
                                                     <rect key="frame" x="70" y="5" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -225,6 +225,7 @@
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
                     <connections>
                         <outlet property="cameraSwitch" destination="gtv-15-4lX" id="PSf-lg-ggz"/>
+                        <outlet property="recordButton" destination="Acx-wh-gdd" id="yeV-hF-5lZ"/>
                         <outlet property="threadTableView" destination="Q1g-yP-7Om" id="Cla-Gl-OUJ"/>
                     </connections>
                 </viewController>

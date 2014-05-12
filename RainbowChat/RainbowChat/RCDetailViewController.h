@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RCUser.h"
-#import <AVFoundation/AVFoundation.h>
+
 
 @interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
