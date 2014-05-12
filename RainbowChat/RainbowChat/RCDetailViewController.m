@@ -33,6 +33,8 @@
 
 
 @interface RCDetailViewController ()
+
+@property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
 - (void)configureView;
 @end
 
@@ -40,6 +42,7 @@
     IBOutlet UITableView *threadTableView;
     NSMutableArray *chats; // every chat contains one movie controller
     BOOL isRecording;
+    BOOL isFrontCamera;
 }
 
 #pragma mark - Managing the detail item
@@ -55,10 +58,6 @@
 
 
 - (void)configureView {
-    // Update the user interface for the detail item.
-    
-    threadTableView = [[UITableView alloc] init];
-    
     if (_toUser) {
         self.title = _toUser.firstName;
     }
@@ -69,11 +68,11 @@
     [super viewDidLoad];
 	
     [self fetchFromBackend];
-
+    
     [self configureView];
     
-    isRecording = false;
-    
+    isRecording = NO;
+    isFrontCamera = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -92,6 +91,7 @@
 #pragma mark - AVFoundation
 
 - (void)initializeCameraFor:(CurrentUserCell*)cell {
+    DBGMSG(@"%s", __func__);
     cell.videoView.hidden = YES;
     
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -132,11 +132,19 @@
     }
     
     NSError *error = nil;
-    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
-    if (!input) {
-        NSLog(@"ERROR: trying to open camera: %@", error);
+    if (!isFrontCamera) {
+        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
+        if (!input) {
+            NSLog(@"ERROR: trying to open camera: %@", error);
+        }
+        [session addInput:input];
+    } else {
+        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
+        if (!input) {
+            NSLog(@"ERROR: trying to open camera: %@", error);
+        }
+        [session addInput:input];
     }
-    [session addInput:input];
     
     AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
@@ -146,6 +154,20 @@
     
     [session startRunning];
 }
+- (IBAction)switchCamera:(id)sender {
+    DBGMSG(@"%s", __func__);
+    if (_cameraSwitch.isOn) {
+        isFrontCamera = YES;
+//        [self initializeCamera];
+        [threadTableView reloadData];
+    }
+    else {
+        isFrontCamera = NO;
+        [threadTableView reloadData];
+    }
+}
+
+
 
 #warning Need to implement
 - (void)startRecord {
