@@ -39,6 +39,18 @@
 		F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */; };
 		F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */; };
 		F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */; };
+		F0FCCCD21921CAE800B9CF7D /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCD11921CAE800B9CF7D /* RCVideo.m */; };
+		F0FCCCD31921CAE800B9CF7D /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCD11921CAE800B9CF7D /* RCVideo.m */; };
+		F0FCCCD71921E97D00B9CF7D /* RCConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCD61921E97D00B9CF7D /* RCConstant.m */; };
+		F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCD61921E97D00B9CF7D /* RCConstant.m */; };
+		F0FCCCDB1921EB7D00B9CF7D /* RCUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCDA1921EB7D00B9CF7D /* RCUtility.m */; };
+		F0FCCCDC1921EB7D00B9CF7D /* RCUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCDA1921EB7D00B9CF7D /* RCUtility.m */; };
+		F0FCCCDF1921EC0C00B9CF7D /* AmazonClientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */; };
+		F0FCCCE01921EC0C00B9CF7D /* AmazonClientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */; };
+		F0FCCCE31921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */; };
+		F0FCCCE41921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */; };
+		F0FCCCE51921EC2A00B9CF7D /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */; };
+		F0FCCCE61921EC2A00B9CF7D /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +107,16 @@
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		F0FCCCCB192116B300B9CF7D /* RCCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCamPreviewView.h; sourceTree = "<group>"; };
 		F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCamPreviewView.m; sourceTree = "<group>"; };
+		F0FCCCD01921CAE800B9CF7D /* RCVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVideo.h; sourceTree = "<group>"; };
+		F0FCCCD11921CAE800B9CF7D /* RCVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVideo.m; sourceTree = "<group>"; };
+		F0FCCCD51921E97D00B9CF7D /* RCConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConstant.h; sourceTree = "<group>"; };
+		F0FCCCD61921E97D00B9CF7D /* RCConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstant.m; sourceTree = "<group>"; };
+		F0FCCCD91921EB7D00B9CF7D /* RCUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUtility.h; sourceTree = "<group>"; };
+		F0FCCCDA1921EB7D00B9CF7D /* RCUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUtility.m; sourceTree = "<group>"; };
+		F0FCCCDD1921EC0C00B9CF7D /* AmazonClientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmazonClientManager.h; sourceTree = "<group>"; };
+		F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmazonClientManager.m; sourceTree = "<group>"; };
+		F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
+		F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,11 +126,13 @@
 			files = (
 				F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */,
 				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
+				F0FCCCE51921EC2A00B9CF7D /* AWSS3.framework in Frameworks */,
 				F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */,
 				F0688B99190CF1AA00E933F8 /* UIKit.framework in Frameworks */,
 				F0B2DADC191A33BE00226963 /* FFEF.framework in Frameworks */,
 				F0688B95190CF1AA00E933F8 /* Foundation.framework in Frameworks */,
 				BE1DE700214E48528F84B761 /* libPods.a in Frameworks */,
+				F0FCCCE31921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +142,9 @@
 			files = (
 				F0688BBC190CF1AB00E933F8 /* XCTest.framework in Frameworks */,
 				F0688BBF190CF1AB00E933F8 /* CoreData.framework in Frameworks */,
+				F0FCCCE61921EC2A00B9CF7D /* AWSS3.framework in Frameworks */,
 				F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */,
+				F0FCCCE41921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */,
 				F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,6 +175,8 @@
 		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */,
+				F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */,
 				F0D02F6F1920B76B005F3422 /* AVFoundation.framework */,
 				F0B2DADB191A33BE00226963 /* FFEF.framework */,
 				F0688B94190CF1AA00E933F8 /* Foundation.framework */,
@@ -212,6 +240,8 @@
 			children = (
 				F0D02F6B19209704005F3422 /* RCUser.h */,
 				F0D02F6C19209704005F3422 /* RCUser.m */,
+				F0FCCCD01921CAE800B9CF7D /* RCVideo.h */,
+				F0FCCCD11921CAE800B9CF7D /* RCVideo.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -238,8 +268,14 @@
 		F0B2DADD191A39F800226963 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				F0FCCCDD1921EC0C00B9CF7D /* AmazonClientManager.h */,
+				F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */,
 				F0B2DADE191A3A1300226963 /* RCFatFractal.h */,
 				F0B2DADF191A3A1300226963 /* RCFatFractal.m */,
+				F0FCCCD51921E97D00B9CF7D /* RCConstant.h */,
+				F0FCCCD61921E97D00B9CF7D /* RCConstant.m */,
+				F0FCCCD91921EB7D00B9CF7D /* RCUtility.h */,
+				F0FCCCDA1921EB7D00B9CF7D /* RCUtility.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -416,15 +452,19 @@
 				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
+				F0FCCCDF1921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
 				F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */,
 				F0D02F6D19209704005F3422 /* RCUser.m in Sources */,
 				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
+				F0FCCCD71921E97D00B9CF7D /* RCConstant.m in Sources */,
+				F0FCCCD21921CAE800B9CF7D /* RCVideo.m in Sources */,
 				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
 				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
+				F0FCCCDB1921EB7D00B9CF7D /* RCUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,9 +472,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FCCCE01921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
+				F0FCCCDC1921EB7D00B9CF7D /* RCUtility.m in Sources */,
 				F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
+				F0FCCCD31921CAE800B9CF7D /* RCVideo.m in Sources */,
+				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
 				F0D02F6E19209704005F3422 /* RCUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -591,6 +635,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
@@ -613,6 +658,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";

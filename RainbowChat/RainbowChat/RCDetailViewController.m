@@ -10,6 +10,7 @@
 #import "RCCamPreviewView.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "RCVideo.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
@@ -162,6 +163,8 @@ static void * RecordingContext = &RecordingContext;
             // Start recording to a temporary file
             NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview" stringByAppendingPathExtension:@"mov"]];
             [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+            
+            
         } else {
             [self.movieFileOutput stopRecording];
         }
@@ -310,7 +313,7 @@ static void * RecordingContext = &RecordingContext;
     chats = [NSMutableArray arrayWithObject:@{@"name": @"test name"}];
 }
 
-#pragma mark - File output delegate
+#pragma mark - AVCaptureFileOutput delegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
     if (error)
@@ -319,16 +322,34 @@ static void * RecordingContext = &RecordingContext;
     // Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
 	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
 	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-	
-	[[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-		if (error)
-			NSLog(@"%@", error);
+    
+    RCVideo *newVideo = [[RCVideo alloc] init];
+//    newVideo.data = [NSData dataWithContentsOfURL:outputFileURL];
+    newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
+    newVideo.toUser = self.toUser;
+#warning - Need to send to AWS first
+    newVideo.url = [NSString stringWithContentsOfURL:outputFileURL encoding:NSStringEncodingConversionAllowLossy error:nil];
+    
+    [[FatFractal main] createObj:newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        if (theErr)
+			NSLog(@"%@", theErr);
 		
 		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
 		
 		if (backgroundRecordingID != UIBackgroundTaskInvalid)
 			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-	}];
+    }];
+    
+	
+//	[[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+//		if (error)
+//			NSLog(@"%@", error);
+//		
+//		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+//		
+//		if (backgroundRecordingID != UIBackgroundTaskInvalid)
+//			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+//	}];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

@@ -7,6 +7,10 @@
 # Pods/
 
 
+/AnonymousTVM/
+/RainbowChat/RainbowChat/RCConstant.m
+
+
 Xcode
 .DS_Store
 build/
