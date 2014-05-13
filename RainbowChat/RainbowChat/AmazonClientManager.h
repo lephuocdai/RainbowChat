@@ -13,7 +13,7 @@
 
 #import "AmazonKeyChainWrapper.h"
 #import "AmazonTVMClient.h"
-#import "Constants.h"
+#import "RCConstant.h"
 #import "Response.h"
 
 @interface AmazonClientManager : NSObject {

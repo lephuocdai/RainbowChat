@@ -51,6 +51,30 @@
 		F0FCCCE41921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */; };
 		F0FCCCE51921EC2A00B9CF7D /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */; };
 		F0FCCCE61921EC2A00B9CF7D /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */; };
+		F0FCCD001921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCE91921FB6500B9CF7D /* AmazonKeyChainWrapper.m */; };
+		F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCE91921FB6500B9CF7D /* AmazonKeyChainWrapper.m */; };
+		F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCEB1921FB6500B9CF7D /* AmazonTVMClient.m */; };
+		F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCEB1921FB6500B9CF7D /* AmazonTVMClient.m */; };
+		F0FCCD041921FB6500B9CF7D /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCED1921FB6500B9CF7D /* Crypto.m */; };
+		F0FCCD051921FB6500B9CF7D /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCED1921FB6500B9CF7D /* Crypto.m */; };
+		F0FCCD061921FB6500B9CF7D /* GetTokenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCEF1921FB6500B9CF7D /* GetTokenRequest.m */; };
+		F0FCCD071921FB6500B9CF7D /* GetTokenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCEF1921FB6500B9CF7D /* GetTokenRequest.m */; };
+		F0FCCD081921FB6500B9CF7D /* GetTokenResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF11921FB6500B9CF7D /* GetTokenResponse.m */; };
+		F0FCCD091921FB6500B9CF7D /* GetTokenResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF11921FB6500B9CF7D /* GetTokenResponse.m */; };
+		F0FCCD0A1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF31921FB6500B9CF7D /* GetTokenResponseHandler.m */; };
+		F0FCCD0B1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF31921FB6500B9CF7D /* GetTokenResponseHandler.m */; };
+		F0FCCD0C1921FB6500B9CF7D /* JSONUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */; };
+		F0FCCD0D1921FB6500B9CF7D /* JSONUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */; };
+		F0FCCD0E1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */; };
+		F0FCCD0F1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */; };
+		F0FCCD101921FB6500B9CF7D /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* Request.m */; };
+		F0FCCD111921FB6500B9CF7D /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* Request.m */; };
+		F0FCCD121921FB6500B9CF7D /* RequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */; };
+		F0FCCD131921FB6500B9CF7D /* RequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */; };
+		F0FCCD141921FB6500B9CF7D /* Response.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFD1921FB6500B9CF7D /* Response.m */; };
+		F0FCCD151921FB6500B9CF7D /* Response.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFD1921FB6500B9CF7D /* Response.m */; };
+		F0FCCD161921FB6500B9CF7D /* ResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFF1921FB6500B9CF7D /* ResponseHandler.m */; };
+		F0FCCD171921FB6500B9CF7D /* ResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFF1921FB6500B9CF7D /* ResponseHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +141,30 @@
 		F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmazonClientManager.m; sourceTree = "<group>"; };
 		F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
 		F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
+		F0FCCCE81921FB6500B9CF7D /* AmazonKeyChainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmazonKeyChainWrapper.h; sourceTree = "<group>"; };
+		F0FCCCE91921FB6500B9CF7D /* AmazonKeyChainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmazonKeyChainWrapper.m; sourceTree = "<group>"; };
+		F0FCCCEA1921FB6500B9CF7D /* AmazonTVMClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmazonTVMClient.h; sourceTree = "<group>"; };
+		F0FCCCEB1921FB6500B9CF7D /* AmazonTVMClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AmazonTVMClient.m; sourceTree = "<group>"; };
+		F0FCCCEC1921FB6500B9CF7D /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
+		F0FCCCED1921FB6500B9CF7D /* Crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Crypto.m; sourceTree = "<group>"; };
+		F0FCCCEE1921FB6500B9CF7D /* GetTokenRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTokenRequest.h; sourceTree = "<group>"; };
+		F0FCCCEF1921FB6500B9CF7D /* GetTokenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTokenRequest.m; sourceTree = "<group>"; };
+		F0FCCCF01921FB6500B9CF7D /* GetTokenResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTokenResponse.h; sourceTree = "<group>"; };
+		F0FCCCF11921FB6500B9CF7D /* GetTokenResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTokenResponse.m; sourceTree = "<group>"; };
+		F0FCCCF21921FB6500B9CF7D /* GetTokenResponseHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTokenResponseHandler.h; sourceTree = "<group>"; };
+		F0FCCCF31921FB6500B9CF7D /* GetTokenResponseHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTokenResponseHandler.m; sourceTree = "<group>"; };
+		F0FCCCF41921FB6500B9CF7D /* JSONUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONUtilities.h; sourceTree = "<group>"; };
+		F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONUtilities.m; sourceTree = "<group>"; };
+		F0FCCCF61921FB6500B9CF7D /* RegisterDeviceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterDeviceRequest.h; sourceTree = "<group>"; };
+		F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterDeviceRequest.m; sourceTree = "<group>"; };
+		F0FCCCF81921FB6500B9CF7D /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
+		F0FCCCF91921FB6500B9CF7D /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = "<group>"; };
+		F0FCCCFA1921FB6500B9CF7D /* RequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestDelegate.h; sourceTree = "<group>"; };
+		F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestDelegate.m; sourceTree = "<group>"; };
+		F0FCCCFC1921FB6500B9CF7D /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
+		F0FCCCFD1921FB6500B9CF7D /* Response.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Response.m; sourceTree = "<group>"; };
+		F0FCCCFE1921FB6500B9CF7D /* ResponseHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseHandler.h; sourceTree = "<group>"; };
+		F0FCCCFF1921FB6500B9CF7D /* ResponseHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +316,7 @@
 		F0B2DADD191A39F800226963 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				F0FCCCE71921FB5000B9CF7D /* TVM */,
 				F0FCCCDD1921EC0C00B9CF7D /* AmazonClientManager.h */,
 				F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */,
 				F0B2DADE191A3A1300226963 /* RCFatFractal.h */,
@@ -313,6 +362,37 @@
 				F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */,
 			);
 			name = External;
+			sourceTree = "<group>";
+		};
+		F0FCCCE71921FB5000B9CF7D /* TVM */ = {
+			isa = PBXGroup;
+			children = (
+				F0FCCCE81921FB6500B9CF7D /* AmazonKeyChainWrapper.h */,
+				F0FCCCE91921FB6500B9CF7D /* AmazonKeyChainWrapper.m */,
+				F0FCCCEA1921FB6500B9CF7D /* AmazonTVMClient.h */,
+				F0FCCCEB1921FB6500B9CF7D /* AmazonTVMClient.m */,
+				F0FCCCEC1921FB6500B9CF7D /* Crypto.h */,
+				F0FCCCED1921FB6500B9CF7D /* Crypto.m */,
+				F0FCCCEE1921FB6500B9CF7D /* GetTokenRequest.h */,
+				F0FCCCEF1921FB6500B9CF7D /* GetTokenRequest.m */,
+				F0FCCCF01921FB6500B9CF7D /* GetTokenResponse.h */,
+				F0FCCCF11921FB6500B9CF7D /* GetTokenResponse.m */,
+				F0FCCCF21921FB6500B9CF7D /* GetTokenResponseHandler.h */,
+				F0FCCCF31921FB6500B9CF7D /* GetTokenResponseHandler.m */,
+				F0FCCCF41921FB6500B9CF7D /* JSONUtilities.h */,
+				F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */,
+				F0FCCCF61921FB6500B9CF7D /* RegisterDeviceRequest.h */,
+				F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */,
+				F0FCCCF81921FB6500B9CF7D /* Request.h */,
+				F0FCCCF91921FB6500B9CF7D /* Request.m */,
+				F0FCCCFA1921FB6500B9CF7D /* RequestDelegate.h */,
+				F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */,
+				F0FCCCFC1921FB6500B9CF7D /* Response.h */,
+				F0FCCCFD1921FB6500B9CF7D /* Response.m */,
+				F0FCCCFE1921FB6500B9CF7D /* ResponseHandler.h */,
+				F0FCCCFF1921FB6500B9CF7D /* ResponseHandler.m */,
+			);
+			name = TVM;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -448,11 +528,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FCCD0C1921FB6500B9CF7D /* JSONUtilities.m in Sources */,
+				F0FCCD041921FB6500B9CF7D /* Crypto.m in Sources */,
+				F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
 				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
 				F0FCCCDF1921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
+				F0FCCD161921FB6500B9CF7D /* ResponseHandler.m in Sources */,
+				F0FCCD001921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
 				F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
@@ -460,9 +545,16 @@
 				F0D02F6D19209704005F3422 /* RCUser.m in Sources */,
 				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
 				F0FCCCD71921E97D00B9CF7D /* RCConstant.m in Sources */,
+				F0FCCD141921FB6500B9CF7D /* Response.m in Sources */,
+				F0FCCD0E1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */,
+				F0FCCD0A1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
 				F0FCCCD21921CAE800B9CF7D /* RCVideo.m in Sources */,
+				F0FCCD061921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
+				F0FCCD121921FB6500B9CF7D /* RequestDelegate.m in Sources */,
 				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
+				F0FCCD101921FB6500B9CF7D /* Request.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
+				F0FCCD081921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
 				F0FCCCDB1921EB7D00B9CF7D /* RCUtility.m in Sources */,
 			);
@@ -472,13 +564,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0FCCD0F1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */,
+				F0FCCD0D1921FB6500B9CF7D /* JSONUtilities.m in Sources */,
+				F0FCCD131921FB6500B9CF7D /* RequestDelegate.m in Sources */,
 				F0FCCCE01921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
 				F0FCCCDC1921EB7D00B9CF7D /* RCUtility.m in Sources */,
+				F0FCCD171921FB6500B9CF7D /* ResponseHandler.m in Sources */,
+				F0FCCD0B1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
+				F0FCCD051921FB6500B9CF7D /* Crypto.m in Sources */,
+				F0FCCD111921FB6500B9CF7D /* Request.m in Sources */,
+				F0FCCD091921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
+				F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
+				F0FCCD151921FB6500B9CF7D /* Response.m in Sources */,
 				F0FCCCD31921CAE800B9CF7D /* RCVideo.m in Sources */,
 				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
+				F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
+				F0FCCD071921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
 				F0D02F6E19209704005F3422 /* RCUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

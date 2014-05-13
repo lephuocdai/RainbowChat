@@ -20,12 +20,12 @@ static AmazonTVMClient      *tvm = nil;
 
 +(AmazonTVMClient *)tvm {
     if (tvm == nil)
-        tvm = [[AmazonTVMClient alloc] initWithEndpoint:[Constants TVM_URL] useSSL:[Constants USE_SSL]];
+        tvm = [[AmazonTVMClient alloc] initWithEndpoint:[RCConstant TVM_URL] useSSL:[RCConstant USE_SSL]];
     return tvm;
 }
 
 +(bool)hasCredentials {
-    return ![[Constants TVM_URL] isEqualToString:@"CHANGE ME"];
+    return ![[RCConstant TVM_URL] isEqualToString:@"CHANGE ME"];
 }
 
 +(Response *)validateCredentials {

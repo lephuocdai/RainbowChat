@@ -328,7 +328,8 @@ static void * RecordingContext = &RecordingContext;
     newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
     newVideo.toUser = self.toUser;
 #warning - Need to send to AWS first
-    newVideo.url = [NSString stringWithContentsOfURL:outputFileURL encoding:NSStringEncodingConversionAllowLossy error:nil];
+//    newVideo.url = [NSString stringWithContentsOfURL:outputFileURL encoding:NSStringEncodingConversionAllowLossy error:nil];
+    newVideo.url = @"Test";
     
     [[FatFractal main] createObj:newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr)
