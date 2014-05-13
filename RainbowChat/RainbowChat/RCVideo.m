@@ -10,6 +10,6 @@
 
 @implementation RCVideo
 
-@synthesize url, data, fromUser, toUser;
+@synthesize url, data, fromUser, toUser, users;
 
 @end

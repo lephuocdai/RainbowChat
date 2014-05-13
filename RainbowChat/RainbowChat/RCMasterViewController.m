@@ -17,7 +17,7 @@
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
-@property (nonatomic) NSNumber *lastRefreshTime;
+//@property (nonatomic) NSNumber *lastRefreshTime;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
@@ -200,7 +200,7 @@
         _friends = nil;
     }
     
-    // Load from back end
+    // Load from backend
     NSString *uri = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
     _friends = [NSMutableArray array];
     [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];

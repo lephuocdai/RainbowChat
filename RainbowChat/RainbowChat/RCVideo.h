@@ -16,5 +16,6 @@
 @property (strong, nonatomic) NSData *data;
 @property (strong, nonatomic) RCUser *fromUser;
 @property (strong, nonatomic) RCUser *toUser;
+@property (strong, nonatomic) NSArray *users;
 
 @end

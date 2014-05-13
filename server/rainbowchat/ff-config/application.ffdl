@@ -2,11 +2,13 @@
 # Application configuration
 #
 SET ActivateUsersOnReg          true
-SET AllowAutoRegistration       false
+SET AllowAnonymousGets 			true
+SET AllowAutoRegistration       true
 SET AllowNewCollections         true
 SET AllowNewObjectTypes         true
 SET AllowNewMembers             true
 SET AllowSystemUserToLogin      true
+SET AllowInsecureAuth 			true
 SET AndroidPushAuthToken        YOUR_ANDROID_AUTH_TOKEN_GOES_HERE
 SET ApplePushKeystorePassword   YOUR_KEYSTORE_PASSWORD_GOES_HERE
 SET ApplePushUsingProduction    false
@@ -23,7 +25,7 @@ CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, em
 CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
 CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
-CREATE OBJECTTYPE RCVideo (url STRING, data BYTEARRAY, fromUser REFERENCE /FFUser, toUser REFERENCE /FFUser)
+CREATE OBJECTTYPE RCVideo (url STRING, data BYTEARRAY, fromUser REFERENCE /FFUser, toUser REFERENCE /FFUser, users GRABBAG /FFUser, userNameList STRING[])
 
 
 #
@@ -41,3 +43,7 @@ CREATE COLLECTION /RCVideo OBJECTTYPE RCVideo
 #
 # Extension Resources
 #
+
+CREATE EXTENSION /getVideos UNSECURED AS javascript:require('scripts/GetVideosExtensions.js').getVideos();
+
+

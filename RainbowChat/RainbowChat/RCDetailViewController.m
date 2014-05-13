@@ -42,6 +42,10 @@ static void * RecordingContext = &RecordingContext;
 
 @interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
 
+@property (strong, nonatomic) RCUser *currentUser;
+@property (nonatomic) NSMutableArray *videos;
+//@property (nonatomic) NSNumber *lastRefreshTime;
+
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
 
@@ -109,6 +113,8 @@ static void * RecordingContext = &RecordingContext;
     
     [self configureView];
     
+    [self refresh];
+    
     isFrontCamera = YES;
 }
 
@@ -170,6 +176,42 @@ static void * RecordingContext = &RecordingContext;
         }
     });
 }
+
+#pragma mark - Public methods
+- (void)refresh {
+    DBGMSG(@"%s", __func__);
+    if ([[FatFractal main] loggedInUser]) {
+        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+        [self refreshTableAndLoadData];
+    }
+}
+
+- (void)refreshTableAndLoadData {
+    DBGMSG(@"%s", __func__);
+    // Clean videos array
+    if (_videos) {
+        [_videos removeAllObjects];
+        _videos = nil;
+    }
+//    __block BOOL blockComplete = NO;
+    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",self.currentUser.guid, self.toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+//        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
+        if (theObj) {
+            _videos = (NSMutableArray*)theObj;
+            NSLog(@"Videos = %@", _videos);
+        }
+//        STAssertTrue([conversations count] == 1, @"Expected 1 conversation, got %d", [conversations count]);
+//        NSLog(@"Conversations: \n%@", conversations);
+//        blockComplete = YES;
+        
+    }];
+//    while (!blockComplete) {
+//        NSDate* cycle = [NSDate dateWithTimeIntervalSinceNow:0.001];
+//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+//                                 beforeDate:cycle];
+//    }
+}
+
 
 #pragma mark - AVFoundation
 
@@ -327,9 +369,9 @@ static void * RecordingContext = &RecordingContext;
 //    newVideo.data = [NSData dataWithContentsOfURL:outputFileURL];
     newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
     newVideo.toUser = self.toUser;
+//    newVideo.users = [NSArray arrayWithObjects:newVideo.fromUser, newVideo.toUser, nil];
 #warning - Need to send to AWS first
-//    newVideo.url = [NSString stringWithContentsOfURL:outputFileURL encoding:NSStringEncodingConversionAllowLossy error:nil];
-    newVideo.url = @"Test";
+    newVideo.url = [NSString stringWithFormat:@"%@", [NSDate date]];
     
     [[FatFractal main] createObj:newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr)
@@ -339,6 +381,11 @@ static void * RecordingContext = &RecordingContext;
 		
 		if (backgroundRecordingID != UIBackgroundTaskInvalid)
 			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+        NSError *error = nil;
+        [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
+        [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
+        if (error)
+            NSLog(@"Add grabbag error %@", error);
     }];
     
 	
