@@ -10,10 +10,13 @@
 #import "RCCamPreviewView.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "RCVideo.h"
 #import "RCUtility.h"
 #import "RCConstant.h"
 #import <AWSRuntime/AWSRuntime.h>
+#import <AWSS3/AWSS3.h>
+#import "AmazonClientManager.h"
 #import "MBProgressHUD.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
@@ -49,6 +52,8 @@ static void * RecordingContext = &RecordingContext;
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *videos;
+@property (nonatomic) NSMutableArray *videoURLs;
+@property (nonatomic) NSMutableArray *movieControllers;
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 //@property (nonatomic) NSNumber *lastRefreshTime;
 
@@ -124,6 +129,9 @@ static void * RecordingContext = &RecordingContext;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    DBGMSG(@"%s", __func__);
+    [super viewWillDisappear:animated];
+    
     dispatch_async(self.sessionQueue, ^{
         
         [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
@@ -141,12 +149,19 @@ static void * RecordingContext = &RecordingContext;
     });
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
+    DBGMSG(@"%s", __func__);
+    [super viewWillDisappear:animated];
 	dispatch_async([self sessionQueue], ^{
 		[self.session stopRunning];
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
+        
+        for (MPMoviePlayerController *movieController in _movieControllers) {
+            [movieController stop];
+            [movieController.view removeFromSuperview];
+        }
+        _movieControllers = nil;
 	});
 }
 
@@ -173,6 +188,12 @@ static void * RecordingContext = &RecordingContext;
             
             // Start recording to a temporary file
             NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview" stringByAppendingPathExtension:@"mov"]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:outputFilePath]) {
+                NSError *error;
+                if ([[NSFileManager defaultManager] removeItemAtPath:outputFilePath error:&error] == NO) {
+                    NSLog(@"removeItemAtPath %@ error:%@", outputFilePath, error);
+                }
+            }
             [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
             
             
@@ -194,9 +215,13 @@ static void * RecordingContext = &RecordingContext;
 - (void)refreshTableAndLoadData {
     DBGMSG(@"%s", __func__);
     // Clean videos array
-    if (_videos) {
+    if (_videos || _videoURLs || _movieControllers) {
         [_videos removeAllObjects];
         _videos = nil;
+        [_videoURLs removeAllObjects];
+        _videoURLs = nil;
+        [_movieControllers removeAllObjects];
+        _movieControllers = nil;
     }
     [self fetchFromBackend];
 }
@@ -332,11 +357,46 @@ static void * RecordingContext = &RecordingContext;
         if (isCurrentUser) {
             CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             cell.videoPreview.hidden = YES;
+            cell.videoView.hidden = NO;
             cell.userNameLabel.text = videoForCell.fromUser.firstName;
+            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
+            cellMovieController.contentURL = _videoURLs[indexPath.row];
+            cellMovieController.view.frame = cell.videoView.bounds;
+            [cell.videoView addSubview:cellMovieController.view];
+            
+            // Using the Movie Player Notifications
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
+            
+            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
+            cellMovieController.shouldAutoplay = YES;
+            cellMovieController.repeatMode = NO;
+            [cellMovieController prepareToPlay];
+//            [cellMovieController play];
+            [_movieControllers addObject:cellMovieController];
+            
             return cell;
         } else {
             ToUserCell *cell = (ToUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            cell.videoView.hidden = NO;
             cell.userNameLabel.text = videoForCell.fromUser.firstName;
+            
+            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
+            cellMovieController.contentURL = _videoURLs[indexPath.row];
+            cellMovieController.view.frame = cell.videoView.bounds;
+            [cell.videoView addSubview:cellMovieController.view];
+            
+            // Using the Movie Player Notifications
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
+            
+            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
+            cellMovieController.shouldAutoplay = YES;
+            cellMovieController.repeatMode = NO;
+            [cellMovieController prepareToPlay];
+            [cellMovieController play];
+            
+            [_movieControllers addObject:cellMovieController];
             return cell;
         }
     }
@@ -357,7 +417,13 @@ static void * RecordingContext = &RecordingContext;
         //        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
-            NSLog(@"Videos = %@", _videos);
+            _videoURLs = [[NSMutableArray alloc] init];
+            _movieControllers = [[NSMutableArray alloc] init];
+            
+            for (RCVideo *video in _videos) {
+                [_videoURLs addObject:[self s3URLForVideo:video]];
+            }
+            NSLog(@"Videos = %@ \n videoURLs = %@", _videos, _videoURLs);
             [threadTableView reloadData];
         }
         /*
@@ -378,20 +444,64 @@ static void * RecordingContext = &RecordingContext;
 #pragma mark - AVCaptureFileOutput delegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)anOutputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
+    DBGMSG(@"%s - %@", __func__, anOutputFileURL);
     if (error)
 		NSLog(@"%@", error);
     
     // Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
-	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
-	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+//	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
+//	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
     
-    _newVideo = [[RCVideo alloc] init];
-    _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
-    _newVideo.toUser = self.toUser;
-    _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+//    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+//    NSString* outputPath = [docFolder stringByAppendingPathComponent:@"output2.mov"];
+    NSString *outputPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview2" stringByAppendingPathExtension:@"mov"]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath])
+        [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+    
+    // input file
+    AVAsset* asset = [AVAsset assetWithURL:anOutputFileURL];
+    
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    [composition  addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+    
+    // input clip
+    AVAssetTrack *clipVideoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+    
+    // make it square
+    AVMutableVideoComposition* videoComposition = [AVMutableVideoComposition videoComposition];
+    videoComposition.renderSize = CGSizeMake(clipVideoTrack.naturalSize.height, clipVideoTrack.naturalSize.height);
+    videoComposition.frameDuration = CMTimeMake(1, 30);
+    
+    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30) );
+    
+    // rotate to portrait
+    AVMutableVideoCompositionLayerInstruction* transformer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:clipVideoTrack];
+    CGAffineTransform t1 = CGAffineTransformMakeTranslation(clipVideoTrack.naturalSize.height, -(clipVideoTrack.naturalSize.width - clipVideoTrack.naturalSize.height) /2 );
+    CGAffineTransform t2 = CGAffineTransformRotate(t1, M_PI_2);
+    
+    CGAffineTransform finalTransform = t2;
+    [transformer setTransform:finalTransform atTime:kCMTimeZero];
+    instruction.layerInstructions = [NSArray arrayWithObject:transformer];
+    videoComposition.instructions = [NSArray arrayWithObject: instruction];
+    
+    // export
+    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality] ;
+    exporter.videoComposition = videoComposition;
+    exporter.outputURL=[NSURL fileURLWithPath:outputPath];
+    exporter.outputFileType=AVFileTypeQuickTimeMovie;
+    
+    [exporter exportAsynchronouslyWithCompletionHandler:^(void){
+        NSLog(@"Exporting done!");
+        outputFileURL = exporter.outputURL;
+        _newVideo = [[RCVideo alloc] init];
+        _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
+        _newVideo.toUser = self.toUser;
+        _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
 #warning - Need to send to AWS first
-    outputFileURL = anOutputFileURL;
-    [RCUtility putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+        [RCUtility putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+    }];
+    
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -413,6 +523,36 @@ static void * RecordingContext = &RecordingContext;
 
 #pragma mark - AmazonServiceRequest delegate
 
+- (NSURL*)s3URLForVideo:(RCVideo*)video {
+    DBGMSG(@"%s", __func__);
+    // Init connection with S3Client
+    AmazonS3Client *s3Client = [AmazonClientManager s3];
+    @try {
+        // Set the content type so that the browser will treat the URL as an image.
+        S3ResponseHeaderOverrides *override = [[S3ResponseHeaderOverrides alloc] init];
+        override.contentType = @" ";
+        // Request a pre-signed URL to picture that has been uploaded.
+        S3GetPreSignedURLRequest *gpsur = [[S3GetPreSignedURLRequest alloc] init];
+        // Video name
+        gpsur.key = [NSString stringWithFormat:@"%@", video.url];
+        //bucket name
+        gpsur.bucket  = [RCConstant transferManagerBucket];
+        // Added an hour's worth of seconds to the current time.
+        gpsur.expires = [NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval) 3600];
+        
+        gpsur.responseHeaderOverrides = override;
+        
+        // Get the URL
+        NSError *error;
+        NSURL *url = [s3Client getPreSignedURL:gpsur error:&error];
+        return url;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Cannot list S3 %@",exception);
+    }
+}
+
+
 -(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)response {
     DBGMSG(@"%s - %@", __func__, response);
 }
@@ -432,28 +572,23 @@ static void * RecordingContext = &RecordingContext;
     [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr)
 			NSLog(@"%@", theErr);
+        [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+            if (error)
+                NSLog(@"%@", error);
+            [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+            if (_backgroundRecordingID != UIBackgroundTaskInvalid)
+                [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
+        }];
 		
-		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-		
-		if (_backgroundRecordingID != UIBackgroundTaskInvalid)
-			[[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
         NSError *error = nil;
         [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
         [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
         if (error)
             NSLog(@"Add grabbag error %@", error);
     }];
-	/*
-    [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-    	if (error)
-    		NSLog(@"%@", error);
+	
     
-    	[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
     
-    	if (backgroundRecordingID != UIBackgroundTaskInvalid)
-    		[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-    }];
-     */
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
@@ -462,6 +597,18 @@ static void * RecordingContext = &RecordingContext;
 
 -(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)exception {
     DBGMSG(@"%s - %@", __func__, exception);
+}
+
+#pragma mark - Movie Player
+
+- (void)moviePlayBackDidFinish:(NSNotification *)notification {
+    DBGMSG(@"%s - %@", __func__, notification);
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+}
+
+- (void)willEnterFullScreen:(NSNotification *)notification {
+    DBGMSG(@"%s - %@", __func__, notification);
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidEnterFullscreenNotification object:nil];
 }
 
 # pragma mark - Helper

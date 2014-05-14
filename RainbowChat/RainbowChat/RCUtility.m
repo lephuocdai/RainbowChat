@@ -14,6 +14,7 @@
 @implementation RCUtility
 
 + (void)putNewVideoWithData:(NSData*)recordedVideoData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate {
+    DBGMSG(@"%s - %@", __func__, uploadFileName);
     S3PutObjectRequest *putObjectRequest = [[S3PutObjectRequest alloc] initWithKey:uploadFileName inBucket:bucket];
     putObjectRequest.data = recordedVideoData;
     putObjectRequest.delegate = delegate;
