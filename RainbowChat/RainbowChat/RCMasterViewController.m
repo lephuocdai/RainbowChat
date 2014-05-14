@@ -95,7 +95,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
 //    return [sectionInfo numberOfObjects];
-    NSLog(@"Number of row = %lu", (unsigned long)_friends.count);
     return _friends.count;
 }
 

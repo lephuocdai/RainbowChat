@@ -11,6 +11,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "RCVideo.h"
+#import "RCUtility.h"
+#import "RCConstant.h"
+#import <AWSRuntime/AWSRuntime.h>
+#import "MBProgressHUD.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
@@ -20,6 +24,7 @@ static void * RecordingContext = &RecordingContext;
 
 @interface ToUserCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *userProfilePicture;
+@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *videoView;
 @end
 
@@ -30,9 +35,9 @@ static void * RecordingContext = &RecordingContext;
 
 @interface CurrentUserCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *userProfilePicture;
+@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *videoView;
 @property (weak, nonatomic) IBOutlet RCCamPreviewView *videoPreview;
-
 @end
 
 @implementation CurrentUserCell
@@ -44,6 +49,7 @@ static void * RecordingContext = &RecordingContext;
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *videos;
+@property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 //@property (nonatomic) NSNumber *lastRefreshTime;
 
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
@@ -71,8 +77,7 @@ static void * RecordingContext = &RecordingContext;
 
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
-    NSMutableArray *chats; // every chat contains one movie controller
-//    BOOL isRecording;
+    NSURL *outputFileURL;
     BOOL isFrontCamera;
 }
 
@@ -193,23 +198,7 @@ static void * RecordingContext = &RecordingContext;
         [_videos removeAllObjects];
         _videos = nil;
     }
-//    __block BOOL blockComplete = NO;
-    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",self.currentUser.guid, self.toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-//        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
-        if (theObj) {
-            _videos = (NSMutableArray*)theObj;
-            NSLog(@"Videos = %@", _videos);
-        }
-//        STAssertTrue([conversations count] == 1, @"Expected 1 conversation, got %d", [conversations count]);
-//        NSLog(@"Conversations: \n%@", conversations);
-//        blockComplete = YES;
-        
-    }];
-//    while (!blockComplete) {
-//        NSDate* cycle = [NSDate dateWithTimeIntervalSinceNow:0.001];
-//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-//                                 beforeDate:cycle];
-//    }
+    [self fetchFromBackend];
 }
 
 
@@ -218,6 +207,7 @@ static void * RecordingContext = &RecordingContext;
 - (void)initializeCameraFor:(CurrentUserCell*)cell {
     DBGMSG(@"%s", __func__);
     cell.videoView.hidden = YES;
+    cell.userNameLabel.text = self.currentUser.firstName;
     
     self.captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
     [cell.videoPreview.layer addSublayer:self.captureVideoPreviewLayer];
@@ -314,18 +304,18 @@ static void * RecordingContext = &RecordingContext;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    DBGMSG(@"%s chats.count = %d", __func__, chats.count);
-    return chats.count;
+    DBGMSG(@"%s videos.count = %d", __func__, _videos.count);
+    return _videos.count + 1;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DBGMSG(@"%s", __func__);
-    
+    static NSString *cellIdentifier;
     // Configure last cell
-    if (indexPath.row == chats.count - 1) {
+    if (indexPath.row == _videos.count) {
         NSLog(@"Last cell");
         
-        static NSString *cellIdentifier = @"currentUserCell";
+        cellIdentifier = @"currentUserCell";
         CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         [self initializeCameraFor:cell];
@@ -334,11 +324,21 @@ static void * RecordingContext = &RecordingContext;
         
     } else {
         NSLog(@"Not last cell");
-        static NSString *cellIdentifier = @"Cell";
         
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+        RCVideo *videoForCell = _videos[indexPath.row];
+        BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:self.currentUser.guid];
+        cellIdentifier = (isCurrentUser) ? @"currentUserCell" : @"toUserCell";
         
-        return cell;
+        if (isCurrentUser) {
+            CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            cell.videoPreview.hidden = YES;
+            cell.userNameLabel.text = videoForCell.fromUser.firstName;
+            return cell;
+        } else {
+            ToUserCell *cell = (ToUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            cell.userNameLabel.text = videoForCell.fromUser.firstName;
+            return cell;
+        }
     }
 }
 
@@ -352,12 +352,32 @@ static void * RecordingContext = &RecordingContext;
 #pragma mark - Data fetch
 
 - (void)fetchFromBackend {
-    chats = [NSMutableArray arrayWithObject:@{@"name": @"test name"}];
+    //    __block BOOL blockComplete = NO;
+    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",self.currentUser.guid, self.toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        //        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
+        if (theObj) {
+            _videos = (NSMutableArray*)theObj;
+            NSLog(@"Videos = %@", _videos);
+            [threadTableView reloadData];
+        }
+        /*
+        STAssertTrue([conversations count] == 1, @"Expected 1 conversation, got %d", [conversations count]);
+        NSLog(@"Conversations: \n%@", conversations);
+        blockComplete = YES;
+        */
+    }];
+    /*
+    while (!blockComplete) {
+        NSDate* cycle = [NSDate dateWithTimeIntervalSinceNow:0.001];
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:cycle];
+    }
+     */
 }
 
 #pragma mark - AVCaptureFileOutput delegate
 
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)anOutputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
     if (error)
 		NSLog(@"%@", error);
     
@@ -365,39 +385,13 @@ static void * RecordingContext = &RecordingContext;
 	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
 	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
     
-    RCVideo *newVideo = [[RCVideo alloc] init];
-//    newVideo.data = [NSData dataWithContentsOfURL:outputFileURL];
-    newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
-    newVideo.toUser = self.toUser;
-//    newVideo.users = [NSArray arrayWithObjects:newVideo.fromUser, newVideo.toUser, nil];
+    _newVideo = [[RCVideo alloc] init];
+    _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
+    _newVideo.toUser = self.toUser;
+    _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
 #warning - Need to send to AWS first
-    newVideo.url = [NSString stringWithFormat:@"%@", [NSDate date]];
-    
-    [[FatFractal main] createObj:newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-        if (theErr)
-			NSLog(@"%@", theErr);
-		
-		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-		
-		if (backgroundRecordingID != UIBackgroundTaskInvalid)
-			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-        NSError *error = nil;
-        [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
-        [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
-        if (error)
-            NSLog(@"Add grabbag error %@", error);
-    }];
-    
-	
-//	[[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-//		if (error)
-//			NSLog(@"%@", error);
-//		
-//		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-//		
-//		if (backgroundRecordingID != UIBackgroundTaskInvalid)
-//			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-//	}];
+    outputFileURL = anOutputFileURL;
+    [RCUtility putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -417,5 +411,68 @@ static void * RecordingContext = &RecordingContext;
 	}
 }
 
+#pragma mark - AmazonServiceRequest delegate
+
+-(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)response {
+    DBGMSG(@"%s - %@", __func__, response);
+}
+
+-(void)request:(AmazonServiceRequest *)request didSendData:(long long)bytesWritten totalBytesWritten:(long long)totalBytesWritten totalBytesExpectedToWrite:(long long)totalBytesExpectedToWrite {
+    if ([MBProgressHUD allHUDsForView:self.view].count == 0)
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    double percent = ((double)totalBytesWritten/(double)totalBytesExpectedToWrite)*100;
+    NSLog(@"totalBytesWritten = %.2f%%", percent);
+}
+
+-(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
+    DBGMSG(@"%s - %@", __func__, response);
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        if (theErr)
+			NSLog(@"%@", theErr);
+		
+		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+		
+		if (_backgroundRecordingID != UIBackgroundTaskInvalid)
+			[[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
+        NSError *error = nil;
+        [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
+        [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
+        if (error)
+            NSLog(@"Add grabbag error %@", error);
+    }];
+	/*
+    [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+    	if (error)
+    		NSLog(@"%@", error);
+    
+    	[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
+    
+    	if (backgroundRecordingID != UIBackgroundTaskInvalid)
+    		[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+    }];
+     */
+}
+
+-(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
+    DBGMSG(@"%s - %@", __func__, error);
+}
+
+-(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)exception {
+    DBGMSG(@"%s - %@", __func__, exception);
+}
+
+# pragma mark - Helper
+- (NSDateFormatter*)dateFormatter {
+    static NSDateFormatter *_dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateFormat:@"HH:mm"];
+    });
+    return _dateFormatter;
+}
 
 @end

@@ -10,4 +10,7 @@
 
 @interface RCUtility : NSObject
 
++ (void)putNewVideoWithData:(NSData*)recordedVideoData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate;
+
+
 @end

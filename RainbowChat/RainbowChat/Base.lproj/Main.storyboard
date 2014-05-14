@@ -134,16 +134,16 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="210" sectionHeaderHeight="22" sectionFooterHeight="22" id="Q1g-yP-7Om">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="230" sectionHeaderHeight="22" sectionFooterHeight="22" id="Q1g-yP-7Om">
                                 <rect key="frame" x="0.0" y="66" width="320" height="458"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="toUserCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="toUserCell" rowHeight="210" id="zc8-8x-xOp" customClass="ToUserCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="210"/>
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="toUserCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="toUserCell" rowHeight="230" id="zc8-8x-xOp" customClass="ToUserCell">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="230"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zc8-8x-xOp" id="X5r-k6-NwT">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="209"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="IUf-lv-g0w">
@@ -151,22 +151,29 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" id="3ds-wn-RC1">
-                                                    <rect key="frame" x="50" y="5" width="200" height="200"/>
+                                                    <rect key="frame" x="50" y="25" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="userName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dz2-1d-uqB">
+                                                    <rect key="frame" x="53" y="5" width="247" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="userNameLabel" destination="dz2-1d-uqB" id="JJJ-Os-xKC"/>
                                             <outlet property="userProfilePicture" destination="IUf-lv-g0w" id="sM8-Dw-ADu"/>
                                             <outlet property="videoView" destination="3ds-wn-RC1" id="WRl-km-GTh"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="currentUserCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentUserCell" rowHeight="210" id="2yZ-KH-vEP" customClass="CurrentUserCell">
-                                        <rect key="frame" x="0.0" y="232" width="320" height="210"/>
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="currentUserCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="currentUserCell" rowHeight="230" id="2yZ-KH-vEP" customClass="CurrentUserCell">
+                                        <rect key="frame" x="0.0" y="252" width="320" height="230"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2yZ-KH-vEP" id="oZr-7V-J1q">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="209"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="lxh-ap-cIg">
@@ -174,18 +181,25 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" id="uJB-h7-ihb" customClass="RCCamPreviewView">
-                                                    <rect key="frame" x="70" y="5" width="200" height="200"/>
+                                                    <rect key="frame" x="70" y="25" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" id="946-Ya-jJr">
-                                                    <rect key="frame" x="70" y="5" width="200" height="200"/>
+                                                    <rect key="frame" x="70" y="25" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="userName" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Axp-Mq-zm2">
+                                                    <rect key="frame" x="20" y="5" width="250" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="userNameLabel" destination="Axp-Mq-zm2" id="WVJ-2E-Vjb"/>
                                             <outlet property="userProfilePicture" destination="lxh-ap-cIg" id="amS-Sj-o6n"/>
                                             <outlet property="videoPreview" destination="uJB-h7-ihb" id="afW-4m-29F"/>
                                             <outlet property="videoView" destination="946-Ya-jJr" id="kow-kW-9he"/>
