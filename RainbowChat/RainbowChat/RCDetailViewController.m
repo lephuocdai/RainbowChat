@@ -67,6 +67,7 @@ static void * RecordingContext = &RecordingContext;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
 @property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
+@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
 @property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 @property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
 
@@ -106,10 +107,6 @@ static void * RecordingContext = &RecordingContext;
     // Create the AVCaptureSession
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
-    self.session.sessionPreset = AVCaptureSessionPresetLow;
-    self.captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [self.captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
     // Set up session queue
     dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
 	[self setSessionQueue:sessionQueue];
@@ -231,6 +228,13 @@ static void * RecordingContext = &RecordingContext;
 
 - (void)initializeCameraFor:(CurrentUserCell*)cell {
     DBGMSG(@"%s", __func__);
+    [self.session beginConfiguration];
+    self.session.sessionPreset = AVCaptureSessionPresetLow;
+    self.captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+    [self.captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+    
+    
     cell.videoView.hidden = YES;
     cell.userNameLabel.text = self.currentUser.firstName;
     
@@ -243,6 +247,7 @@ static void * RecordingContext = &RecordingContext;
     NSArray *devices = [AVCaptureDevice devices];
     AVCaptureDevice *frontCamera;
     AVCaptureDevice *backCamera;
+    AVCaptureDevice *audioDevice;
     
     for (AVCaptureDevice *device in devices) {
         NSLog(@"Device name: %@", [device localizedName]);
@@ -255,6 +260,8 @@ static void * RecordingContext = &RecordingContext;
                 NSLog(@"Device position : front");
                 frontCamera = device;
             }
+        } else if ([device hasMediaType:AVMediaTypeAudio]) {
+            audioDevice = device;
         }
     }
     
@@ -278,6 +285,13 @@ static void * RecordingContext = &RecordingContext;
         [self.session addInput:self.videoDeviceInput];
     }
     
+    if (self.audioDeviceInput) {
+        [self.session removeInput:self.audioDeviceInput];
+        self.audioDeviceInput = nil;
+    }
+    self.audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
+    [self.session addInput:self.audioDeviceInput];
+    
     // Init deviceOutput
     if (!self.stillImageOutput) {
         self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
@@ -294,6 +308,7 @@ static void * RecordingContext = &RecordingContext;
             [connection setEnablesVideoStabilizationWhenAvailable:YES];
         [self.session addOutput:self.movieFileOutput];
     }
+    [self.session commitConfiguration];
 }
 
 - (IBAction)switchCamera:(id)sender {
@@ -369,7 +384,7 @@ static void * RecordingContext = &RecordingContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
             
             cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-            cellMovieController.shouldAutoplay = YES;
+            cellMovieController.shouldAutoplay = NO;
             cellMovieController.repeatMode = NO;
             [cellMovieController prepareToPlay];
 //            [cellMovieController play];
@@ -391,10 +406,10 @@ static void * RecordingContext = &RecordingContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
             
             cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-            cellMovieController.shouldAutoplay = YES;
+            cellMovieController.shouldAutoplay = NO;
             cellMovieController.repeatMode = NO;
             [cellMovieController prepareToPlay];
-            [cellMovieController play];
+//            [cellMovieController play];
             
             [_movieControllers addObject:cellMovieController];
             return cell;
