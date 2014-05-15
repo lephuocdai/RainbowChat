@@ -499,7 +499,9 @@ static void * RecordingContext = &RecordingContext;
         _newVideo.toUser = self.toUser;
         _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
 #warning - Need to send to AWS first
-        [RCUtility putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+        });
     }];
     
 }
@@ -522,6 +524,18 @@ static void * RecordingContext = &RecordingContext;
 }
 
 #pragma mark - AmazonServiceRequest delegate
+
+- (void)putNewVideoWithData:(NSData*)recordedVideoData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate {
+    DBGMSG(@"%s - %@", __func__, uploadFileName);
+    S3PutObjectRequest *putObjectRequest = [[S3PutObjectRequest alloc] initWithKey:uploadFileName inBucket:bucket];
+    putObjectRequest.data = recordedVideoData;
+    putObjectRequest.delegate = delegate;
+    
+    S3PutObjectResponse *response = [[AmazonClientManager s3] putObject:putObjectRequest];
+    if (response.error != nil) {
+        DBGMSG(@"%s error = %@", __func__, response.error.description);
+    }
+}
 
 - (NSURL*)s3URLForVideo:(RCVideo*)video {
     DBGMSG(@"%s", __func__);
