@@ -22,6 +22,25 @@
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
 
+
+typedef enum {
+    UploadStateNotUpload,
+    UploadStateUploading,
+    UploadStateFinished
+} UploadState;
+
+typedef enum {
+    UploadStateThumbnailNotUpload,
+    UploadStateThumbnailStarted,
+    UploadStateThumbnailFinished
+} UploadStateThumbnail;
+
+typedef enum {
+    UploadStateVideoNotUpload,
+    UploadStateVideoStarted,
+    UploadStateVideoFinished
+} UploadStateVideo;
+
 @class ToUserCell;
 @class CurrentUserCell;
 
@@ -55,6 +74,7 @@ static void * RecordingContext = &RecordingContext;
 @property (nonatomic) NSMutableArray *videoURLs;
 @property (nonatomic) NSMutableArray *movieControllers;
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
+@property (nonatomic) AVPlayer *avPlayer;
 //@property (nonatomic) NSNumber *lastRefreshTime;
 
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
@@ -78,6 +98,10 @@ static void * RecordingContext = &RecordingContext;
 @property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
 @property (nonatomic) BOOL lockInterfaceRotation;
 @property (nonatomic) id runtimeErrorHandlingObserver;
+
+@property (nonatomic, readwrite) UploadState uploadState;
+@property (nonatomic, readwrite) UploadStateThumbnail uploadStateThumbnail;
+@property (nonatomic, readwrite) UploadStateVideo uploadStateVideo;
 
 @end
 
@@ -104,6 +128,10 @@ static void * RecordingContext = &RecordingContext;
         self.title = _toUser.firstName;
     }
     
+    // Set up AVPlayer
+    self.avPlayer = [[AVPlayer alloc] init];
+    
+    
     // Create the AVCaptureSession
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     [self setSession:session];
@@ -128,6 +156,10 @@ static void * RecordingContext = &RecordingContext;
 - (void)viewWillAppear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
+    
+    self.uploadState = UploadStateVideoNotUpload;
+    self.uploadStateThumbnail = UploadStateThumbnailNotUpload;
+    self.uploadStateVideo = UploadStateVideoNotUpload;
     
     dispatch_async(self.sessionQueue, ^{
         
@@ -509,13 +541,33 @@ static void * RecordingContext = &RecordingContext;
     [exporter exportAsynchronouslyWithCompletionHandler:^(void){
         NSLog(@"Exporting done!");
         outputFileURL = exporter.outputURL;
+        
+        // Generate thumbnail picture
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
+        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        generator.appliesPreferredTrackTransform = YES;
+        NSError *err = NULL;
+        CMTime time = CMTimeMake(1, 60);
+        CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:&err];
+        UIImage *img = [[UIImage alloc] initWithCGImage:imgRef];
+        NSData *thumbnailData = UIImagePNGRepresentation(img);
+        
+        
         _newVideo = [[RCVideo alloc] init];
         _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
         _newVideo.toUser = self.toUser;
         _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        
 #warning - Need to send to AWS first
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.uploadStateThumbnail = UploadStateThumbnailStarted;
+            self.uploadStateVideo = UploadStateVideoStarted;
+            self.uploadState = UploadStateUploading;
+            
+            [self putNewThumbNailWithData:thumbnailData fileName:_newVideo.thumbnailURL toBucket:[RCConstant transferManagerBucket] delegate:self];
             [self putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+            
         });
     }];
     
@@ -540,11 +592,25 @@ static void * RecordingContext = &RecordingContext;
 
 #pragma mark - AmazonServiceRequest delegate
 
+- (void)putNewThumbNailWithData:(NSData*)thumbnailData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate {
+    DBGMSG(@"%s - %@", __func__, uploadFileName);
+    S3PutObjectRequest *putObjectRequest = [[S3PutObjectRequest alloc] initWithKey:uploadFileName inBucket:bucket];
+    putObjectRequest.data = thumbnailData;
+    putObjectRequest.delegate = delegate;
+    putObjectRequest.requestTag = @"thumbnail";
+    
+    S3PutObjectResponse *response = [[AmazonClientManager s3] putObject:putObjectRequest];
+    if (response.error != nil) {
+        DBGMSG(@"%s error = %@", __func__, response.error.description);
+    }
+}
+
 - (void)putNewVideoWithData:(NSData*)recordedVideoData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate {
     DBGMSG(@"%s - %@", __func__, uploadFileName);
     S3PutObjectRequest *putObjectRequest = [[S3PutObjectRequest alloc] initWithKey:uploadFileName inBucket:bucket];
     putObjectRequest.data = recordedVideoData;
     putObjectRequest.delegate = delegate;
+    putObjectRequest.requestTag = @"video";
     
     S3PutObjectResponse *response = [[AmazonClientManager s3] putObject:putObjectRequest];
     if (response.error != nil) {
@@ -596,28 +662,39 @@ static void * RecordingContext = &RecordingContext;
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response {
     DBGMSG(@"%s - %@", __func__, response);
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     
-    [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-        if (theErr)
-			NSLog(@"%@", theErr);
-        [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-            if (error)
-                NSLog(@"%@", error);
+    
+    if ([request.requestTag isEqualToString:@"video"]) {
+        self.uploadStateVideo = UploadStateVideoFinished;
+        NSLog(@"change upload state video");
+    }
+    
+    if ([request.requestTag isEqualToString:@"thumbnail"]) {
+        self.uploadStateThumbnail = UploadStateThumbnailFinished;
+        NSLog(@"change upload state thumbnail");
+    }
+    
+    
+    if (self.uploadStateVideo == UploadStateVideoFinished && self.uploadStateThumbnail == UploadStateThumbnailFinished) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+            if (theErr)
+                NSLog(@"%@", theErr);
+            //        [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
+            //            if (error)
+            //                NSLog(@"%@", error);
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
             if (_backgroundRecordingID != UIBackgroundTaskInvalid)
                 [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
+            //        }];
+            
+            NSError *error = nil;
+            [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
+            [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
+            if (error)
+                NSLog(@"Add grabbag error %@", error);
         }];
-		
-        NSError *error = nil;
-        [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
-        [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
-        if (error)
-            NSLog(@"Add grabbag error %@", error);
-    }];
-	
-    
-    
+    }
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error {
@@ -646,7 +723,7 @@ static void * RecordingContext = &RecordingContext;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateFormat:@"HH:mm"];
+        [_dateFormatter setDateFormat:@"yyyy-MM-dd-HH:mm"];
     });
     return _dateFormatter;
 }

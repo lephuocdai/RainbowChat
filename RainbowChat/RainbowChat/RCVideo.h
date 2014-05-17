@@ -13,6 +13,7 @@
 @interface RCVideo : NSObject
 
 @property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) NSString *thumbnailURL;
 @property (strong, nonatomic) NSData *data;
 @property (strong, nonatomic) RCUser *fromUser;
 @property (strong, nonatomic) RCUser *toUser;
