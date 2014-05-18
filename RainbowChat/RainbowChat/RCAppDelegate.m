@@ -83,7 +83,8 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
 #warning - Need to revise this line of code
     [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+#warning - Need to revise the usage of localstorage
+//    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
 #ifdef DEBUG
     _ffInstance.debug = YES;
 #endif
