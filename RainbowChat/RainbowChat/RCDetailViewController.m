@@ -75,6 +75,7 @@ typedef enum {
 @property (nonatomic) NSMutableArray *movieControllers;
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 @property (nonatomic) AVPlayer *avPlayer;
+@property (nonatomic) AVPlayerLayer *avPlayerLayer;
 //@property (nonatomic) NSNumber *lastRefreshTime;
 
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
@@ -131,7 +132,7 @@ typedef enum {
     
     // Set up AVPlayer
     self.avPlayer = [[AVPlayer alloc] init];
-    
+    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
     
     // Create the AVCaptureSession
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -471,13 +472,9 @@ typedef enum {
     
     if (currentSelectedCell >= 0) {
         [self.avPlayer pause];
-        CALayer *cellLayer = [[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentSelectedCell inSection:0]] layer];
-        for (CALayer *layer in [cellLayer sublayers]) {
-            if ([layer isKindOfClass:[AVPlayerLayer class]]) {
-                [layer removeFromSuperlayer];
-            }
-        }
+        [self.avPlayerLayer removeFromSuperlayer];
     }
+    currentSelectedCell = indexPath.row;
     
     AVAsset *newAsset = [AVURLAsset URLAssetWithURL:[self s3URLForVideo:videoForCell] options:nil];
     AVPlayerItem *newPlayerItem = [AVPlayerItem playerItemWithAsset:newAsset];
@@ -486,18 +483,18 @@ typedef enum {
     } else {
         self.avPlayer = [AVPlayer playerWithPlayerItem:newPlayerItem];
     }
-    AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
+    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
     
     if (isCurrentUser) {
         CurrentUserCell *cell = (CurrentUserCell*)[tableView cellForRowAtIndexPath:indexPath];
         cell.videoView.hidden = NO;
-        layer.frame = cell.videoView.bounds;
-        [cell.videoView.layer addSublayer:layer];
+        self.avPlayerLayer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:self.avPlayerLayer];
     } else {
         ToUserCell *cell = (ToUserCell*)[tableView cellForRowAtIndexPath:indexPath];
         cell.videoView.hidden = NO;
-        layer.frame = cell.videoView.bounds;
-        [cell.videoView.layer addSublayer:layer];
+        self.avPlayerLayer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:self.avPlayerLayer];
     }
     [self.avPlayer play];
     
