@@ -351,11 +351,13 @@ typedef enum {
     DBGMSG(@"%s", __func__);
     if (_cameraSwitch.isOn) {
         isFrontCamera = YES;
-        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
+        [threadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_videos.count inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+//        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
     else {
         isFrontCamera = NO;
-        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
+        [threadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_videos.count inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+//        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
 }
 
