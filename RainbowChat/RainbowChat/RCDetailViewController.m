@@ -109,6 +109,7 @@ typedef enum {
     IBOutlet UITableView *threadTableView;
     NSURL *outputFileURL;
     BOOL isFrontCamera;
+    int currentSelectedCell;
 }
 
 #pragma mark - View life cycle
@@ -144,6 +145,8 @@ typedef enum {
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+    currentSelectedCell = -1;
+    
     [self fetchFromBackend];
     
     [self configureView];
@@ -406,21 +409,27 @@ typedef enum {
             cell.videoPreview.hidden = YES;
             cell.videoView.hidden = NO;
             cell.userNameLabel.text = videoForCell.fromUser.firstName;
-            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
-            cellMovieController.contentURL = _videoURLs[indexPath.row];
-            cellMovieController.view.frame = cell.videoView.bounds;
-            [cell.videoView addSubview:cellMovieController.view];
+            UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
+            UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
+            thumbnailImageView.image = thumbnailImage;
+            [cell.videoView addSubview:thumbnailImageView];
             
-            // Using the Movie Player Notifications
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
             
-            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-            cellMovieController.shouldAutoplay = NO;
-            cellMovieController.repeatMode = NO;
-            [cellMovieController prepareToPlay];
-//            [cellMovieController play];
-            [_movieControllers addObject:cellMovieController];
+//            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
+//            cellMovieController.contentURL = _videoURLs[indexPath.row];
+//            cellMovieController.view.frame = cell.videoView.bounds;
+//            [cell.videoView addSubview:cellMovieController.view];
+//            
+//            // Using the Movie Player Notifications
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
+//            
+//            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
+//            cellMovieController.shouldAutoplay = NO;
+//            cellMovieController.repeatMode = NO;
+//            [cellMovieController prepareToPlay];
+////            [cellMovieController play];
+//            [_movieControllers addObject:cellMovieController];
             
             return cell;
         } else {
@@ -428,22 +437,27 @@ typedef enum {
             cell.videoView.hidden = NO;
             cell.userNameLabel.text = videoForCell.fromUser.firstName;
             
-            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
-            cellMovieController.contentURL = _videoURLs[indexPath.row];
-            cellMovieController.view.frame = cell.videoView.bounds;
-            [cell.videoView addSubview:cellMovieController.view];
+            UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
+            UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
+            thumbnailImageView.image = thumbnailImage;
+            [cell.videoView addSubview:thumbnailImageView];
             
-            // Using the Movie Player Notifications
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
-            
-            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-            cellMovieController.shouldAutoplay = NO;
-            cellMovieController.repeatMode = NO;
-            [cellMovieController prepareToPlay];
-//            [cellMovieController play];
-            
-            [_movieControllers addObject:cellMovieController];
+//            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
+//            cellMovieController.contentURL = _videoURLs[indexPath.row];
+//            cellMovieController.view.frame = cell.videoView.bounds;
+//            [cell.videoView addSubview:cellMovieController.view];
+//            
+//            // Using the Movie Player Notifications
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
+//            
+//            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
+//            cellMovieController.shouldAutoplay = NO;
+//            cellMovieController.repeatMode = NO;
+//            [cellMovieController prepareToPlay];
+////            [cellMovieController play];
+//            
+//            [_movieControllers addObject:cellMovieController];
             return cell;
         }
     }
@@ -451,6 +465,41 @@ typedef enum {
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    RCVideo *videoForCell = _videos[indexPath.row];
+    BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:self.currentUser.guid];
+    
+    if (currentSelectedCell >= 0) {
+        [self.avPlayer pause];
+        CALayer *cellLayer = [[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentSelectedCell inSection:0]] layer];
+        for (CALayer *layer in [cellLayer sublayers]) {
+            if ([layer isKindOfClass:[AVPlayerLayer class]]) {
+                [layer removeFromSuperlayer];
+            }
+        }
+    }
+    
+    AVAsset *newAsset = [AVURLAsset URLAssetWithURL:[self s3URLForVideo:videoForCell] options:nil];
+    AVPlayerItem *newPlayerItem = [AVPlayerItem playerItemWithAsset:newAsset];
+    if ([self.avPlayer currentItem]) {
+        [self.avPlayer replaceCurrentItemWithPlayerItem:newPlayerItem];
+    } else {
+        self.avPlayer = [AVPlayer playerWithPlayerItem:newPlayerItem];
+    }
+    AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
+    
+    if (isCurrentUser) {
+        CurrentUserCell *cell = (CurrentUserCell*)[tableView cellForRowAtIndexPath:indexPath];
+        cell.videoView.hidden = NO;
+        layer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:layer];
+    } else {
+        ToUserCell *cell = (ToUserCell*)[tableView cellForRowAtIndexPath:indexPath];
+        cell.videoView.hidden = NO;
+        layer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:layer];
+    }
+    [self.avPlayer play];
     
     #warning Need to implement
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -630,6 +679,35 @@ typedef enum {
         S3GetPreSignedURLRequest *gpsur = [[S3GetPreSignedURLRequest alloc] init];
         // Video name
         gpsur.key = [NSString stringWithFormat:@"%@", video.url];
+        //bucket name
+        gpsur.bucket  = [RCConstant transferManagerBucket];
+        // Added an hour's worth of seconds to the current time.
+        gpsur.expires = [NSDate dateWithTimeIntervalSinceNow:(NSTimeInterval) 3600];
+        
+        gpsur.responseHeaderOverrides = override;
+        
+        // Get the URL
+        NSError *error;
+        NSURL *url = [s3Client getPreSignedURL:gpsur error:&error];
+        return url;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Cannot list S3 %@",exception);
+    }
+}
+
+- (NSURL*)s3URLForThumbnailOfVideo:(RCVideo*)video {
+    DBGMSG(@"%s", __func__);
+    // Init connection with S3Client
+    AmazonS3Client *s3Client = [AmazonClientManager s3];
+    @try {
+        // Set the content type so that the browser will treat the URL as an image.
+        S3ResponseHeaderOverrides *override = [[S3ResponseHeaderOverrides alloc] init];
+        override.contentType = @" ";
+        // Request a pre-signed URL to picture that has been uploaded.
+        S3GetPreSignedURLRequest *gpsur = [[S3GetPreSignedURLRequest alloc] init];
+        // Video name
+        gpsur.key = [NSString stringWithFormat:@"%@", video.thumbnailURL];
         //bucket name
         gpsur.bucket  = [RCConstant transferManagerBucket];
         // Added an hour's worth of seconds to the current time.

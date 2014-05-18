@@ -9,6 +9,7 @@
 #import "RCAppDelegate.h"
 #import "RCWelcomeViewController.h"
 #import "RCMasterViewController.h"
+#import "RCUser.h"
 
 static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
 static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
@@ -80,6 +81,8 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     
     // Initiate the RCFatFractal instance that your application will use
     _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+#warning - Need to revise this line of code
+    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
 #ifdef DEBUG
     _ffInstance.debug = YES;
@@ -90,6 +93,7 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     
     // Create the KeychainItem singleton
     _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+    
     
     // If Keychain item exists, attempt login
     if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {

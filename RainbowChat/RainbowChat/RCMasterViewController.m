@@ -51,6 +51,7 @@
         welcomeViewController.delegate = self;
         [self presentViewController:welcomeViewController animated:YES completion:nil];
     } else {
+        [self userIsAuthenticatedFromAppDelegateOnLaunch];
         [self.tableView reloadData];
     }
 }
@@ -180,15 +181,14 @@
 #pragma mark - Public Methods
 - (void)refresh {
     DBGMSG(@"%s", __func__);
-    if ([[FatFractal main] loggedInUser]) {
-        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
-        [self refreshTableAndLoadData];
-    }
 }
 
 - (void)userIsAuthenticatedFromAppDelegateOnLaunch {
     DBGMSG(@"%s", __func__);
-    [self refresh];
+    if ([[FatFractal main] loggedInUser]) {
+        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+        [self refreshTableAndLoadData];
+    }
 }
 
 - (void)refreshTableAndLoadData {
