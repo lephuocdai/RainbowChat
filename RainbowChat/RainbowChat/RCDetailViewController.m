@@ -351,11 +351,11 @@ typedef enum {
     DBGMSG(@"%s", __func__);
     if (_cameraSwitch.isOn) {
         isFrontCamera = YES;
-        [threadTableView reloadData];
+        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
     else {
         isFrontCamera = NO;
-        [threadTableView reloadData];
+        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
 }
 
@@ -415,22 +415,7 @@ typedef enum {
             thumbnailImageView.image = thumbnailImage;
             [cell.videoView addSubview:thumbnailImageView];
             
-            
-//            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
-//            cellMovieController.contentURL = _videoURLs[indexPath.row];
-//            cellMovieController.view.frame = cell.videoView.bounds;
-//            [cell.videoView addSubview:cellMovieController.view];
-//            
-//            // Using the Movie Player Notifications
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
-//            
-//            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-//            cellMovieController.shouldAutoplay = NO;
-//            cellMovieController.repeatMode = NO;
-//            [cellMovieController prepareToPlay];
-////            [cellMovieController play];
-//            [_movieControllers addObject:cellMovieController];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
             
             return cell;
         } else {
@@ -443,22 +428,8 @@ typedef enum {
             thumbnailImageView.image = thumbnailImage;
             [cell.videoView addSubview:thumbnailImageView];
             
-//            MPMoviePlayerController *cellMovieController = [[MPMoviePlayerController alloc] init];
-//            cellMovieController.contentURL = _videoURLs[indexPath.row];
-//            cellMovieController.view.frame = cell.videoView.bounds;
-//            [cell.videoView addSubview:cellMovieController.view];
-//            
-//            // Using the Movie Player Notifications
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:) name:MPMoviePlayerPlaybackDidFinishNotification object:cellMovieController];
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
-//            
-//            cellMovieController.controlStyle =  MPMovieControlStyleEmbedded;
-//            cellMovieController.shouldAutoplay = NO;
-//            cellMovieController.repeatMode = NO;
-//            [cellMovieController prepareToPlay];
-////            [cellMovieController play];
-//            
-//            [_movieControllers addObject:cellMovieController];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
+
             return cell;
         }
     }
@@ -466,6 +437,8 @@ typedef enum {
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+#warning Need to implement
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     RCVideo *videoForCell = _videos[indexPath.row];
     BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:self.currentUser.guid];
@@ -497,9 +470,6 @@ typedef enum {
         [cell.videoView.layer addSublayer:self.avPlayerLayer];
     }
     [self.avPlayer play];
-    
-    #warning Need to implement
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Data fetch
