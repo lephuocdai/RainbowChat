@@ -147,7 +147,7 @@ typedef enum {
 	
     currentSelectedCell = -1;
     
-    [self fetchFromBackend];
+//    [self fetchFromBackend];
     
     [self configureView];
     
@@ -473,12 +473,18 @@ typedef enum {
     [_avPlayer play];
 }
 
+- (void)scrollToLastCell {
+    NSInteger lastRowNumber = [threadTableView numberOfRowsInSection:0] - 1;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
+    [threadTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
 #pragma mark - Data fetch
 
 - (void)fetchFromBackend {
-    //    __block BOOL blockComplete = NO;
+    DBGMSG(@"%s", __func__);
+    __block BOOL blockComplete = NO;
     [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-        //        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
             _videoURLs = [[NSMutableArray alloc] init];
@@ -489,20 +495,16 @@ typedef enum {
             }
             NSLog(@"Videos = %@ \n videoURLs = %@", _videos, _videoURLs);
             [threadTableView reloadData];
+            [self scrollToLastCell];
         }
-        /*
-        STAssertTrue([conversations count] == 1, @"Expected 1 conversation, got %d", [conversations count]);
-        NSLog(@"Conversations: \n%@", conversations);
         blockComplete = YES;
-        */
     }];
-    /*
+    
     while (!blockComplete) {
         NSDate* cycle = [NSDate dateWithTimeIntervalSinceNow:0.001];
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                  beforeDate:cycle];
     }
-     */
 }
 
 #pragma mark - AVCaptureFileOutput delegate
