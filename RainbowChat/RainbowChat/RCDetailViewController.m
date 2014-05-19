@@ -59,20 +59,27 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UIImageView *userProfilePicture;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UIView *videoView;
-@property (weak, nonatomic) IBOutlet RCCamPreviewView *videoPreview;
 @end
 
 @implementation CurrentUserCell
-@synthesize userProfilePicture, videoView, videoPreview;
+@synthesize userProfilePicture, videoView;
 @end
 
+@interface RCCamPreviewFooter : UITableViewHeaderFooterView
+@property (nonatomic) IBOutlet UILabel *userNameLabel;
+@property (nonatomic) IBOutlet UIImageView *userProfilePicture;
+@property (nonatomic) IBOutlet RCCamPreviewView *videoPreview;
+@end
+
+@implementation RCCamPreviewFooter
+@synthesize userNameLabel, userProfilePicture, videoPreview;
+@end
 
 @interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *videos;
 @property (nonatomic) NSMutableArray *videoURLs;
-@property (nonatomic) NSMutableArray *movieControllers;
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 @property (nonatomic) AVPlayer *avPlayer;
 @property (nonatomic) AVPlayerLayer *avPlayerLayer;
@@ -108,6 +115,9 @@ typedef enum {
 
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
+    // Table view footer
+    
+    
     NSURL *outputFileURL;
     BOOL isFrontCamera;
     NSInteger currentSelectedCell;
@@ -147,8 +157,6 @@ typedef enum {
 	
     currentSelectedCell = -1;
     
-//    [self fetchFromBackend];
-    
     [self configureView];
     
     [self refresh];
@@ -187,16 +195,8 @@ typedef enum {
 	dispatch_async(_sessionQueue, ^{
 		[_avCapturesession stopRunning];
         
-        
-        
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
-        
-        for (MPMoviePlayerController *movieController in _movieControllers) {
-            [movieController stop];
-            [movieController.view removeFromSuperview];
-        }
-        _movieControllers = nil;
 	});
 }
 
@@ -248,20 +248,18 @@ typedef enum {
 - (void)refreshTableAndLoadData {
     DBGMSG(@"%s", __func__);
     // Clean videos array
-    if (_videos || _videoURLs || _movieControllers) {
+    if (_videos || _videoURLs) {
         [_videos removeAllObjects];
         _videos = nil;
         [_videoURLs removeAllObjects];
         _videoURLs = nil;
-        [_movieControllers removeAllObjects];
-        _movieControllers = nil;
     }
     [self fetchFromBackend];
 }
 
 
 #pragma mark - AVFoundation
-
+/*
 - (void)initializeCameraFor:(CurrentUserCell*)cell {
     DBGMSG(@"%s", __func__);
     [_avCapturesession beginConfiguration];
@@ -345,7 +343,7 @@ typedef enum {
     }
     [_avCapturesession commitConfiguration];
 }
-
+*/
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
     if (_cameraSwitch.isOn) {
@@ -382,57 +380,128 @@ typedef enum {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     DBGMSG(@"%s videos.count = %d", __func__, _videos.count);
-    return _videos.count + 1;
+    return _videos.count;
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)tableView.tableFooterView;
+    
+    footerView.userNameLabel.text = _currentUser.firstName;
+    
+    [_avCapturesession beginConfiguration];
+    _avCapturesession.sessionPreset = AVCaptureSessionPresetLow;
+    _captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_avCapturesession];
+    [_captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+    _captureVideoPreviewLayer.frame = footerView.videoPreview.bounds;
+    [footerView.videoPreview.layer addSublayer:_captureVideoPreviewLayer];
+    
+    [footerView.videoPreview.layer setMasksToBounds:YES];
+    
+    NSArray *devices = [AVCaptureDevice devices];
+    AVCaptureDevice *frontCamera;
+    AVCaptureDevice *backCamera;
+    AVCaptureDevice *audioDevice;
+    
+    for (AVCaptureDevice *device in devices) {
+        NSLog(@"Device name: %@", [device localizedName]);
+        if ([device hasMediaType:AVMediaTypeVideo]) {
+            if ([device position] == AVCaptureDevicePositionBack) {
+                NSLog(@"Device position : back");
+                backCamera = device;
+            }
+            else {
+                NSLog(@"Device position : front");
+                frontCamera = device;
+            }
+        } else if ([device hasMediaType:AVMediaTypeAudio]) {
+            audioDevice = device;
+        }
+    }
+    
+    // Set device input
+    if (_videoDeviceInput) {
+        [_avCapturesession removeInput:_videoDeviceInput];
+        _videoDeviceInput = nil;
+    }
+    NSError *error = nil;
+    if (!isFrontCamera) {
+        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
+        if (!_videoDeviceInput) {
+            NSLog(@"ERROR: trying to open camera: %@", error);
+        }
+        [_avCapturesession addInput:_videoDeviceInput];
+    } else {
+        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
+        if (!_videoDeviceInput) {
+            NSLog(@"ERROR: trying to open camera: %@", error);
+        }
+        [_avCapturesession addInput:_videoDeviceInput];
+    }
+    
+    if (_audioDeviceInput) {
+        [_avCapturesession removeInput:_audioDeviceInput];
+        _audioDeviceInput = nil;
+    }
+    _audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
+    [_avCapturesession addInput:_audioDeviceInput];
+    
+    // Init deviceOutput
+    if (!_stillImageOutput) {
+        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+        [stillImageOutput setOutputSettings:outputSettings];
+        [self setStillImageOutput:stillImageOutput];
+        [_avCapturesession addOutput:_stillImageOutput];
+    }
+    
+    if (!_movieFileOutput) {
+        AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+        [self setMovieFileOutput:movieFileOutput];
+        AVCaptureConnection *connection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+        if ([connection isVideoStabilizationSupported])
+            [connection setEnablesVideoStabilizationWhenAvailable:YES];
+        [_avCapturesession addOutput:_movieFileOutput];
+    }
+    [_avCapturesession commitConfiguration];
+    
+    return footerView;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DBGMSG(@"%s", __func__);
     static NSString *cellIdentifier;
-    // Configure last cell
-    if (indexPath.row == _videos.count) {
-        NSLog(@"Last cell");
-        
-        cellIdentifier = @"currentUserCell";
+    RCVideo *videoForCell = _videos[indexPath.row];
+    BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:_currentUser.guid];
+    cellIdentifier = (isCurrentUser) ? @"currentUserCell" : @"toUserCell";
+    
+    UITableViewCell *cell;
+    
+    if (isCurrentUser) {
         CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        cell.videoView.hidden = NO;
+        cell.userNameLabel.text = videoForCell.fromUser.firstName;
         
-        [self initializeCameraFor:cell];
+        UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
+        UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
+        thumbnailImageView.image = thumbnailImage;
+        [cell.videoView addSubview:thumbnailImageView];
+        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
         
         return cell;
-        
     } else {
-        NSLog(@"Not last cell");
+        ToUserCell *cell = (ToUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        cell.videoView.hidden = NO;
+        cell.userNameLabel.text = videoForCell.fromUser.firstName;
         
-        RCVideo *videoForCell = _videos[indexPath.row];
-        BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:_currentUser.guid];
-        cellIdentifier = (isCurrentUser) ? @"currentUserCell" : @"toUserCell";
+        UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
+        UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
+        thumbnailImageView.image = thumbnailImage;
+        [cell.videoView addSubview:thumbnailImageView];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
         
-        if (isCurrentUser) {
-            CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            cell.videoPreview.hidden = YES;
-            cell.videoView.hidden = NO;
-            cell.userNameLabel.text = videoForCell.fromUser.firstName;
-            UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
-            UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
-            thumbnailImageView.image = thumbnailImage;
-            [cell.videoView addSubview:thumbnailImageView];
-            
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
-            
-            return cell;
-        } else {
-            ToUserCell *cell = (ToUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            cell.videoView.hidden = NO;
-            cell.userNameLabel.text = videoForCell.fromUser.firstName;
-            
-            UIImage *thumbnailImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self s3URLForThumbnailOfVideo:videoForCell]]];
-            UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height)];
-            thumbnailImageView.image = thumbnailImage;
-            [cell.videoView addSubview:thumbnailImageView];
-            
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; // Disable animation of cell selection
-
-            return cell;
-        }
+        return cell;
     }
 }
 
@@ -474,9 +543,11 @@ typedef enum {
 }
 
 - (void)scrollToLastCell {
-    NSInteger lastRowNumber = [threadTableView numberOfRowsInSection:0] - 1;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
-    [threadTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    if (_videos.count > 0) {
+        NSInteger lastRowNumber = [threadTableView numberOfRowsInSection:0] - 1;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRowNumber inSection:0];
+        [threadTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 #pragma mark - Data fetch
@@ -488,12 +559,12 @@ typedef enum {
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
             _videoURLs = [[NSMutableArray alloc] init];
-            _movieControllers = [[NSMutableArray alloc] init];
             
             for (RCVideo *video in _videos) {
                 [_videoURLs addObject:[self s3URLForVideo:video]];
             }
             NSLog(@"Videos = %@ \n videoURLs = %@", _videos, _videoURLs);
+#warning - Need to add notification here, then execute the following 2 lines of code outside
             [threadTableView reloadData];
             [self scrollToLastCell];
         }
@@ -518,8 +589,7 @@ typedef enum {
 //	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
 //	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
     
-//    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-//    NSString* outputPath = [docFolder stringByAppendingPathComponent:@"output2.mov"];
+
     NSString *outputPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview2" stringByAppendingPathExtension:@"mov"]];
     if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath])
         [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];

@@ -33,6 +33,7 @@
 		F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAEB191A401D00226963 /* RCLoginViewController.m */; };
 		F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */; };
 		F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */; };
+		F0BB8FB71929F700001FCF16 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0688BA8190CF1AB00E933F8 /* Main.storyboard */; };
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
@@ -126,6 +127,7 @@
 		F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		F0B2DAF4191CA2DE00226963 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		F0BB8FB9192A01D8001FCF16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -485,6 +487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */,
+				F0BB8FB71929F700001FCF16 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,6 +613,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F0688BA9190CF1AB00E933F8 /* Base */,
+				F0BB8FB9192A01D8001FCF16 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

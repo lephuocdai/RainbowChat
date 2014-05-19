@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="rS3-R9-Ivy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="rS3-R9-Ivy">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -138,6 +138,37 @@
                                 <rect key="frame" x="0.0" y="66" width="320" height="458"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="32A-8e-roE" customClass="RCCamPreviewFooter">
+                                    <rect key="frame" x="0.0" y="482" width="320" height="230"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="u0u-Za-Zzz">
+                                            <rect key="frame" x="275" y="5" width="40" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </imageView>
+                                        <view contentMode="scaleToFill" id="SkX-Cq-DlD" customClass="RCCamPreviewView">
+                                            <rect key="frame" x="70" y="25" width="200" height="200"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="userName" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NWr-79-4vb">
+                                            <rect key="frame" x="20" y="5" width="247" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <bool key="isElement" value="YES"/>
+                                    </accessibility>
+                                    <connections>
+                                        <outlet property="userNameLabel" destination="NWr-79-4vb" id="DoZ-td-QH0"/>
+                                        <outlet property="userProfilePicture" destination="u0u-Za-Zzz" id="CT4-yU-Ffp"/>
+                                        <outlet property="videoPreview" destination="SkX-Cq-DlD" id="DRp-mX-PD1"/>
+                                    </connections>
+                                </view>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" restorationIdentifier="toUserCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="toUserCell" rowHeight="230" id="zc8-8x-xOp" customClass="ToUserCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="230"/>
@@ -180,11 +211,6 @@
                                                     <rect key="frame" x="275" y="5" width="40" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
-                                                <view contentMode="scaleToFill" id="uJB-h7-ihb" customClass="RCCamPreviewView">
-                                                    <rect key="frame" x="70" y="25" width="200" height="200"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                                 <view contentMode="scaleToFill" id="946-Ya-jJr">
                                                     <rect key="frame" x="70" y="25" width="200" height="200"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -201,7 +227,6 @@
                                         <connections>
                                             <outlet property="userNameLabel" destination="Axp-Mq-zm2" id="WVJ-2E-Vjb"/>
                                             <outlet property="userProfilePicture" destination="lxh-ap-cIg" id="amS-Sj-o6n"/>
-                                            <outlet property="videoPreview" destination="uJB-h7-ihb" id="afW-4m-29F"/>
                                             <outlet property="videoView" destination="946-Ya-jJr" id="kow-kW-9he"/>
                                         </connections>
                                     </tableViewCell>

@@ -1,0 +1,66 @@
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "2pz-XF-uhl"; */
+"2pz-XF-uhl.text" = "Title";
+
+/* Class = "IBUIButton"; normalTitle = "Sign up"; ObjectID = "6w7-CJ-97R"; */
+"6w7-CJ-97R.normalTitle" = "Sign up";
+
+/* Class = "IBUIViewController"; title = "Detail"; ObjectID = "Ah7-4n-0Wa"; */
+"Ah7-4n-0Wa.title" = "Detail";
+
+/* Class = "IBUILabel"; text = "userName"; ObjectID = "Axp-Mq-zm2"; */
+"Axp-Mq-zm2.text" = "userName";
+
+/* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "Gax-jI-eHr"; */
+"Gax-jI-eHr.title" = "Title";
+
+/* Class = "IBUILabel"; text = "Detail view content goes here"; ObjectID = "Lei-5M-9Gs"; */
+"Lei-5M-9Gs.text" = "Detail view content goes here";
+
+/* Class = "IBUILabel"; text = "userName"; ObjectID = "NWr-79-4vb"; */
+"NWr-79-4vb.text" = "userName";
+
+/* Class = "IBUIButton"; normalTitle = "Log out"; ObjectID = "Ngk-Ds-dTE"; */
+"Ngk-Ds-dTE.normalTitle" = "Log out";
+
+/* Class = "IBUITextField"; placeholder = "Password"; ObjectID = "QTb-FS-HX9"; */
+"QTb-FS-HX9.placeholder" = "Password";
+
+/* Class = "IBUITextField"; placeholder = "Password"; ObjectID = "Ud9-Qm-mEw"; */
+"Ud9-Qm-mEw.placeholder" = "Password";
+
+/* Class = "IBUITextField"; placeholder = "Password again"; ObjectID = "Y3l-5x-IiW"; */
+"Y3l-5x-IiW.placeholder" = "Password again";
+
+/* Class = "IBUITextField"; placeholder = "Email"; ObjectID = "b0g-Od-TSU"; */
+"b0g-Od-TSU.placeholder" = "Email";
+
+/* Class = "IBUINavigationItem"; title = "Detail"; ObjectID = "cra-N8-TIN"; */
+"cra-N8-TIN.title" = "Detail";
+
+/* Class = "IBUILabel"; text = "userName"; ObjectID = "dz2-1d-uqB"; */
+"dz2-1d-uqB.text" = "userName";
+
+/* Class = "IBUIButton"; normalTitle = "Login"; ObjectID = "got-aB-QAa"; */
+"got-aB-QAa.normalTitle" = "Login";
+
+/* Class = "IBUIButton"; normalTitle = "Login"; ObjectID = "oA2-Ad-W31"; */
+"oA2-Ad-W31.normalTitle" = "Login";
+
+/* Class = "IBUITextField"; placeholder = "Full name"; ObjectID = "p9R-g0-dH9"; */
+"p9R-g0-dH9.placeholder" = "Full name";
+
+/* Class = "IBUITableViewController"; title = "Master"; ObjectID = "pGg-6v-bdr"; */
+"pGg-6v-bdr.title" = "Master";
+
+/* Class = "IBUINavigationItem"; title = "Sign up"; ObjectID = "rlx-WJ-QLZ"; */
+"rlx-WJ-QLZ.title" = "Sign up";
+
+/* Class = "IBUINavigationItem"; title = "Friends"; ObjectID = "tQt-TN-PWz"; */
+"tQt-TN-PWz.title" = "Friends";
+
+/* Class = "IBUITextField"; placeholder = "Email"; ObjectID = "u3J-pL-ixv"; */
+"u3J-pL-ixv.placeholder" = "Email";
+
+/* Class = "IBUIButton"; normalTitle = "Sign up"; ObjectID = "xyp-pH-FAb"; */
+"xyp-pH-FAb.normalTitle" = "Sign up";
