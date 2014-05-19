@@ -85,7 +85,7 @@ typedef enum {
 
 // Session Management
 @property (nonatomic) dispatch_queue_t sessionQueue;
-@property (nonatomic) AVCaptureSession *session;
+@property (nonatomic) AVCaptureSession *avCapturesession;
 @property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
 @property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
 @property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
@@ -110,7 +110,7 @@ typedef enum {
     IBOutlet UITableView *threadTableView;
     NSURL *outputFileURL;
     BOOL isFrontCamera;
-    int currentSelectedCell;
+    NSInteger currentSelectedCell;
 }
 
 #pragma mark - View life cycle
@@ -126,17 +126,16 @@ typedef enum {
 
 
 - (void)configureView {
-    if (_toUser) {
+    if (_toUser)
         self.title = _toUser.firstName;
-    }
     
     // Set up AVPlayer
-    self.avPlayer = [[AVPlayer alloc] init];
-    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
+    _avPlayer = [[AVPlayer alloc] init];
+    _avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
     
     // Create the AVCaptureSession
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setSession:session];
+    [self setAvCapturesession:session];
     // Set up session queue
     dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
 	[self setSessionQueue:sessionQueue];
@@ -161,32 +160,35 @@ typedef enum {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
     
-    self.uploadState = UploadStateVideoNotUpload;
-    self.uploadStateThumbnail = UploadStateThumbnailNotUpload;
-    self.uploadStateVideo = UploadStateVideoNotUpload;
+    _uploadState = UploadStateNotUpload;
+    _uploadStateThumbnail = UploadStateThumbnailNotUpload;
+    _uploadStateVideo = UploadStateVideoNotUpload;
     
-    dispatch_async(self.sessionQueue, ^{
+    dispatch_async(_sessionQueue, ^{
         
         [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
         [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
         
         __weak RCDetailViewController *weakSelf = self;
-		[self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
+		[self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:_avCapturesession queue:nil usingBlock:^(NSNotification *note) {
 			RCDetailViewController *strongSelf = weakSelf;
 			dispatch_async(strongSelf.sessionQueue, ^{
 				// Manually restarting the session since it must have been stopped due to an error.
-				[strongSelf.session startRunning];
+				[strongSelf.avCapturesession startRunning];
 			});
 		}]];
-		[[self session] startRunning];
+		[_avCapturesession startRunning];
     });
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
-	dispatch_async([self sessionQueue], ^{
-		[self.session stopRunning];
+	dispatch_async(_sessionQueue, ^{
+		[_avCapturesession stopRunning];
+        
+        
+        
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
         
@@ -198,8 +200,6 @@ typedef enum {
 	});
 }
 
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -207,10 +207,10 @@ typedef enum {
 
 - (IBAction)recordButtonPushed:(id)sender {
     
-    [self.recordButton setEnabled:NO];
+    [_recordButton setEnabled:NO];
     
-    dispatch_async(self.sessionQueue, ^{
-        if (![self.movieFileOutput isRecording]) {
+    dispatch_async(_sessionQueue, ^{
+        if (![_movieFileOutput isRecording]) {
             if ([[UIDevice currentDevice] isMultitaskingSupported]) {
                 // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
                 [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
@@ -227,11 +227,11 @@ typedef enum {
                     NSLog(@"removeItemAtPath %@ error:%@", outputFilePath, error);
                 }
             }
-            [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+            [_movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
             
             
         } else {
-            [self.movieFileOutput stopRecording];
+            [_movieFileOutput stopRecording];
         }
     });
 }
@@ -240,7 +240,7 @@ typedef enum {
 - (void)refresh {
     DBGMSG(@"%s", __func__);
     if ([[FatFractal main] loggedInUser]) {
-        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+        _currentUser = (RCUser*)[[FatFractal main] loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -264,18 +264,16 @@ typedef enum {
 
 - (void)initializeCameraFor:(CurrentUserCell*)cell {
     DBGMSG(@"%s", __func__);
-    [self.session beginConfiguration];
-    self.session.sessionPreset = AVCaptureSessionPresetLow;
-    self.captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
-    [self.captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    
+    [_avCapturesession beginConfiguration];
+    _avCapturesession.sessionPreset = AVCaptureSessionPresetLow;
+    _captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_avCapturesession];
+    [_captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
     cell.videoView.hidden = YES;
-    cell.userNameLabel.text = self.currentUser.firstName;
+    cell.userNameLabel.text = _currentUser.firstName;
     
-    self.captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
-    [cell.videoPreview.layer addSublayer:self.captureVideoPreviewLayer];
+    _captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
+    [cell.videoPreview.layer addSublayer:_captureVideoPreviewLayer];
     
     [cell.videoPreview.layer setMasksToBounds:YES];
 
@@ -302,49 +300,50 @@ typedef enum {
     }
     
     // Set device input
-    if (self.videoDeviceInput) {
-        [self.session removeInput:self.videoDeviceInput];
-        self.videoDeviceInput = nil;
+    if (_videoDeviceInput) {
+        [_avCapturesession removeInput:_videoDeviceInput];
+        _videoDeviceInput = nil;
     }
     NSError *error = nil;
     if (!isFrontCamera) {
-        self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-        if (!self.videoDeviceInput) {
+        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
+        if (!_videoDeviceInput) {
             NSLog(@"ERROR: trying to open camera: %@", error);
         }
-        [self.session addInput:self.videoDeviceInput];
+        [_avCapturesession addInput:_videoDeviceInput];
     } else {
-        self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
-        if (!self.videoDeviceInput) {
+        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
+        if (!_videoDeviceInput) {
             NSLog(@"ERROR: trying to open camera: %@", error);
         }
-        [self.session addInput:self.videoDeviceInput];
+        [_avCapturesession addInput:_videoDeviceInput];
     }
     
-    if (self.audioDeviceInput) {
-        [self.session removeInput:self.audioDeviceInput];
-        self.audioDeviceInput = nil;
+    if (_audioDeviceInput) {
+        [_avCapturesession removeInput:_audioDeviceInput];
+        _audioDeviceInput = nil;
     }
-    self.audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
-    [self.session addInput:self.audioDeviceInput];
+    _audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
+    [_avCapturesession addInput:_audioDeviceInput];
     
     // Init deviceOutput
-    if (!self.stillImageOutput) {
-        self.stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+    if (!_stillImageOutput) {
+        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
         NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-        [self.stillImageOutput setOutputSettings:outputSettings];
-        
-        [self.session addOutput:self.stillImageOutput];
+        [stillImageOutput setOutputSettings:outputSettings];
+        [self setStillImageOutput:stillImageOutput];
+        [_avCapturesession addOutput:_stillImageOutput];
     }
     
-    if (!self.movieFileOutput) {
-        self.movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-        AVCaptureConnection *connection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    if (!_movieFileOutput) {
+        AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
+        [self setMovieFileOutput:movieFileOutput];
+        AVCaptureConnection *connection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
         if ([connection isVideoStabilizationSupported])
             [connection setEnablesVideoStabilizationWhenAvailable:YES];
-        [self.session addOutput:self.movieFileOutput];
+        [_avCapturesession addOutput:_movieFileOutput];
     }
-    [self.session commitConfiguration];
+    [_avCapturesession commitConfiguration];
 }
 
 - (IBAction)switchCamera:(id)sender {
@@ -404,7 +403,7 @@ typedef enum {
         NSLog(@"Not last cell");
         
         RCVideo *videoForCell = _videos[indexPath.row];
-        BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:self.currentUser.guid];
+        BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:_currentUser.guid];
         cellIdentifier = (isCurrentUser) ? @"currentUserCell" : @"toUserCell";
         
         if (isCurrentUser) {
@@ -443,42 +442,42 @@ typedef enum {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     RCVideo *videoForCell = _videos[indexPath.row];
-    BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:self.currentUser.guid];
+    BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:_currentUser.guid];
     
     if (currentSelectedCell >= 0) {
-        [self.avPlayer pause];
-        [self.avPlayerLayer removeFromSuperlayer];
+        [_avPlayer pause];
+        [_avPlayerLayer removeFromSuperlayer];
     }
     currentSelectedCell = indexPath.row;
     
     AVAsset *newAsset = [AVURLAsset URLAssetWithURL:[self s3URLForVideo:videoForCell] options:nil];
     AVPlayerItem *newPlayerItem = [AVPlayerItem playerItemWithAsset:newAsset];
-    if ([self.avPlayer currentItem]) {
-        [self.avPlayer replaceCurrentItemWithPlayerItem:newPlayerItem];
+    if ([_avPlayer currentItem]) {
+        [_avPlayer replaceCurrentItemWithPlayerItem:newPlayerItem];
     } else {
-        self.avPlayer = [AVPlayer playerWithPlayerItem:newPlayerItem];
+        _avPlayer = [AVPlayer playerWithPlayerItem:newPlayerItem];
     }
-    self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
+    _avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
     
     if (isCurrentUser) {
         CurrentUserCell *cell = (CurrentUserCell*)[tableView cellForRowAtIndexPath:indexPath];
         cell.videoView.hidden = NO;
-        self.avPlayerLayer.frame = cell.videoView.bounds;
-        [cell.videoView.layer addSublayer:self.avPlayerLayer];
+        _avPlayerLayer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:_avPlayerLayer];
     } else {
         ToUserCell *cell = (ToUserCell*)[tableView cellForRowAtIndexPath:indexPath];
         cell.videoView.hidden = NO;
-        self.avPlayerLayer.frame = cell.videoView.bounds;
-        [cell.videoView.layer addSublayer:self.avPlayerLayer];
+        _avPlayerLayer.frame = cell.videoView.bounds;
+        [cell.videoView.layer addSublayer:_avPlayerLayer];
     }
-    [self.avPlayer play];
+    [_avPlayer play];
 }
 
 #pragma mark - Data fetch
 
 - (void)fetchFromBackend {
     //    __block BOOL blockComplete = NO;
-    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",self.currentUser.guid, self.toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         //        STAssertNil(theErr, @"Got error from extension: %@", [theErr localizedDescription]);
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
@@ -573,15 +572,15 @@ typedef enum {
         
         _newVideo = [[RCVideo alloc] init];
         _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
-        _newVideo.toUser = self.toUser;
-        _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
-        _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", self.currentUser.firstName, self.toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        _newVideo.toUser = _toUser;
+        _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
         
 #warning - Need to send to AWS first
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.uploadStateThumbnail = UploadStateThumbnailStarted;
-            self.uploadStateVideo = UploadStateVideoStarted;
-            self.uploadState = UploadStateUploading;
+            _uploadStateThumbnail = UploadStateThumbnailStarted;
+            _uploadStateVideo = UploadStateVideoStarted;
+            _uploadState = UploadStateUploading;
             
             [self putNewThumbNailWithData:thumbnailData fileName:_newVideo.thumbnailURL toBucket:[RCConstant transferManagerBucket] delegate:self];
             [self putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
@@ -597,12 +596,12 @@ typedef enum {
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (isRecording) {
-				[self.recordButton setEnabled:YES];
-                [self.recordButton setTintColor:[UIColor redColor]];
+				[_recordButton setEnabled:YES];
+                [_recordButton setTintColor:[UIColor redColor]];
 			}
 			else {
-				[self.recordButton setEnabled:YES];
-                [self.recordButton setTintColor:[UIColor blueColor]];
+				[_recordButton setEnabled:YES];
+                [_recordButton setTintColor:[UIColor blueColor]];
 			}
 		});
 	}
@@ -712,17 +711,17 @@ typedef enum {
     
     
     if ([request.requestTag isEqualToString:@"video"]) {
-        self.uploadStateVideo = UploadStateVideoFinished;
+        _uploadStateVideo = UploadStateVideoFinished;
         NSLog(@"change upload state video");
     }
     
     if ([request.requestTag isEqualToString:@"thumbnail"]) {
-        self.uploadStateThumbnail = UploadStateThumbnailFinished;
+        _uploadStateThumbnail = UploadStateThumbnailFinished;
         NSLog(@"change upload state thumbnail");
     }
     
     
-    if (self.uploadStateVideo == UploadStateVideoFinished && self.uploadStateThumbnail == UploadStateThumbnailFinished) {
+    if (_uploadStateVideo == UploadStateVideoFinished && _uploadStateThumbnail == UploadStateThumbnailFinished) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr)
@@ -737,7 +736,7 @@ typedef enum {
             
             NSError *error = nil;
             [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
-            [[FatFractal main] grabBagAdd:self.toUser to:theObj grabBagName:@"users" error:&error];
+            [[FatFractal main] grabBagAdd:_toUser to:theObj grabBagName:@"users" error:&error];
             if (error)
                 NSLog(@"Add grabbag error %@", error);
         }];
