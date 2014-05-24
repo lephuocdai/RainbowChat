@@ -7,10 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import "RCPreviewView.h"
+#import "RCVideoProcessor.h"
+
 #import "RCUser.h"
 
 
-@interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RCVideoProcessorDelegate> {
+    RCVideoProcessor *videoProcessor;
+    RCPreviewView *oglView;
+    UIBackgroundTaskIdentifier backgroundRecordingID;
+    dispatch_queue_t progressQueue;
+}
 
 #warning Need to change the type of this class
 @property (strong, nonatomic) RCUser *toUser;

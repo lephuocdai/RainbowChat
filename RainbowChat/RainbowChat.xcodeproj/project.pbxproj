@@ -34,6 +34,23 @@
 		F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */; };
 		F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */; };
 		F0BB8FB71929F700001FCF16 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0688BA8190CF1AB00E933F8 /* Main.storyboard */; };
+		F0BB8FBB192A5C57001FCF16 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FBA192A5C57001FCF16 /* MobileCoreServices.framework */; };
+		F0BB8FBE192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */; };
+		F0BB8FBF192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */; };
+		F0BB8FC2192B1369001FCF16 /* RCPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FC1192B1369001FCF16 /* RCPreviewView.m */; };
+		F0BB8FC3192B1369001FCF16 /* RCPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FC1192B1369001FCF16 /* RCPreviewView.m */; };
+		F0BB8FC81930A316001FCF16 /* ShaderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FC41930A316001FCF16 /* ShaderUtilities.c */; };
+		F0BB8FC91930A316001FCF16 /* ShaderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = F0BB8FC41930A316001FCF16 /* ShaderUtilities.c */; };
+		F0BB8FCA1930A316001FCF16 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = F0BB8FC61930A316001FCF16 /* passThrough.fsh */; };
+		F0BB8FCB1930A316001FCF16 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = F0BB8FC61930A316001FCF16 /* passThrough.fsh */; };
+		F0BB8FCC1930A316001FCF16 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = F0BB8FC71930A316001FCF16 /* passThrough.vsh */; };
+		F0BB8FCD1930A316001FCF16 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = F0BB8FC71930A316001FCF16 /* passThrough.vsh */; };
+		F0BB8FCF1930A5D6001FCF16 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FCE1930A5D6001FCF16 /* OpenGLES.framework */; };
+		F0BB8FD11930A5FC001FCF16 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD01930A5FC001FCF16 /* QuartzCore.framework */; };
+		F0BB8FD31930A609001FCF16 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD21930A609001FCF16 /* AssetsLibrary.framework */; };
+		F0BB8FD51930A611001FCF16 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD41930A611001FCF16 /* CoreMedia.framework */; };
+		F0BB8FD71930A61C001FCF16 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */; };
+		F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */; };
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
@@ -128,6 +145,21 @@
 		F0B2DAF4191CA2DE00226963 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		F0BB8FB9192A01D8001FCF16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		F0BB8FBA192A5C57001FCF16 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		F0BB8FBC192A5F9E001FCF16 /* RCVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVideoProcessor.h; sourceTree = "<group>"; };
+		F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVideoProcessor.m; sourceTree = "<group>"; };
+		F0BB8FC0192B1369001FCF16 /* RCPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCPreviewView.h; sourceTree = "<group>"; };
+		F0BB8FC1192B1369001FCF16 /* RCPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCPreviewView.m; sourceTree = "<group>"; };
+		F0BB8FC41930A316001FCF16 /* ShaderUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ShaderUtilities.c; sourceTree = "<group>"; };
+		F0BB8FC51930A316001FCF16 /* ShaderUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderUtilities.h; sourceTree = "<group>"; };
+		F0BB8FC61930A316001FCF16 /* passThrough.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.fsh; sourceTree = "<group>"; };
+		F0BB8FC71930A316001FCF16 /* passThrough.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.vsh; sourceTree = "<group>"; };
+		F0BB8FCE1930A5D6001FCF16 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		F0BB8FD01930A5FC001FCF16 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F0BB8FD21930A609001FCF16 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		F0BB8FD41930A611001FCF16 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -174,6 +206,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */,
+				F0BB8FD71930A61C001FCF16 /* CoreVideo.framework in Frameworks */,
+				F0BB8FD51930A611001FCF16 /* CoreMedia.framework in Frameworks */,
+				F0BB8FD31930A609001FCF16 /* AssetsLibrary.framework in Frameworks */,
+				F0BB8FD11930A5FC001FCF16 /* QuartzCore.framework in Frameworks */,
+				F0BB8FBB192A5C57001FCF16 /* MobileCoreServices.framework in Frameworks */,
+				F0BB8FCF1930A5D6001FCF16 /* OpenGLES.framework in Frameworks */,
 				F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */,
 				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
 				F0FCCCE51921EC2A00B9CF7D /* AWSS3.framework in Frameworks */,
@@ -225,6 +264,13 @@
 		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */,
+				F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */,
+				F0BB8FD41930A611001FCF16 /* CoreMedia.framework */,
+				F0BB8FD21930A609001FCF16 /* AssetsLibrary.framework */,
+				F0BB8FD01930A5FC001FCF16 /* QuartzCore.framework */,
+				F0BB8FCE1930A5D6001FCF16 /* OpenGLES.framework */,
+				F0BB8FBA192A5C57001FCF16 /* MobileCoreServices.framework */,
 				F0FCCCE11921EC2A00B9CF7D /* AWSRuntime.framework */,
 				F0FCCCE21921EC2A00B9CF7D /* AWSS3.framework */,
 				F0D02F6F1920B76B005F3422 /* AVFoundation.framework */,
@@ -311,6 +357,12 @@
 				F0688BA8190CF1AB00E933F8 /* Main.storyboard */,
 				F0FCCCCB192116B300B9CF7D /* RCCamPreviewView.h */,
 				F0FCCCCC192116B300B9CF7D /* RCCamPreviewView.m */,
+				F0BB8FC0192B1369001FCF16 /* RCPreviewView.h */,
+				F0BB8FC1192B1369001FCF16 /* RCPreviewView.m */,
+				F0BB8FC41930A316001FCF16 /* ShaderUtilities.c */,
+				F0BB8FC51930A316001FCF16 /* ShaderUtilities.h */,
+				F0BB8FC61930A316001FCF16 /* passThrough.fsh */,
+				F0BB8FC71930A316001FCF16 /* passThrough.vsh */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -351,6 +403,8 @@
 				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
 				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
 				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
+				F0BB8FBC192A5F9E001FCF16 /* RCVideoProcessor.h */,
+				F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -476,8 +530,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0BB8FCC1930A316001FCF16 /* passThrough.vsh in Resources */,
 				F0688BB5190CF1AB00E933F8 /* Images.xcassets in Resources */,
 				F0688BA1190CF1AA00E933F8 /* InfoPlist.strings in Resources */,
+				F0BB8FCA1930A316001FCF16 /* passThrough.fsh in Resources */,
 				F0688BAA190CF1AB00E933F8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -486,7 +542,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0BB8FCB1930A316001FCF16 /* passThrough.fsh in Resources */,
 				F0688BC7190CF1AB00E933F8 /* InfoPlist.strings in Resources */,
+				F0BB8FCD1930A316001FCF16 /* passThrough.vsh in Resources */,
 				F0BB8FB71929F700001FCF16 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -536,6 +594,7 @@
 				F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
 				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
+				F0BB8FBE192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */,
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
 				F0FCCCDF1921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
@@ -545,11 +604,13 @@
 				F0FCCCCD192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */,
+				F0BB8FC2192B1369001FCF16 /* RCPreviewView.m in Sources */,
 				F0D02F6D19209704005F3422 /* RCUser.m in Sources */,
 				F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */,
 				F0FCCCD71921E97D00B9CF7D /* RCConstant.m in Sources */,
 				F0FCCD141921FB6500B9CF7D /* Response.m in Sources */,
 				F0FCCD0E1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */,
+				F0BB8FC81930A316001FCF16 /* ShaderUtilities.c in Sources */,
 				F0FCCD0A1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
 				F0FCCCD21921CAE800B9CF7D /* RCVideo.m in Sources */,
 				F0FCCD061921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
@@ -574,10 +635,12 @@
 				F0FCCCDC1921EB7D00B9CF7D /* RCUtility.m in Sources */,
 				F0FCCD171921FB6500B9CF7D /* ResponseHandler.m in Sources */,
 				F0FCCD0B1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
+				F0BB8FC91930A316001FCF16 /* ShaderUtilities.c in Sources */,
 				F0FCCD051921FB6500B9CF7D /* Crypto.m in Sources */,
 				F0FCCD111921FB6500B9CF7D /* Request.m in Sources */,
 				F0FCCD091921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0FCCCCE192116B300B9CF7D /* RCCamPreviewView.m in Sources */,
+				F0BB8FBF192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
 				F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
@@ -586,6 +649,7 @@
 				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
 				F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0FCCD071921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
+				F0BB8FC3192B1369001FCF16 /* RCPreviewView.m in Sources */,
 				F0D02F6E19209704005F3422 /* RCUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -635,7 +699,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -673,7 +737,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;

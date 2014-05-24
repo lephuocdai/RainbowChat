@@ -7,8 +7,8 @@
 //
 
 #import "RCDetailViewController.h"
-#import "RCCamPreviewView.h"
-#import <AVFoundation/AVFoundation.h>
+#import <QuartzCore/QuartzCore.h>
+
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "RCVideo.h"
@@ -21,7 +21,6 @@
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
-
 
 typedef enum {
     UploadStateNotUpload,
@@ -68,11 +67,11 @@ typedef enum {
 @interface RCCamPreviewFooter : UITableViewHeaderFooterView
 @property (nonatomic) IBOutlet UILabel *userNameLabel;
 @property (nonatomic) IBOutlet UIImageView *userProfilePicture;
-@property (nonatomic) IBOutlet RCCamPreviewView *videoPreview;
+@property (nonatomic) IBOutlet UIView *previewView;
 @end
 
 @implementation RCCamPreviewFooter
-@synthesize userNameLabel, userProfilePicture, videoPreview;
+@synthesize userNameLabel, userProfilePicture, previewView;
 @end
 
 @interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
@@ -85,19 +84,19 @@ typedef enum {
 @property (nonatomic) AVPlayerLayer *avPlayerLayer;
 //@property (nonatomic) NSNumber *lastRefreshTime;
 
-@property (strong, nonatomic) IBOutlet UISwitch *cameraSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *cameraSwitchButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
 
 - (void)configureView;
 
 // Session Management
-@property (nonatomic) dispatch_queue_t sessionQueue;
-@property (nonatomic) AVCaptureSession *avCapturesession;
-@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
-@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
-@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
-@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
-@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
+//@property (nonatomic) dispatch_queue_t sessionQueue;
+//@property (nonatomic) AVCaptureSession *avCapturesession;
+//@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+//@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
+//@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
+//@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
+//@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
 
 #warning - Need to implement these properties
 // Utilities.
@@ -113,6 +112,8 @@ typedef enum {
 
 @end
 
+static inline double radians (double degrees) { return degrees * (M_PI / 180); }
+
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
     // Table view footer
@@ -123,7 +124,24 @@ typedef enum {
     NSInteger currentSelectedCell;
 }
 
-#pragma mark - View life cycle
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)applicationDidBecomeActive:(NSNotification*)notifcation {
+	// For performance reasons, we manually pause/resume the session when saving a recording.
+	// If we try to resume the session in the background it will fail. Resume the session here as well to ensure we will succeed.
+	[videoProcessor resumeCaptureSession];
+}
+
+// UIDeviceOrientationDidChangeNotification selector
+- (void)deviceOrientationDidChange {
+	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+	// Don't update the reference orientation when the device orientation is face up/down or unknown.
+	if ( UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation) )
+		[videoProcessor setReferenceOrientation:orientation];
+}
 
 - (void)setToUser:(RCUser *)toUser {
     if (_toUser != toUser) {
@@ -134,23 +152,7 @@ typedef enum {
     }
 }
 
-
-- (void)configureView {
-    if (_toUser)
-        self.title = _toUser.firstName;
-    
-    // Set up AVPlayer
-    _avPlayer = [[AVPlayer alloc] init];
-    _avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
-    
-    // Create the AVCaptureSession
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setAvCapturesession:session];
-    // Set up session queue
-    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-	[self setSessionQueue:sessionQueue];
-}
-
+#pragma mark - View life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -164,10 +166,84 @@ typedef enum {
     isFrontCamera = YES;
 }
 
+- (void)configureView {
+    DBGMSG(@"%s", __func__);
+    if (_toUser)
+        self.title = _toUser.firstName;
+
+    // Set up AVPlayer
+    _avPlayer = [[AVPlayer alloc] init];
+    _avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
+
+/*
+    // Create the AVCaptureSession
+    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    [self setAvCapturesession:session];
+    // Set up session queue
+    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+	[self setSessionQueue:sessionQueue];
+ */
+    
+    // Initialize the class responsible for managing AV capture session and asset writer
+    videoProcessor = [[RCVideoProcessor alloc] init];
+    videoProcessor.delegate = self;
+    
+    // Keep track of changes to the device orientation so we can update the video processor
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	[notificationCenter addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+//    [notificationCenter addObserver:self selector:@selector(didReturnUploadFileConnectionSuccess:)
+//                               name:@"didHaveUploadFileConnectionSuccess" object:nil];
+    
+    // Setup and start the capture session
+    [videoProcessor setupAndStartCaptureSession];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:[UIApplication sharedApplication]];
+    
+    // Create an OpenGLView instance to display the captured video in the view
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.userNameLabel.text = _currentUser.firstName;
+    
+    
+    oglView = [[RCPreviewView alloc] initWithFrame:footerView.previewView.bounds];
+    // Force orientation to portrait
+    oglView.transform = [videoProcessor transformFromCurrentVideoOrientationToOrientation:UIInterfaceOrientationPortrait];
+    [((RCCamPreviewFooter*)threadTableView.tableFooterView).previewView addSubview:oglView];
+    [footerView.previewView.layer setMasksToBounds:YES];
+}
+
+- (void)setPreviewView:(UIView*)aView{
+    DBGMSG(@"%s", __func__);
+    ((RCCamPreviewFooter*)threadTableView.tableFooterView).previewView = aView;
+}
+
+- (void)cleanup {
+    DBGMSG(@"%s", __func__);
+    oglView = nil;
+    
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	[notificationCenter removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    
+	[notificationCenter removeObserver:self name:UIApplicationDidBecomeActiveNotification object:[UIApplication sharedApplication]];
+    
+    // Stop and tear down the capture session
+	[videoProcessor stopAndTearDownCaptureSession];
+	videoProcessor.delegate = nil;
+}
+- (void)viewDidUnload {
+    DBGMSG(@"%s", __func__);
+    [self setPreviewView:nil];
+    [self setRecordButton:nil];
+    [super viewDidUnload];
+    [self cleanup];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
-    
+/**
     _uploadState = UploadStateNotUpload;
     _uploadStateThumbnail = UploadStateThumbnailNotUpload;
     _uploadStateVideo = UploadStateVideoNotUpload;
@@ -187,28 +263,41 @@ typedef enum {
 		}]];
 		[_avCapturesession startRunning];
     });
+ **/
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
+/**
 	dispatch_async(_sessionQueue, ^{
 		[_avCapturesession stopRunning];
         
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
 		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
 	});
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+**/
 }
 
 - (IBAction)recordButtonPushed:(id)sender {
     
+    // Wait for the recording to start/stop before re-enabling the record button.
     [_recordButton setEnabled:NO];
     
+    if ( [videoProcessor isRecording] ) {
+		// The recordingWill/DidStop delegate methods will fire asynchronously in response to this call
+		[videoProcessor stopRecording];
+	}
+	else {
+		// The recordingWill/DidStart delegate methods will fire asynchronously in response to this call
+        [videoProcessor startRecording];
+	}
+    
+    /*
     dispatch_async(_sessionQueue, ^{
         if (![_movieFileOutput isRecording]) {
             if ([[UIDevice currentDevice] isMultitaskingSupported]) {
@@ -234,6 +323,91 @@ typedef enum {
             [_movieFileOutput stopRecording];
         }
     });
+     */
+}
+
+#pragma mark - RCVideoProcessorDelegate
+
+- (void)recordingWillStart {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_recordButton setEnabled:NO];
+        
+		// Disable the idle timer while we are recording
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
+        
+		// Make sure we have time to finish saving the movie if the app is backgrounded during recording
+		if ([[UIDevice currentDevice] isMultitaskingSupported])
+			backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{}];
+    });
+}
+
+- (void)recordingDidStart {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_recordButton setEnabled:YES];
+        [_recordButton setTintColor:[UIColor redColor]];
+    });
+}
+
+- (void)recordingWillStop {
+    dispatch_async(dispatch_get_main_queue(), ^{
+		// Disable until saving to the camera roll is complete
+		[_recordButton setEnabled:NO];
+		
+		// Pause the capture session so that saving will be as fast as possible.
+		// We resume the sesssion in recordingDidStop:
+		[videoProcessor pauseCaptureSession];
+	});
+}
+
+- (void)recordingDidStopWithMovieURL:(NSURL *)movieURL {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_recordButton setEnabled:YES];
+		[_recordButton setTintColor:[UIColor blueColor]];
+        
+		[UIApplication sharedApplication].idleTimerDisabled = NO;
+        
+		[videoProcessor resumeCaptureSession];
+        
+		if ([[UIDevice currentDevice] isMultitaskingSupported]) {
+			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
+			backgroundRecordingID = UIBackgroundTaskInvalid;
+		}
+        
+        // Get the movie url from video processor
+        outputFileURL = movieURL;
+        // Generate thumbnail picture
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
+        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        generator.appliesPreferredTrackTransform = YES;
+        NSError *err = NULL;
+        CMTime time = CMTimeMake(1, 60);
+        CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:&err];
+        UIImage *img = [[UIImage alloc] initWithCGImage:imgRef];
+        NSData *thumbnailData = UIImagePNGRepresentation(img);
+        
+        // Initiate new video
+        _newVideo = [[RCVideo alloc] init];
+        _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
+        _newVideo.toUser = _toUser;
+        _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
+        
+#warning - Need to send to AWS first
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _uploadStateThumbnail = UploadStateThumbnailStarted;
+            _uploadStateVideo = UploadStateVideoStarted;
+            _uploadState = UploadStateUploading;
+            
+            [self putNewThumbNailWithData:thumbnailData fileName:_newVideo.thumbnailURL toBucket:[RCConstant transferManagerBucket] delegate:self];
+            [self putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
+        });
+	});
+}
+
+- (void)pixelBufferReadyForDisplay:(CVPixelBufferRef)pixelBuffer {
+	// Don't make OpenGLES calls while in the background.
+	if ( [UIApplication sharedApplication].applicationState != UIApplicationStateBackground )
+		[oglView displayPixelBuffer:pixelBuffer];
 }
 
 #pragma mark - Public methods
@@ -346,7 +520,7 @@ typedef enum {
 */
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
-    if (_cameraSwitch.isOn) {
+    if (_cameraSwitchButton.isOn) {
         isFrontCamera = YES;
         [threadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_videos.count inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 //        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
@@ -358,14 +532,6 @@ typedef enum {
     }
 }
 
-#warning Need to implement
-- (void)startRecord {
-    
-}
-#warning Need to implement
-- (void)stopRecord {
-    
-}
 #warning Need to implement
 - (void)playVideoAtIndex:(NSInteger)indexPath {
     
@@ -383,6 +549,7 @@ typedef enum {
     return _videos.count;
 }
 
+/*
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)tableView.tableFooterView;
     
@@ -393,10 +560,10 @@ typedef enum {
     _captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_avCapturesession];
     [_captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
-    _captureVideoPreviewLayer.frame = footerView.videoPreview.bounds;
-    [footerView.videoPreview.layer addSublayer:_captureVideoPreviewLayer];
+    _captureVideoPreviewLayer.frame = footerView.previewView.bounds;
+    [footerView.previewView.layer addSublayer:_captureVideoPreviewLayer];
     
-    [footerView.videoPreview.layer setMasksToBounds:YES];
+    [footerView.previewView.layer setMasksToBounds:YES];
     
     NSArray *devices = [AVCaptureDevice devices];
     AVCaptureDevice *frontCamera;
@@ -467,6 +634,7 @@ typedef enum {
     
     return footerView;
 }
+*/
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DBGMSG(@"%s", __func__);
@@ -798,19 +966,16 @@ typedef enum {
         [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr)
                 NSLog(@"%@", theErr);
-            //        [[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-            //            if (error)
-            //                NSLog(@"%@", error);
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
             if (_backgroundRecordingID != UIBackgroundTaskInvalid)
                 [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
-            //        }];
             
             NSError *error = nil;
             [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
             [[FatFractal main] grabBagAdd:_toUser to:theObj grabBagName:@"users" error:&error];
             if (error)
                 NSLog(@"Add grabbag error %@", error);
+            [self fetchFromBackend];
         }];
     }
 }

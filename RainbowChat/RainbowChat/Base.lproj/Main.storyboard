@@ -164,9 +164,9 @@
                                         <bool key="isElement" value="YES"/>
                                     </accessibility>
                                     <connections>
+                                        <outlet property="previewView" destination="SkX-Cq-DlD" id="hsj-ZD-vzG"/>
                                         <outlet property="userNameLabel" destination="NWr-79-4vb" id="DoZ-td-QH0"/>
                                         <outlet property="userProfilePicture" destination="u0u-Za-Zzz" id="CT4-yU-Ffp"/>
-                                        <outlet property="videoPreview" destination="SkX-Cq-DlD" id="DRp-mX-PD1"/>
                                     </connections>
                                 </view>
                                 <prototypes>
@@ -263,7 +263,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
                     <connections>
-                        <outlet property="cameraSwitch" destination="gtv-15-4lX" id="PSf-lg-ggz"/>
+                        <outlet property="cameraSwitchButton" destination="gtv-15-4lX" id="ERS-Z6-Zj6"/>
                         <outlet property="recordButton" destination="Acx-wh-gdd" id="yeV-hF-5lZ"/>
                         <outlet property="threadTableView" destination="Q1g-yP-7Om" id="Cla-Gl-OUJ"/>
                     </connections>
