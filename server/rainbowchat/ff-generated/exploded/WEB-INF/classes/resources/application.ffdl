@@ -25,6 +25,9 @@ CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, em
 CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
 CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
+
+DROP COLLECTION COMPLETELY /RCVideo
+
 CREATE OBJECTTYPE RCVideo (url STRING, thumbnailURL STRING, data BYTEARRAY, fromUser REFERENCE /FFUser, toUser REFERENCE /FFUser, users GRABBAG /FFUser, userNameList STRING[])
 
 

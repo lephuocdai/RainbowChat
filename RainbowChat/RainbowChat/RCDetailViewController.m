@@ -74,6 +74,8 @@ typedef enum {
 @synthesize userNameLabel, userProfilePicture, previewView;
 @end
 
+
+
 @interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (strong, nonatomic) RCUser *currentUser;
@@ -89,23 +91,27 @@ typedef enum {
 
 - (void)configureView;
 
+/*
 // Session Management
-//@property (nonatomic) dispatch_queue_t sessionQueue;
-//@property (nonatomic) AVCaptureSession *avCapturesession;
-//@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
-//@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
-//@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
-//@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
-//@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
-
-#warning - Need to implement these properties
-// Utilities.
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
-@property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
+@property (nonatomic) dispatch_queue_t sessionQueue;
+@property (nonatomic) AVCaptureSession *avCapturesession;
+@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
+@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
+@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
+@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
+@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
 @property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
+*/
+
+
+// Utilities.
+#warning - Need to implement these properties
 @property (nonatomic) BOOL lockInterfaceRotation;
 @property (nonatomic) id runtimeErrorHandlingObserver;
+@property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
 
+
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
 @property (nonatomic, readwrite) UploadState uploadState;
 @property (nonatomic, readwrite) UploadStateThumbnail uploadStateThumbnail;
 @property (nonatomic, readwrite) UploadStateVideo uploadStateVideo;
@@ -117,7 +123,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
     // Table view footer
-    
     
     NSURL *outputFileURL;
     BOOL isFrontCamera;
@@ -520,16 +525,14 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 */
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
+    
     if (_cameraSwitchButton.isOn) {
         isFrontCamera = YES;
-        [threadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_videos.count inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-//        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
     else {
         isFrontCamera = NO;
-        [threadTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_videos.count inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-//        [self initializeCameraFor:(CurrentUserCell *)[threadTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_videos.count inSection:0]]];
     }
+    [videoProcessor toggleCameraIsFront:isFrontCamera];
 }
 
 #warning Need to implement
@@ -746,6 +749,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     }
 }
 
+/*
 #pragma mark - AVCaptureFileOutput delegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)anOutputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
@@ -846,6 +850,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 		});
 	}
 }
+*/
 
 #pragma mark - AmazonServiceRequest delegate
 
@@ -988,6 +993,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     DBGMSG(@"%s - %@", __func__, exception);
 }
 
+/*
 #pragma mark - Movie Player
 
 - (void)moviePlayBackDidFinish:(NSNotification *)notification {
@@ -999,6 +1005,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     DBGMSG(@"%s - %@", __func__, notification);
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidEnterFullscreenNotification object:nil];
 }
+*/
 
 # pragma mark - Helper
 - (NSDateFormatter*)dateFormatter {

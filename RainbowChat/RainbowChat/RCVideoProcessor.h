@@ -22,6 +22,10 @@
 	AVCaptureSession *captureSession;
 	AVCaptureConnection *audioConnection;
 	AVCaptureConnection *videoConnection;
+    AVCaptureDeviceInput *videoDeviceInput;
+    AVCaptureDeviceInput *audioDeviceInput;
+    AVCaptureVideoDataOutput *videoDataOutput;
+    AVCaptureAudioDataOutput *audioDataOutput;
 	CMBufferQueueRef previewBufferQueue;
 	
 	NSURL *movieURL;
@@ -59,6 +63,7 @@
 
 - (void) startRecording;
 - (void) stopRecording;
+- (void) toggleCameraIsFront:(BOOL)isFront;
 
 - (void) pauseCaptureSession; // Pausing while a recording is in progress will cause the recording to be stopped and saved.
 - (void) resumeCaptureSession;

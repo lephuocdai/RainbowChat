@@ -22,6 +22,7 @@
 @property (readwrite, getter=isRecording) BOOL recording;
 
 @property (readwrite) AVCaptureVideoOrientation videoOrientation;
+@property (readwrite) AVCaptureDevicePosition captureDevicePosition;
 
 @end
 
@@ -42,6 +43,7 @@
         
         // The temporary path for the video before saving it to the photo album
         movieURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"Movie.MOV"]];
+        self.captureDevicePosition = AVCaptureDevicePositionFront;
     }
     return self;
 }
@@ -73,13 +75,14 @@
 
 - (CGFloat)angleOffsetFromPortraitOrientationToOrientation:(AVCaptureVideoOrientation)orientation {
 	CGFloat angle = 0.0;
-	
+    
+#warning Need to optimize this
 	switch (orientation) {
 		case AVCaptureVideoOrientationPortrait:
-			angle = 0.0;
+			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? M_PI : 0.0;
 			break;
 		case AVCaptureVideoOrientationPortraitUpsideDown:
-			angle = M_PI;
+			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? 0.0 : M_PI;
 			break;
 		case AVCaptureVideoOrientationLandscapeRight:
 			angle = -M_PI_2;
@@ -141,8 +144,6 @@
         }
     }
 
-    
-    
     // make sure you have the AssetsLibrary framework added
 	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
 	[library writeVideoAtPathToSavedPhotosAlbum:movieURL completionBlock:^(NSURL *assetURL, NSError *error) {
@@ -333,6 +334,36 @@
 	});
 }
 
+- (void)toggleCameraIsFront:(BOOL)isFront {
+    AVCaptureDevicePosition desiredPosition = (isFront) ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:desiredPosition] error:nil];
+    [captureSession beginConfiguration];
+    [captureSession removeInput:videoDeviceInput];
+    if ([captureSession canAddInput:videoIn]) {
+        [captureSession addInput:videoIn];
+        videoDeviceInput = videoIn;
+    } else
+        [captureSession addInput:videoDeviceInput];
+    
+    [captureSession removeOutput:videoDataOutput];
+    AVCaptureVideoDataOutput *videoOut = [[AVCaptureVideoDataOutput alloc] init];
+    if ([captureSession canAddOutput:videoOut]) {
+        [captureSession addOutput:videoOut];
+        videoDataOutput = videoOut;
+        [videoDataOutput setAlwaysDiscardsLateVideoFrames:YES];
+        [videoDataOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+        // How to manage previously created videoCaptureQ in setupSessionWithPreview method ???
+        // or do we need create instance variable as dispatch_queue_t videoCaptureQ ???
+        dispatch_queue_t videoCaptureQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
+        [videoDataOutput setSampleBufferDelegate:self queue:videoCaptureQueue];
+        videoConnection = [videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
+        self.videoOrientation = [videoConnection videoOrientation];
+    } else
+        [captureSession addOutput:videoDataOutput];
+    
+    [captureSession commitConfiguration];
+}
+
 #pragma mark - Capture
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
@@ -441,34 +472,34 @@
     captureSession = [[AVCaptureSession alloc] init];
     
     // Create audio connection
-    AVCaptureDeviceInput *audioIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self audioDevice] error:nil];
-    if ([captureSession canAddInput:audioIn])
-        [captureSession addInput:audioIn];
+    audioDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self audioDevice] error:nil];
+    if ([captureSession canAddInput:audioDeviceInput])
+        [captureSession addInput:audioDeviceInput];
 	
-	AVCaptureAudioDataOutput *audioOut = [[AVCaptureAudioDataOutput alloc] init];
+	audioDataOutput = [[AVCaptureAudioDataOutput alloc] init];
 	dispatch_queue_t audioCaptureQueue = dispatch_queue_create("Audio Capture Queue", DISPATCH_QUEUE_SERIAL);
-	[audioOut setSampleBufferDelegate:self queue:audioCaptureQueue];
+	[audioDataOutput setSampleBufferDelegate:self queue:audioCaptureQueue];
 #warning Need to check: ARC compliance
 //	dispatch_release(audioCaptureQueue);
-	if ([captureSession canAddOutput:audioOut])
-		[captureSession addOutput:audioOut];
-	audioConnection = [audioOut connectionWithMediaType:AVMediaTypeAudio];
+	if ([captureSession canAddOutput:audioDataOutput])
+		[captureSession addOutput:audioDataOutput];
+	audioConnection = [audioDataOutput connectionWithMediaType:AVMediaTypeAudio];
     
-	// Create video connection
-    AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:AVCaptureDevicePositionBack] error:nil];
-    if ([captureSession canAddInput:videoIn])
-        [captureSession addInput:videoIn];
+	// Create video connection with default position is back
+    videoDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:self.captureDevicePosition] error:nil];
+    if ([captureSession canAddInput:videoDeviceInput])
+        [captureSession addInput:videoDeviceInput];
     
-	AVCaptureVideoDataOutput *videoOut = [[AVCaptureVideoDataOutput alloc] init];
-	[videoOut setAlwaysDiscardsLateVideoFrames:NO]; // set this to NO when using AVAssetWriter
-	[videoOut setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+	videoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
+	[videoDataOutput setAlwaysDiscardsLateVideoFrames:NO]; // set this to NO when using AVAssetWriter
+	[videoDataOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
 	dispatch_queue_t videoCaptureQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
-	[videoOut setSampleBufferDelegate:self queue:videoCaptureQueue];
+	[videoDataOutput setSampleBufferDelegate:self queue:videoCaptureQueue];
 #warning Need to check: ARC compliance
 //	dispatch_release(videoCaptureQueue);
-	if ([captureSession canAddOutput:videoOut])
-		[captureSession addOutput:videoOut];
-	videoConnection = [videoOut connectionWithMediaType:AVMediaTypeVideo];
+	if ([captureSession canAddOutput:videoDataOutput])
+		[captureSession addOutput:videoDataOutput];
+	videoConnection = [videoDataOutput connectionWithMediaType:AVMediaTypeVideo];
 	self.videoOrientation = [videoConnection videoOrientation];
     
 	return YES;
@@ -488,7 +519,7 @@
 	
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureSessionStoppedRunningNotification:) name:AVCaptureSessionDidStopRunningNotification object:captureSession];
 	
-	if ( !captureSession.isRunning )
+	if ( !captureSession.isRunning)
 		[captureSession startRunning];
 }
 
