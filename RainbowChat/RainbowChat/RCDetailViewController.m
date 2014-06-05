@@ -68,6 +68,8 @@ typedef enum {
 @property (nonatomic) IBOutlet UILabel *userNameLabel;
 @property (nonatomic) IBOutlet UIImageView *userProfilePicture;
 @property (nonatomic) IBOutlet UIView *previewView;
+@property (nonatomic) IBOutlet UIView *opponentVideoView;
+@property (nonatomic) IBOutlet UIView *myVideoView;
 @end
 
 @implementation RCCamPreviewFooter
@@ -75,8 +77,13 @@ typedef enum {
 @end
 
 
-
-@interface RCDetailViewController () <AVCaptureFileOutputRecordingDelegate>
+@interface RCDetailViewController () <QBActionStatusDelegate, QBChatDelegate,AVCaptureFileOutputRecordingDelegate> {
+    
+    IBOutlet UIBarButtonItem *callButton;
+    NSUInteger videoChatOpponentID;
+    enum QBVideoChatConferenceType videoChatConferenceType;
+    NSString *sessionID;
+}
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *videos;
@@ -84,24 +91,12 @@ typedef enum {
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 @property (nonatomic) AVPlayer *avPlayer;
 @property (nonatomic) AVPlayerLayer *avPlayerLayer;
-//@property (nonatomic) NSNumber *lastRefreshTime;
+
 
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitchButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
 
 - (void)configureView;
-
-/*
-// Session Management
-@property (nonatomic) dispatch_queue_t sessionQueue;
-@property (nonatomic) AVCaptureSession *avCapturesession;
-@property (nonatomic) AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
-@property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
-@property (nonatomic) AVCaptureDeviceInput *audioDeviceInput;
-@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
-@property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
-@property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
-*/
 
 
 // Utilities.
@@ -116,6 +111,15 @@ typedef enum {
 @property (nonatomic, readwrite) UploadStateThumbnail uploadStateThumbnail;
 @property (nonatomic, readwrite) UploadStateVideo uploadStateVideo;
 
+
+@property (retain) NSNumber *quickbloxID_currentuser;
+@property (retain) NSNumber *quickbloxID_opponentID;
+@property (retain) QBVideoChat *videoChat;
+@property (retain) UIAlertView *callAlert;
+
+- (void)reject;
+- (void)accept;
+
 @end
 
 static inline double radians (double degrees) { return degrees * (M_PI / 180); }
@@ -128,6 +132,9 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     BOOL isFrontCamera;
     NSInteger currentSelectedCell;
 }
+
+@synthesize quickbloxID_currentuser;
+@synthesize quickbloxID_opponentID;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -169,6 +176,10 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     [self refresh];
     
     isFrontCamera = YES;
+    
+    
+    
+    
 }
 
 - (void)configureView {
@@ -180,14 +191,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     _avPlayer = [[AVPlayer alloc] init];
     _avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:_avPlayer];
 
-/*
-    // Create the AVCaptureSession
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    [self setAvCapturesession:session];
-    // Set up session queue
-    dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-	[self setSessionQueue:sessionQueue];
- */
     
     // Initialize the class responsible for managing AV capture session and asset writer
     videoProcessor = [[RCVideoProcessor alloc] init];
@@ -216,6 +219,11 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     oglView.transform = [videoProcessor transformFromCurrentVideoOrientationToOrientation:UIInterfaceOrientationPortrait];
     [((RCCamPreviewFooter*)threadTableView.tableFooterView).previewView addSubview:oglView];
     [footerView.previewView.layer setMasksToBounds:YES];
+    
+    
+    // Quickblox setting
+    footerView.opponentVideoView.hidden = YES;
+    footerView.myVideoView.hidden = YES;
 }
 
 - (void)setPreviewView:(UIView*)aView{
@@ -243,56 +251,87 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     [self setRecordButton:nil];
     [super viewDidUnload];
     [self cleanup];
+    
+    // Quickblox
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.myVideoView = nil;
+    footerView.opponentVideoView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
-/**
-    _uploadState = UploadStateNotUpload;
-    _uploadStateThumbnail = UploadStateThumbnailNotUpload;
-    _uploadStateVideo = UploadStateVideoNotUpload;
-    
-    dispatch_async(_sessionQueue, ^{
-        
-        [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-        [self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
-        
-        __weak RCDetailViewController *weakSelf = self;
-		[self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:_avCapturesession queue:nil usingBlock:^(NSNotification *note) {
-			RCDetailViewController *strongSelf = weakSelf;
-			dispatch_async(strongSelf.sessionQueue, ^{
-				// Manually restarting the session since it must have been stopped due to an error.
-				[strongSelf.avCapturesession startRunning];
-			});
-		}]];
-		[_avCapturesession startRunning];
-    });
- **/
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    // Start sending chat presence
+    [QBChat instance].delegate = self;
+    [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     DBGMSG(@"%s", __func__);
     [super viewWillDisappear:animated];
-/**
-	dispatch_async(_sessionQueue, ^{
-		[_avCapturesession stopRunning];
-        
-		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
-	});
-**/
 }
 
 - (IBAction)recordButtonPushed:(id)sender {
-    
-    // Wait for the recording to start/stop before re-enabling the record button.
-    [_recordButton setEnabled:NO];
-    
+    [self sendVideoMessage];
+}
+
+- (IBAction)callButtonPushed:(id)sender {
+    DBGMSG(@"%s", __func__);
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    // Call
+    if(callButton.tag == 101){
+        callButton.tag = 102;
+        
+        // Hide streaming
+        footerView.userNameLabel.hidden = YES;
+        footerView.userProfilePicture.hidden = YES;
+        footerView.previewView.hidden = YES;
+        footerView.opponentVideoView.hidden = NO;
+        footerView.myVideoView.hidden = NO;
+        
+        // Setup video chat
+        if(self.videoChat == nil){
+            self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstance];
+            self.videoChat.viewToRenderOpponentVideoStream = footerView.opponentVideoView;
+            self.videoChat.viewToRenderOwnVideoStream = footerView.myVideoView;
+        }
+        
+        // Set Audio & Video output
+        self.videoChat.useHeadphone = NO;
+        self.videoChat.useBackCamera = NO;
+        
+        // Call user by ID
+        [self.videoChat callUser:[quickbloxID_opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+        
+        callButton.enabled = NO;
+        
+        // Finish
+    }else{
+        callButton.tag = 101;
+        
+        // Finish call
+        //
+        [self.videoChat finishCall];
+        
+        footerView.userNameLabel.hidden = NO;
+        footerView.userProfilePicture.hidden = NO;
+        footerView.previewView.hidden = NO;
+        footerView.myVideoView.hidden = YES;
+        footerView.opponentVideoView.hidden = YES;
+        
+        // release video chat
+        [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
+        self.videoChat = nil;
+    }
+}
+
+- (void)sendVideoMessage {
     if ( [videoProcessor isRecording] ) {
 		// The recordingWill/DidStop delegate methods will fire asynchronously in response to this call
 		[videoProcessor stopRecording];
@@ -301,34 +340,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 		// The recordingWill/DidStart delegate methods will fire asynchronously in response to this call
         [videoProcessor startRecording];
 	}
-    
-    /*
-    dispatch_async(_sessionQueue, ^{
-        if (![_movieFileOutput isRecording]) {
-            if ([[UIDevice currentDevice] isMultitaskingSupported]) {
-                // Setup background task. This is needed because the captureOutput:didFinishRecordingToOutputFileAtURL: callback is not received until AVCam returns to the foreground unless you request background execution time. This also ensures that there will be time to write the file to the assets library when AVCam is backgrounded. To conclude this background execution, -endBackgroundTask is called in -recorder:recordingDidFinishToOutputFileURL:error: after the recorded file has been saved.
-                [self setBackgroundRecordingID:[[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil]];
-            }
-            
-            // Turning OFF flash for video recording
-#warning - Need to implement
-            
-            // Start recording to a temporary file
-            NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview" stringByAppendingPathExtension:@"mov"]];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:outputFilePath]) {
-                NSError *error;
-                if ([[NSFileManager defaultManager] removeItemAtPath:outputFilePath error:&error] == NO) {
-                    NSLog(@"removeItemAtPath %@ error:%@", outputFilePath, error);
-                }
-            }
-            [_movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
-            
-            
-        } else {
-            [_movieFileOutput stopRecording];
-        }
-    });
-     */
 }
 
 #pragma mark - RCVideoProcessorDelegate
@@ -438,91 +449,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 
 
 #pragma mark - AVFoundation
-/*
-- (void)initializeCameraFor:(CurrentUserCell*)cell {
-    DBGMSG(@"%s", __func__);
-    [_avCapturesession beginConfiguration];
-    _avCapturesession.sessionPreset = AVCaptureSessionPresetLow;
-    _captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_avCapturesession];
-    [_captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    cell.videoView.hidden = YES;
-    cell.userNameLabel.text = _currentUser.firstName;
-    
-    _captureVideoPreviewLayer.frame = cell.videoPreview.bounds;
-    [cell.videoPreview.layer addSublayer:_captureVideoPreviewLayer];
-    
-    [cell.videoPreview.layer setMasksToBounds:YES];
-
-    
-    NSArray *devices = [AVCaptureDevice devices];
-    AVCaptureDevice *frontCamera;
-    AVCaptureDevice *backCamera;
-    AVCaptureDevice *audioDevice;
-    
-    for (AVCaptureDevice *device in devices) {
-        NSLog(@"Device name: %@", [device localizedName]);
-        if ([device hasMediaType:AVMediaTypeVideo]) {
-            if ([device position] == AVCaptureDevicePositionBack) {
-                NSLog(@"Device position : back");
-                backCamera = device;
-            }
-            else {
-                NSLog(@"Device position : front");
-                frontCamera = device;
-            }
-        } else if ([device hasMediaType:AVMediaTypeAudio]) {
-            audioDevice = device;
-        }
-    }
-    
-    // Set device input
-    if (_videoDeviceInput) {
-        [_avCapturesession removeInput:_videoDeviceInput];
-        _videoDeviceInput = nil;
-    }
-    NSError *error = nil;
-    if (!isFrontCamera) {
-        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-        if (!_videoDeviceInput) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
-        }
-        [_avCapturesession addInput:_videoDeviceInput];
-    } else {
-        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
-        if (!_videoDeviceInput) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
-        }
-        [_avCapturesession addInput:_videoDeviceInput];
-    }
-    
-    if (_audioDeviceInput) {
-        [_avCapturesession removeInput:_audioDeviceInput];
-        _audioDeviceInput = nil;
-    }
-    _audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
-    [_avCapturesession addInput:_audioDeviceInput];
-    
-    // Init deviceOutput
-    if (!_stillImageOutput) {
-        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-        [stillImageOutput setOutputSettings:outputSettings];
-        [self setStillImageOutput:stillImageOutput];
-        [_avCapturesession addOutput:_stillImageOutput];
-    }
-    
-    if (!_movieFileOutput) {
-        AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-        [self setMovieFileOutput:movieFileOutput];
-        AVCaptureConnection *connection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-        if ([connection isVideoStabilizationSupported])
-            [connection setEnablesVideoStabilizationWhenAvailable:YES];
-        [_avCapturesession addOutput:_movieFileOutput];
-    }
-    [_avCapturesession commitConfiguration];
-}
-*/
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
     
@@ -552,92 +478,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     return _videos.count;
 }
 
-/*
-- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)tableView.tableFooterView;
-    
-    footerView.userNameLabel.text = _currentUser.firstName;
-    
-    [_avCapturesession beginConfiguration];
-    _avCapturesession.sessionPreset = AVCaptureSessionPresetLow;
-    _captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_avCapturesession];
-    [_captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    _captureVideoPreviewLayer.frame = footerView.previewView.bounds;
-    [footerView.previewView.layer addSublayer:_captureVideoPreviewLayer];
-    
-    [footerView.previewView.layer setMasksToBounds:YES];
-    
-    NSArray *devices = [AVCaptureDevice devices];
-    AVCaptureDevice *frontCamera;
-    AVCaptureDevice *backCamera;
-    AVCaptureDevice *audioDevice;
-    
-    for (AVCaptureDevice *device in devices) {
-        NSLog(@"Device name: %@", [device localizedName]);
-        if ([device hasMediaType:AVMediaTypeVideo]) {
-            if ([device position] == AVCaptureDevicePositionBack) {
-                NSLog(@"Device position : back");
-                backCamera = device;
-            }
-            else {
-                NSLog(@"Device position : front");
-                frontCamera = device;
-            }
-        } else if ([device hasMediaType:AVMediaTypeAudio]) {
-            audioDevice = device;
-        }
-    }
-    
-    // Set device input
-    if (_videoDeviceInput) {
-        [_avCapturesession removeInput:_videoDeviceInput];
-        _videoDeviceInput = nil;
-    }
-    NSError *error = nil;
-    if (!isFrontCamera) {
-        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
-        if (!_videoDeviceInput) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
-        }
-        [_avCapturesession addInput:_videoDeviceInput];
-    } else {
-        _videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
-        if (!_videoDeviceInput) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
-        }
-        [_avCapturesession addInput:_videoDeviceInput];
-    }
-    
-    if (_audioDeviceInput) {
-        [_avCapturesession removeInput:_audioDeviceInput];
-        _audioDeviceInput = nil;
-    }
-    _audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:nil];
-    [_avCapturesession addInput:_audioDeviceInput];
-    
-    // Init deviceOutput
-    if (!_stillImageOutput) {
-        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-        NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-        [stillImageOutput setOutputSettings:outputSettings];
-        [self setStillImageOutput:stillImageOutput];
-        [_avCapturesession addOutput:_stillImageOutput];
-    }
-    
-    if (!_movieFileOutput) {
-        AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-        [self setMovieFileOutput:movieFileOutput];
-        AVCaptureConnection *connection = [_movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-        if ([connection isVideoStabilizationSupported])
-            [connection setEnablesVideoStabilizationWhenAvailable:YES];
-        [_avCapturesession addOutput:_movieFileOutput];
-    }
-    [_avCapturesession commitConfiguration];
-    
-    return footerView;
-}
-*/
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DBGMSG(@"%s", __func__);
@@ -738,6 +578,8 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 #warning - Need to add notification here, then execute the following 2 lines of code outside
             [threadTableView reloadData];
             [self scrollToLastCell];
+            
+            [self setQuickbloxID];
         }
         blockComplete = YES;
     }];
@@ -749,108 +591,51 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     }
 }
 
-/*
-#pragma mark - AVCaptureFileOutput delegate
-
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)anOutputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    DBGMSG(@"%s - %@", __func__, anOutputFileURL);
-    if (error)
-		NSLog(@"%@", error);
+- (void)setQuickbloxID {
     
-    // Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
-//	UIBackgroundTaskIdentifier backgroundRecordingID = self.backgroundRecordingID;
-//	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+    QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
+    extendedAuthRequest.userLogin = ([_currentUser.userName isEqualToString:@"test1@test.c"]) ? @"test1" : @"test2";
+    extendedAuthRequest.userPassword = @"12345678";
+    [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
     
-
-    NSString *outputPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"moview2" stringByAppendingPathExtension:@"mov"]];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:outputPath])
-        [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
     
-    // input file
-    AVAsset* asset = [AVAsset assetWithURL:anOutputFileURL];
-    
-    AVMutableComposition *composition = [AVMutableComposition composition];
-    [composition  addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-    
-    // input clip
-    AVAssetTrack *clipVideoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-    
-    // make it square
-    AVMutableVideoComposition* videoComposition = [AVMutableVideoComposition videoComposition];
-    videoComposition.renderSize = CGSizeMake(clipVideoTrack.naturalSize.height, clipVideoTrack.naturalSize.height);
-    videoComposition.frameDuration = CMTimeMake(1, 30);
-    
-    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(60, 30) );
-    
-    // rotate to portrait
-    AVMutableVideoCompositionLayerInstruction* transformer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:clipVideoTrack];
-    CGAffineTransform t1 = CGAffineTransformMakeTranslation(clipVideoTrack.naturalSize.height, -(clipVideoTrack.naturalSize.width - clipVideoTrack.naturalSize.height) /2 );
-    CGAffineTransform t2 = CGAffineTransformRotate(t1, M_PI_2);
-    
-    CGAffineTransform finalTransform = t2;
-    [transformer setTransform:finalTransform atTime:kCMTimeZero];
-    instruction.layerInstructions = [NSArray arrayWithObject:transformer];
-    videoComposition.instructions = [NSArray arrayWithObject: instruction];
-    
-    // export
-    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality] ;
-    exporter.videoComposition = videoComposition;
-    exporter.outputURL=[NSURL fileURLWithPath:outputPath];
-    exporter.outputFileType=AVFileTypeQuickTimeMovie;
-    
-    [exporter exportAsynchronouslyWithCompletionHandler:^(void){
-        NSLog(@"Exporting done!");
-        outputFileURL = exporter.outputURL;
-        
-        // Generate thumbnail picture
-        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:outputFileURL options:nil];
-        AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-        generator.appliesPreferredTrackTransform = YES;
-        NSError *err = NULL;
-        CMTime time = CMTimeMake(1, 60);
-        CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:&err];
-        UIImage *img = [[UIImage alloc] initWithCGImage:imgRef];
-        NSData *thumbnailData = UIImagePNGRepresentation(img);
-        
-        
-        _newVideo = [[RCVideo alloc] init];
-        _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
-        _newVideo.toUser = _toUser;
-        _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
-        _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
-        
-#warning - Need to send to AWS first
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _uploadStateThumbnail = UploadStateThumbnailStarted;
-            _uploadStateVideo = UploadStateVideoStarted;
-            _uploadState = UploadStateUploading;
-            
-            [self putNewThumbNailWithData:thumbnailData fileName:_newVideo.thumbnailURL toBucket:[RCConstant transferManagerBucket] delegate:self];
-            [self putNewVideoWithData:[NSData dataWithContentsOfURL:outputFileURL] fileName:_newVideo.url toBucket:[RCConstant transferManagerBucket] delegate:self];
-            
-        });
-    }];
-    
+    if ([_currentUser.userName isEqualToString:@"test1@test.c"]) {
+        [self setQuickbloxID_currentuser:@1180746];
+        [self setQuickbloxID_opponentID:@1180748];
+    } else {
+        [self setQuickbloxID_currentuser:@1180748];
+        [self setQuickbloxID_opponentID:@1180746];
+    }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == RecordingContext) {
-		BOOL isRecording = [change[NSKeyValueChangeNewKey] boolValue];
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if (isRecording) {
-				[_recordButton setEnabled:YES];
-                [_recordButton setTintColor:[UIColor redColor]];
-			}
-			else {
-				[_recordButton setEnabled:YES];
-                [_recordButton setTintColor:[UIColor blueColor]];
-			}
-		});
-	}
+#pragma mark - QBActionStatusDelegate
+// QuickBlox API queries delegate
+- (void)completedWithResult:(Result *)result{
+    DBGMSG(@"%s - result = %@", __func__, result);
+    // QuickBlox session creation  result
+    if([result isKindOfClass:[QBAAuthSessionCreationResult class]]){
+        
+        // Success result
+        if(result.success){
+            
+            // Set QuickBlox Chat delegate
+            //
+            [QBChat instance].delegate = self;
+            
+            QBUUser *user = [QBUUser user];
+            user.ID = ((QBAAuthSessionCreationResult *)result).session.userID;
+            user.password = @"12345678";
+            
+            // Login to QuickBlox Chat
+            //
+            [[QBChat instance] loginWithUser:user];
+        }else{
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[[result errors] description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        }
+    }
 }
-*/
 
 #pragma mark - AmazonServiceRequest delegate
 
@@ -993,20 +778,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     DBGMSG(@"%s - %@", __func__, exception);
 }
 
-/*
-#pragma mark - Movie Player
-
-- (void)moviePlayBackDidFinish:(NSNotification *)notification {
-    DBGMSG(@"%s - %@", __func__, notification);
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
-}
-
-- (void)willEnterFullScreen:(NSNotification *)notification {
-    DBGMSG(@"%s - %@", __func__, notification);
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerDidEnterFullscreenNotification object:nil];
-}
-*/
-
 # pragma mark - Helper
 - (NSDateFormatter*)dateFormatter {
     static NSDateFormatter *_dateFormatter = nil;
@@ -1016,6 +787,182 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         [_dateFormatter setDateFormat:@"yyyy-MM-dd-HH:mm"];
     });
     return _dateFormatter;
+}
+
+#pragma mark - QBChatDelegate 
+
+-(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString *)_sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType{
+    NSLog(@"chatDidReceiveCallRequestFromUser %lu", (unsigned long)userID);
+    
+    // save  opponent data
+    videoChatOpponentID = userID;
+    videoChatConferenceType = conferenceType;
+    sessionID = _sessionID;
+    
+    NSLog(@"receive sessionID = %@", sessionID);
+    
+    // show call alert
+    if (self.callAlert == nil) {
+        NSString *message = [NSString stringWithFormat:@"%@ is calling. Would you like to answer?", [self.currentUser.userName isEqualToString:@"test1@test.c"] ? @"Test Jiro" : @"Test Taro"];
+        self.callAlert = [[UIAlertView alloc] initWithTitle:@"Call"
+                                                    message:message
+                                                   delegate:self
+                                          cancelButtonTitle:@"Decline"
+                                          otherButtonTitles:@"Accept", nil];
+        [self.callAlert show];
+    }
+    
+    // hide call alert if opponent has canceled call
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCallAlert) object:nil];
+    [self performSelector:@selector(hideCallAlert) withObject:nil afterDelay:4];
+    
+}
+
+-(void) chatCallUserDidNotAnswer:(NSUInteger)userID{
+    NSLog(@"chatCallUserDidNotAnswer %lu", (unsigned long)userID);
+    
+    callButton.enabled = YES;
+    callButton.tag = 101;
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"QuickBlox VideoChat" message:@"User isn't answering. Please try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
+}
+
+
+-(void) chatCallDidRejectByUser:(NSUInteger)userID{
+    NSLog(@"chatCallDidRejectByUser %lu", (unsigned long)userID);
+    
+    callButton.enabled = YES;
+    callButton.tag = 101;
+    
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"QuickBlox VideoChat"
+                          message:@"User has rejected your call."
+                          delegate:nil
+                          cancelButtonTitle:@"Ok"
+                          otherButtonTitles:nil];
+    [alert show];
+}
+
+-(void) chatCallDidAcceptByUser:(NSUInteger)userID{
+    NSLog(@"chatCallDidAcceptByUser %lu", (unsigned long)userID);
+    
+    callButton.enabled = YES;
+    callButton.tag = 102;
+    
+    // Hide streaming
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.userNameLabel.hidden = YES;
+    footerView.userProfilePicture.hidden = YES;
+    footerView.previewView.hidden = YES;
+    footerView.opponentVideoView.hidden = NO;
+    footerView.myVideoView.hidden = NO;
+}
+
+-(void) chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status{
+    NSLog(@"chatCallDidStopByUser %lu purpose %@", (unsigned long)userID, status);
+    
+    if([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]){
+        
+        self.callAlert.delegate = nil;
+        [self.callAlert dismissWithClickedButtonIndex:0 animated:YES];
+        self.callAlert = nil;
+        
+    }else{
+        // Show streaming
+        RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+        footerView.userNameLabel.hidden = NO;
+        footerView.userProfilePicture.hidden = NO;
+        footerView.previewView.hidden = NO;
+        footerView.opponentVideoView.hidden = YES;
+        footerView.myVideoView.hidden = YES;
+        
+        callButton.tag = 101;
+    }
+    
+    callButton.enabled = YES;
+    
+    // release video chat
+    //
+    [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
+    self.videoChat = nil;
+}
+
+- (void)chatCallDidStartWithUser:(NSUInteger)userID sessionID:(NSString *)sessionID{
+    NSLog(@"chatCallDidAcceptByUser %lu", (unsigned long)userID);
+}
+
+- (void)didStartUseTURNForVideoChat{
+    //    NSLog(@"_____TURN_____TURN_____");
+}
+
+- (void)reject {
+    // Reject call
+    if(self.videoChat == nil){
+        self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstanceWithSessionID:sessionID];
+    }
+    [self.videoChat rejectCallWithOpponentID:videoChatOpponentID];
+
+    [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
+    self.videoChat = nil;
+    
+    // update UI
+    callButton.enabled = YES;
+}
+
+- (void)accept {
+    NSLog(@"accept");
+    
+    // Hide streaming
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.userNameLabel.hidden = YES;
+    footerView.userProfilePicture.hidden = YES;
+    footerView.previewView.hidden = YES;
+    footerView.opponentVideoView.hidden = NO;
+    footerView.myVideoView.hidden = NO;
+    
+    // Setup video chat
+    if(self.videoChat == nil){
+        self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstanceWithSessionID:sessionID];
+        self.videoChat.viewToRenderOpponentVideoStream = footerView.opponentVideoView;
+        self.videoChat.viewToRenderOwnVideoStream = footerView.myVideoView;
+    }
+    
+    // Set Audio & Video output
+    self.videoChat.useHeadphone = NO;
+    self.videoChat.useBackCamera = NO;
+    
+    // Accept call
+    [self.videoChat acceptCallWithOpponentID:videoChatOpponentID conferenceType:videoChatConferenceType];
+
+    callButton.enabled = YES;
+    callButton.tag = 102;
+}
+
+#pragma mark UIAlertView
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    switch (buttonIndex) {
+            // Reject
+        case 0:
+            [self reject];
+            break;
+            // Accept
+        case 1:
+            [self accept];
+            break;
+            
+        default:
+            break;
+    }
+    
+    self.callAlert = nil;
+}
+
+- (void)hideCallAlert{
+    [self.callAlert dismissWithClickedButtonIndex:-1 animated:YES];
+    self.callAlert = nil;
+    callButton.enabled = YES;
 }
 
 @end

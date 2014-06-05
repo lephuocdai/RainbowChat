@@ -207,6 +207,7 @@
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
             NSLog(@"first friend = %@", (RCUser*)[_friends firstObject]);
+            self.title = self.currentUser.nickname;
             [self.tableView reloadData];
         }
     }];

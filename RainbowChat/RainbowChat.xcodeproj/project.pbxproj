@@ -51,6 +51,19 @@
 		F0BB8FD51930A611001FCF16 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD41930A611001FCF16 /* CoreMedia.framework */; };
 		F0BB8FD71930A61C001FCF16 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */; };
 		F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */; };
+		F0C50068193EF3BB00A3F63D /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50067193EF3BB00A3F63D /* Quickblox.framework */; };
+		F0C50069193EF3BB00A3F63D /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50067193EF3BB00A3F63D /* Quickblox.framework */; };
+		F0C5006B193EF3E500A3F63D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006A193EF3E500A3F63D /* CFNetwork.framework */; };
+		F0C5006D193EF3EF00A3F63D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006C193EF3EF00A3F63D /* SystemConfiguration.framework */; };
+		F0C5006F193EF40900A3F63D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006E193EF40900A3F63D /* CoreLocation.framework */; };
+		F0C50071193EF41F00A3F63D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50070193EF41F00A3F63D /* AudioToolbox.framework */; };
+		F0C50073193EF42C00A3F63D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50072193EF42B00A3F63D /* Accelerate.framework */; };
+		F0C50075193EF43D00A3F63D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50074193EF43D00A3F63D /* Security.framework */; };
+		F0C50077193EF45B00A3F63D /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */; };
+		F0C50079193EF46900A3F63D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50078193EF46800A3F63D /* libxml2.dylib */; };
+		F0C5007B193EF47A00A3F63D /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5007A193EF47A00A3F63D /* libresolv.dylib */; };
+		F0C5007E193EFC8600A3F63D /* RCCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C5007D193EFC8600A3F63D /* RCCallViewController.m */; };
+		F0C5007F193EFC8600A3F63D /* RCCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C5007D193EFC8600A3F63D /* RCCallViewController.m */; };
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
@@ -83,8 +96,8 @@
 		F0FCCD0D1921FB6500B9CF7D /* JSONUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */; };
 		F0FCCD0E1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */; };
 		F0FCCD0F1921FB6500B9CF7D /* RegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */; };
-		F0FCCD101921FB6500B9CF7D /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* Request.m */; };
-		F0FCCD111921FB6500B9CF7D /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* Request.m */; };
+		F0FCCD101921FB6500B9CF7D /* RequestTVM.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* RequestTVM.m */; };
+		F0FCCD111921FB6500B9CF7D /* RequestTVM.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCF91921FB6500B9CF7D /* RequestTVM.m */; };
 		F0FCCD121921FB6500B9CF7D /* RequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */; };
 		F0FCCD131921FB6500B9CF7D /* RequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */; };
 		F0FCCD141921FB6500B9CF7D /* Response.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCFD1921FB6500B9CF7D /* Response.m */; };
@@ -158,6 +171,18 @@
 		F0BB8FD41930A611001FCF16 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		F0C50067193EF3BB00A3F63D /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quickblox.framework; sourceTree = "<group>"; };
+		F0C5006A193EF3E500A3F63D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F0C5006C193EF3EF00A3F63D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F0C5006E193EF40900A3F63D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F0C50070193EF41F00A3F63D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		F0C50072193EF42B00A3F63D /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		F0C50074193EF43D00A3F63D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		F0C50078193EF46800A3F63D /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		F0C5007A193EF47A00A3F63D /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		F0C5007C193EFC8600A3F63D /* RCCallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCallViewController.h; sourceTree = "<group>"; };
+		F0C5007D193EFC8600A3F63D /* RCCallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCallViewController.m; sourceTree = "<group>"; };
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -187,8 +212,8 @@
 		F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONUtilities.m; sourceTree = "<group>"; };
 		F0FCCCF61921FB6500B9CF7D /* RegisterDeviceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterDeviceRequest.h; sourceTree = "<group>"; };
 		F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterDeviceRequest.m; sourceTree = "<group>"; };
-		F0FCCCF81921FB6500B9CF7D /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
-		F0FCCCF91921FB6500B9CF7D /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = "<group>"; };
+		F0FCCCF81921FB6500B9CF7D /* RequestTVM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestTVM.h; sourceTree = "<group>"; };
+		F0FCCCF91921FB6500B9CF7D /* RequestTVM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestTVM.m; sourceTree = "<group>"; };
 		F0FCCCFA1921FB6500B9CF7D /* RequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestDelegate.h; sourceTree = "<group>"; };
 		F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestDelegate.m; sourceTree = "<group>"; };
 		F0FCCCFC1921FB6500B9CF7D /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
@@ -202,6 +227,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0C5007B193EF47A00A3F63D /* libresolv.dylib in Frameworks */,
+				F0C50079193EF46900A3F63D /* libxml2.dylib in Frameworks */,
+				F0C50077193EF45B00A3F63D /* libz.1.2.5.dylib in Frameworks */,
+				F0C50075193EF43D00A3F63D /* Security.framework in Frameworks */,
+				F0C50073193EF42C00A3F63D /* Accelerate.framework in Frameworks */,
+				F0C50071193EF41F00A3F63D /* AudioToolbox.framework in Frameworks */,
+				F0C5006F193EF40900A3F63D /* CoreLocation.framework in Frameworks */,
+				F0C5006D193EF3EF00A3F63D /* SystemConfiguration.framework in Frameworks */,
+				F0C5006B193EF3E500A3F63D /* CFNetwork.framework in Frameworks */,
 				F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */,
 				F0BB8FD71930A61C001FCF16 /* CoreVideo.framework in Frameworks */,
 				F0BB8FD51930A611001FCF16 /* CoreMedia.framework in Frameworks */,
@@ -210,6 +244,7 @@
 				F0BB8FBB192A5C57001FCF16 /* MobileCoreServices.framework in Frameworks */,
 				F0BB8FCF1930A5D6001FCF16 /* OpenGLES.framework in Frameworks */,
 				F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */,
+				F0C50068193EF3BB00A3F63D /* Quickblox.framework in Frameworks */,
 				F0688B97190CF1AA00E933F8 /* CoreGraphics.framework in Frameworks */,
 				F0FCCCE51921EC2A00B9CF7D /* AWSS3.framework in Frameworks */,
 				F0688B9B190CF1AA00E933F8 /* CoreData.framework in Frameworks */,
@@ -231,6 +266,7 @@
 				F0688BBE190CF1AB00E933F8 /* UIKit.framework in Frameworks */,
 				F0FCCCE41921EC2A00B9CF7D /* AWSRuntime.framework in Frameworks */,
 				F0688BBD190CF1AB00E933F8 /* Foundation.framework in Frameworks */,
+				F0C50069193EF3BB00A3F63D /* Quickblox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +296,16 @@
 		F0688B93190CF1AA00E933F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0C5007A193EF47A00A3F63D /* libresolv.dylib */,
+				F0C50078193EF46800A3F63D /* libxml2.dylib */,
+				F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */,
+				F0C50074193EF43D00A3F63D /* Security.framework */,
+				F0C50072193EF42B00A3F63D /* Accelerate.framework */,
+				F0C50070193EF41F00A3F63D /* AudioToolbox.framework */,
+				F0C5006E193EF40900A3F63D /* CoreLocation.framework */,
+				F0C5006C193EF3EF00A3F63D /* SystemConfiguration.framework */,
+				F0C5006A193EF3E500A3F63D /* CFNetwork.framework */,
+				F0C50067193EF3BB00A3F63D /* Quickblox.framework */,
 				F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */,
 				F0BB8FD61930A61C001FCF16 /* CoreVideo.framework */,
 				F0BB8FD41930A611001FCF16 /* CoreMedia.framework */,
@@ -393,12 +439,14 @@
 		F0B2DAEE191A404200226963 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				F0BB8FBC192A5F9E001FCF16 /* RCVideoProcessor.h */,
+				F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */,
 				F0688BAE190CF1AB00E933F8 /* RCMasterViewController.h */,
 				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
 				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
 				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
-				F0BB8FBC192A5F9E001FCF16 /* RCVideoProcessor.h */,
-				F0BB8FBD192A5F9E001FCF16 /* RCVideoProcessor.m */,
+				F0C5007C193EFC8600A3F63D /* RCCallViewController.h */,
+				F0C5007D193EFC8600A3F63D /* RCCallViewController.m */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -433,8 +481,8 @@
 				F0FCCCF51921FB6500B9CF7D /* JSONUtilities.m */,
 				F0FCCCF61921FB6500B9CF7D /* RegisterDeviceRequest.h */,
 				F0FCCCF71921FB6500B9CF7D /* RegisterDeviceRequest.m */,
-				F0FCCCF81921FB6500B9CF7D /* Request.h */,
-				F0FCCCF91921FB6500B9CF7D /* Request.m */,
+				F0FCCCF81921FB6500B9CF7D /* RequestTVM.h */,
+				F0FCCCF91921FB6500B9CF7D /* RequestTVM.m */,
 				F0FCCCFA1921FB6500B9CF7D /* RequestDelegate.h */,
 				F0FCCCFB1921FB6500B9CF7D /* RequestDelegate.m */,
 				F0FCCCFC1921FB6500B9CF7D /* Response.h */,
@@ -584,6 +632,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0FCCD0C1921FB6500B9CF7D /* JSONUtilities.m in Sources */,
+				F0C5007E193EFC8600A3F63D /* RCCallViewController.m in Sources */,
 				F0FCCD041921FB6500B9CF7D /* Crypto.m in Sources */,
 				F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
@@ -609,7 +658,7 @@
 				F0FCCD061921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
 				F0FCCD121921FB6500B9CF7D /* RequestDelegate.m in Sources */,
 				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
-				F0FCCD101921FB6500B9CF7D /* Request.m in Sources */,
+				F0FCCD101921FB6500B9CF7D /* RequestTVM.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
 				F0FCCD081921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0688BB0190CF1AB00E933F8 /* RCMasterViewController.m in Sources */,
@@ -630,13 +679,14 @@
 				F0FCCD0B1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
 				F0BB8FC91930A316001FCF16 /* ShaderUtilities.c in Sources */,
 				F0FCCD051921FB6500B9CF7D /* Crypto.m in Sources */,
-				F0FCCD111921FB6500B9CF7D /* Request.m in Sources */,
+				F0FCCD111921FB6500B9CF7D /* RequestTVM.m in Sources */,
 				F0FCCD091921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0BB8FBF192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
 				F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
 				F0FCCD151921FB6500B9CF7D /* Response.m in Sources */,
+				F0C5007F193EFC8600A3F63D /* RCCallViewController.m in Sources */,
 				F0FCCCD31921CAE800B9CF7D /* RCVideo.m in Sources */,
 				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
 				F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
@@ -768,6 +818,19 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
 				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					MobileCoreServices,
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lstdc++",
+					"-lxml2",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -786,6 +849,19 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RainbowChat/RainbowChat-Prefix.pch";
 				INFOPLIST_FILE = "RainbowChat/RainbowChat-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					MobileCoreServices,
+					"-framework",
+					Security,
+					"-framework",
+					SystemConfiguration,
+					"-lstdc++",
+					"-lxml2",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -101,12 +101,10 @@
             } else {
                 if (theObj) {
                     [self saveUserCredentialsInKeyChain];
-                    [MBProgressHUD hideHUDForView:self.view animated:YES];
-                    [self dismissViewControllerAnimated:YES completion:^{
-                        // Upon successful dismiss, handle login.
-                        [self handleSuccessfulLogin];
-                    }];
-
+                    QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
+                    extendedAuthRequest.userLogin = ([email isEqualToString:@"test1@test.c"])? @"test1" : @"test2";
+                    extendedAuthRequest.userPassword = @"12345678";
+                    [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
                 }
             }
         }];
@@ -141,6 +139,46 @@
     [self.delegate loginViewControllerDidLoginUser];
 }
 
+#pragma mark - QBActionStatusDelegate
+// QuickBlox API queries delegate
+- (void)completedWithResult:(Result *)result {
+    DBGMSG(@"%s", __func__);
+    // QuickBlox session creation  result
+    if ([result isKindOfClass:[QBAAuthSessionCreationResult class]]) {
+        if (result.success) {
+            // Set QuickBlox Chat delegate
+            //
+            [QBChat instance].delegate = self;
+            QBUUser *user = [QBUUser user];
+            user.ID = ((QBAAuthSessionCreationResult *)result).session.userID;
+            user.password = @"12345678";
+            
+            // Login to QuickBlox Chat
+            //
+            [[QBChat instance] loginWithUser:user];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:[[result errors] description]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+}
 
+#pragma mark QBChatDelegate
+- (void)chatDidLogin {
+    DBGMSG(@"%s", __func__);
+    // Show main controller
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // Upon successful dismiss, handle login.
+        [self handleSuccessfulLogin];
+    }];
+}
+- (void)chatDidNotLogin{
+    DBGMSG(@"%s", __func__);
+}
 
 @end

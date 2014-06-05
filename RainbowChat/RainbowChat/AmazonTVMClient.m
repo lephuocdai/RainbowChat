@@ -69,7 +69,7 @@
     NSString         *uid = [AmazonKeyChainWrapper getUidForDevice];
     NSString         *key = [AmazonKeyChainWrapper getKeyForDevice];
 
-    Request          *request = [[GetTokenRequest alloc] initWithEndpoint:self.endpoint andUid:uid andKey:key usingSSL:self.useSSL];
+    RequestTVM          *request = [[GetTokenRequest alloc] initWithEndpoint:self.endpoint andUid:uid andKey:key usingSSL:self.useSSL];
     ResponseHandler  *handler = [[GetTokenResponseHandler alloc] initWithKey:key];
 
     GetTokenResponse *response = (GetTokenResponse *)[self processRequest:request responseHandler:handler];
@@ -84,7 +84,7 @@
     return response;
 }
 
--(Response *)processRequest:(Request *)request responseHandler:(ResponseHandler *)handler {
+-(Response *)processRequest:(RequestTVM *)request responseHandler:(ResponseHandler *)handler {
     DBGMSG(@"%s", __func__);
     int             retries   = 2;
     RequestDelegate *delegate = [[RequestDelegate alloc] init];

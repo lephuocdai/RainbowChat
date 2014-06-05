@@ -13,12 +13,12 @@
  * permissions and limitations under the License.
  */
 
-#import "Request.h"
+#import "RequestTVM.h"
 
 #define REGISTER_REQUEST        @"http://%@/registerdevice?uid=%@&key=%@"
 #define SSL_REGISTER_REQUEST    @"https://%@/registerdevice?uid=%@&key=%@"
 
-@interface RegisterDeviceRequest:Request {
+@interface RegisterDeviceRequest:RequestTVM {
     NSString *endpoint;
     NSString *uid;
     NSString *key;

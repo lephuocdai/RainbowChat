@@ -13,12 +13,12 @@
  * permissions and limitations under the License.
  */
 
-#import "Request.h"
+#import "RequestTVM.h"
 
 #define GET_TOKEN_REQUEST        @"http://%@/gettoken?uid=%@&timestamp=%@&signature=%@"
 #define SSL_GET_TOKEN_REQUEST    @"https://%@/gettoken?uid=%@&timestamp=%@&signature=%@"
 
-@interface GetTokenRequest:Request {
+@interface GetTokenRequest:RequestTVM {
     NSString *endpoint;
     NSString *uid;
     NSString *key;

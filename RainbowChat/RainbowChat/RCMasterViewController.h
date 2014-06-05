@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import <CoreData/CoreData.h>
-
 #import "RCFatFractal.h"
-
 #import "RCWelcomeViewController.h"
+#import <Quickblox/Quickblox.h>
 
 #warning - We do not need a fetchedResultsController since we have the managedObjectContext
 @interface RCMasterViewController : UITableViewController <WelcomeViewControllerDelegate>

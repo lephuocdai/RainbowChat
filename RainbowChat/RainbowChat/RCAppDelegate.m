@@ -79,6 +79,21 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    // Set QuickBlox credentials. Register at admin.quickblox.com, create a new app
+    // and copy credentials here to have your own backend instance enabled.
+    [QBSettings setApplicationID:10793];
+    [QBSettings setAuthorizationKey:@"uxk8UDP3e5bU86V"];
+    [QBSettings setAuthorizationSecret:@"DZg6fZKCOWg-6kP"];
+    [QBSettings setAccountKey:@"niLsXRnpG2bhBtqzGsxF"];
+    
+    NSMutableDictionary *videoChatConfiguration = [[QBSettings videoChatConfiguration] mutableCopy];
+    [videoChatConfiguration setObject:@20 forKey:kQBVideoChatCallTimeout];
+    [videoChatConfiguration setObject:AVCaptureSessionPresetLow forKey:kQBVideoChatFrameQualityPreset];
+    [videoChatConfiguration setObject:@10 forKey:kQBVideoChatVideoFramesPerSecond];
+    [videoChatConfiguration setObject:@3 forKey:kQBVideoChatP2PTimeout];
+    [QBSettings setVideoChatConfiguration:videoChatConfiguration];
+    
+    
     // Initiate the RCFatFractal instance that your application will use
     _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
 #warning - Need to revise this line of code

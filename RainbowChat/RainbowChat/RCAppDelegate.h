@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KeychainItemWrapper.h"
 #import "RCFatFractal.h"
+#import <Quickblox/Quickblox.h>
 
 @interface RCAppDelegate : UIResponder <UIApplicationDelegate>
 

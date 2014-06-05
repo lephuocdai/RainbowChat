@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Quickblox/Quickblox.h>
 
 @class RCLoginViewController;
 
@@ -18,7 +19,7 @@
 @end
 
 
-@interface RCLoginViewController : UIViewController <UITextFieldDelegate>
+@interface RCLoginViewController : UIViewController <UITextFieldDelegate, QBActionStatusDelegate, QBChatDelegate>
 
 @property (nonatomic, assign) id <RCLoginViewControllerDelegate> delegate;
 

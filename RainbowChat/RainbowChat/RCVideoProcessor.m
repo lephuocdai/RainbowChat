@@ -79,10 +79,12 @@
 #warning Need to optimize this
 	switch (orientation) {
 		case AVCaptureVideoOrientationPortrait:
-			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? M_PI : 0.0;
+//			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? M_PI : 0.0;
+            angle = 0.0;
 			break;
 		case AVCaptureVideoOrientationPortraitUpsideDown:
-			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? 0.0 : M_PI;
+//			angle = (self.captureDevicePosition == AVCaptureDevicePositionFront) ? 0.0 : M_PI;
+            angle = M_PI;
 			break;
 		case AVCaptureVideoOrientationLandscapeRight:
 			angle = -M_PI_2;
@@ -98,6 +100,7 @@
 }
 
 - (CGAffineTransform)transformFromCurrentVideoOrientationToOrientation:(AVCaptureVideoOrientation)orientation {
+    DBGMSG(@"%s", __func__);
 	CGAffineTransform transform = CGAffineTransformIdentity;
     
 	// Calculate offsets from an arbitrary reference orientation (portrait)
@@ -106,7 +109,14 @@
 	
 	// Find the difference in angle between the passed in orientation and the current video orientation
 	CGFloat angleOffset = orientationAngleOffset - videoOrientationAngleOffset;
-	transform = CGAffineTransformMakeRotation(angleOffset);
+    if (self.captureDevicePosition == AVCaptureDevicePositionFront) {
+        transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(angleOffset), CGAffineTransformMakeScale(1.0, -1.0));
+    } else {
+        transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(angleOffset), CGAffineTransformMakeScale(-1.0, -1.0));
+    }
+    
+    
+//	transform = CGAffineTransformMakeRotation(angleOffset);
 	
 	return transform;
 }
@@ -335,6 +345,8 @@
 }
 
 - (void)toggleCameraIsFront:(BOOL)isFront {
+    
+#warning - Need to change transform orientation
     AVCaptureDevicePosition desiredPosition = (isFront) ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
     AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:desiredPosition] error:nil];
     [captureSession beginConfiguration];

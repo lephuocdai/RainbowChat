@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-#import "Request.h"
+#import "RequestTVM.h"
 #import "Response.h"
 #import "ResponseHandler.h"
 
@@ -29,7 +29,7 @@
 -(id)initWithEndpoint:(NSString *)endpoint useSSL:(bool)useSSL;
 -(Response *)anonymousRegister;
 -(Response *)getToken;
--(Response *)processRequest:(Request *)request responseHandler:(ResponseHandler *)handler;
+-(Response *)processRequest:(RequestTVM *)request responseHandler:(ResponseHandler *)handler;
 -(NSString *)getEndpointDomain:(NSString *)originalEndpoint;
 
 @end

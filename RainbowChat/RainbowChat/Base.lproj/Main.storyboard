@@ -158,12 +158,24 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view hidden="YES" contentMode="scaleToFill" id="1mj-fe-JxH" userLabel="OpponentVideo">
+                                            <rect key="frame" x="0.0" y="0.0" width="160" height="230"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <view hidden="YES" contentMode="scaleToFill" id="MRs-hr-9qP" userLabel="MyVideo">
+                                            <rect key="frame" x="160" y="0.0" width="160" height="230"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                     <accessibility key="accessibilityConfiguration">
                                         <bool key="isElement" value="YES"/>
                                     </accessibility>
                                     <connections>
+                                        <outlet property="myVideoView" destination="MRs-hr-9qP" id="SLv-og-B0D"/>
+                                        <outlet property="opponentVideoView" destination="1mj-fe-JxH" id="KJg-Sy-dKk"/>
                                         <outlet property="previewView" destination="SkX-Cq-DlD" id="hsj-ZD-vzG"/>
                                         <outlet property="userNameLabel" destination="NWr-79-4vb" id="DoZ-td-QH0"/>
                                         <outlet property="userProfilePicture" destination="u0u-Za-Zzz" id="CT4-yU-Ffp"/>
@@ -256,6 +268,11 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="uBn-27-3wD"/>
+                                    <barButtonItem tag="101" title="Call" id="jTc-74-tmb">
+                                        <connections>
+                                            <action selector="callButtonPushed:" destination="Ah7-4n-0Wa" id="Xaq-SB-77x"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -263,6 +280,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
                     <connections>
+                        <outlet property="callButton" destination="jTc-74-tmb" id="kZJ-G8-pv2"/>
                         <outlet property="cameraSwitchButton" destination="gtv-15-4lX" id="ERS-Z6-Zj6"/>
                         <outlet property="recordButton" destination="Acx-wh-gdd" id="yeV-hF-5lZ"/>
                         <outlet property="threadTableView" destination="Q1g-yP-7Om" id="Cla-Gl-OUJ"/>
@@ -271,6 +289,45 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lrm-kH-fPn" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="898" y="-463"/>
+        </scene>
+        <!--Call View Controller - Calling-->
+        <scene sceneID="ZK5-UN-War">
+            <objects>
+                <viewController id="Nqu-mI-898" customClass="RCCallViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cEc-Wh-UTb">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="bLG-Ot-arB">
+                                <rect key="frame" x="0.0" y="0.0" width="156" height="234"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="icv-Mn-aGs">
+                                <rect key="frame" x="160" y="316" width="160" height="252"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" title="Calling" id="MSO-Mw-aFl">
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="TvX-fX-hGt">
+                            <connections>
+                                <action selector="stop:" destination="Nqu-mI-898" id="sKe-5h-g1d"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="currentUserVideoView" destination="icv-Mn-aGs" id="bRM-eN-Haw"/>
+                        <outlet property="stopButton" destination="TvX-fX-hGt" id="qnY-pX-Ihb"/>
+                        <outlet property="toUserVideoView" destination="bLG-Ot-arB" id="4ff-SE-oz2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ry8-ha-AMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1427" y="-463"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="McG-xC-vsb">
