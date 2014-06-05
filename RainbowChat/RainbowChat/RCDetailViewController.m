@@ -83,6 +83,7 @@ typedef enum {
     NSUInteger videoChatOpponentID;
     enum QBVideoChatConferenceType videoChatConferenceType;
     NSString *sessionID;
+    BOOL isCalling;
 }
 
 @property (strong, nonatomic) RCUser *currentUser;
@@ -218,6 +219,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     footerView.opponentVideoView.hidden = YES;
     footerView.myVideoView.hidden = YES;
     callButton.title = @"Call";
+    isCalling = NO;
 }
 
 - (void)setPreviewView:(UIView*)aView{
@@ -295,15 +297,16 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         
         // Set Audio & Video output
         self.videoChat.useHeadphone = NO;
-        self.videoChat.useBackCamera = NO;
+        self.videoChat.useBackCamera = !isFrontCamera;
         
         // Call user by ID
         [self.videoChat callUser:[quickbloxID_opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
         
         callButton.enabled = NO;
         callButton.title = @"Calling";
-        
-        // Finish
+    
+        isCalling = YES;
+    // Finish
     }else{
         callButton.tag = 101;
     
@@ -316,6 +319,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         // release video chat
         [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
         self.videoChat = nil;
+        isCalling = NO;
     }
 }
 
@@ -446,7 +450,12 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     else {
         isFrontCamera = NO;
     }
-    [videoProcessor toggleCameraIsFront:isFrontCamera];
+    
+    if (isCalling) {
+        if (self.videoChat != nil)
+            self.videoChat.useBackCamera = !isFrontCamera;
+    } else
+        [videoProcessor toggleCameraIsFront:isFrontCamera];
 }
 
 #warning Need to implement
@@ -925,7 +934,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     // Set Audio & Video output
     self.videoChat.useHeadphone = NO;
-    self.videoChat.useBackCamera = NO;
+    self.videoChat.useBackCamera = !isFrontCamera;
     
     // Accept call
     [self.videoChat acceptCallWithOpponentID:videoChatOpponentID conferenceType:videoChatConferenceType];
@@ -933,21 +942,20 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     callButton.enabled = YES;
     callButton.tag = 102;
     callButton.title = @"Stop";
+    
+    isCalling = YES;
 }
 
 #pragma mark UIAlertView
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     switch (buttonIndex) {
-            // Reject
         case 0:
             [self reject];
             break;
-            // Accept
         case 1:
             [self accept];
             break;
-            
         default:
             break;
     }
