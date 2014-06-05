@@ -62,8 +62,6 @@
 		F0C50077193EF45B00A3F63D /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */; };
 		F0C50079193EF46900A3F63D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50078193EF46800A3F63D /* libxml2.dylib */; };
 		F0C5007B193EF47A00A3F63D /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5007A193EF47A00A3F63D /* libresolv.dylib */; };
-		F0C5007E193EFC8600A3F63D /* RCCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C5007D193EFC8600A3F63D /* RCCallViewController.m */; };
-		F0C5007F193EFC8600A3F63D /* RCCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C5007D193EFC8600A3F63D /* RCCallViewController.m */; };
 		F0D02F6D19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F6E19209704005F3422 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D02F6C19209704005F3422 /* RCUser.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
@@ -181,8 +179,6 @@
 		F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		F0C50078193EF46800A3F63D /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F0C5007A193EF47A00A3F63D /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
-		F0C5007C193EFC8600A3F63D /* RCCallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCallViewController.h; sourceTree = "<group>"; };
-		F0C5007D193EFC8600A3F63D /* RCCallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCallViewController.m; sourceTree = "<group>"; };
 		F0D02F6B19209704005F3422 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
 		F0D02F6C19209704005F3422 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -445,8 +441,6 @@
 				F0688BAF190CF1AB00E933F8 /* RCMasterViewController.m */,
 				F0688BB1190CF1AB00E933F8 /* RCDetailViewController.h */,
 				F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */,
-				F0C5007C193EFC8600A3F63D /* RCCallViewController.h */,
-				F0C5007D193EFC8600A3F63D /* RCCallViewController.m */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -632,7 +626,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0FCCD0C1921FB6500B9CF7D /* JSONUtilities.m in Sources */,
-				F0C5007E193EFC8600A3F63D /* RCCallViewController.m in Sources */,
 				F0FCCD041921FB6500B9CF7D /* Crypto.m in Sources */,
 				F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
@@ -686,7 +679,6 @@
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
 				F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
 				F0FCCD151921FB6500B9CF7D /* Response.m in Sources */,
-				F0C5007F193EFC8600A3F63D /* RCCallViewController.m in Sources */,
 				F0FCCCD31921CAE800B9CF7D /* RCVideo.m in Sources */,
 				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
 				F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,

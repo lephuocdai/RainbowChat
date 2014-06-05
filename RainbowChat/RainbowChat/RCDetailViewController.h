@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "RCPreviewView.h"
 #import "RCVideoProcessor.h"
-#import "RCCallViewController.h"
 #import "RCUser.h"
 #import <Quickblox/Quickblox.h>
 

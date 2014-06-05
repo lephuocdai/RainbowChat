@@ -176,10 +176,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     [self refresh];
     
     isFrontCamera = YES;
-    
-    
-    
-    
 }
 
 - (void)configureView {
@@ -201,9 +197,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 	[notificationCenter addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
-//    [notificationCenter addObserver:self selector:@selector(didReturnUploadFileConnectionSuccess:)
-//                               name:@"didHaveUploadFileConnectionSuccess" object:nil];
-    
     // Setup and start the capture session
     [videoProcessor setupAndStartCaptureSession];
     
@@ -224,6 +217,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     // Quickblox setting
     footerView.opponentVideoView.hidden = YES;
     footerView.myVideoView.hidden = YES;
+    callButton.title = @"Call";
 }
 
 - (void)setPreviewView:(UIView*)aView{
@@ -288,10 +282,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     if(callButton.tag == 101){
         callButton.tag = 102;
         
-        // Hide streaming
-        footerView.userNameLabel.hidden = YES;
-        footerView.userProfilePicture.hidden = YES;
-        footerView.previewView.hidden = YES;
+        // Show call
         footerView.opponentVideoView.hidden = NO;
         footerView.myVideoView.hidden = NO;
         
@@ -310,20 +301,17 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         [self.videoChat callUser:[quickbloxID_opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
         
         callButton.enabled = NO;
+        callButton.title = @"Calling";
         
         // Finish
     }else{
         callButton.tag = 101;
-        
+    
         // Finish call
-        //
         [self.videoChat finishCall];
-        
-        footerView.userNameLabel.hidden = NO;
-        footerView.userProfilePicture.hidden = NO;
-        footerView.previewView.hidden = NO;
         footerView.myVideoView.hidden = YES;
         footerView.opponentVideoView.hidden = YES;
+        [self configureView];
         
         // release video chat
         [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
@@ -824,6 +812,12 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     callButton.enabled = YES;
     callButton.tag = 101;
     
+    // Hide call
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.opponentVideoView.hidden = YES;
+    footerView.myVideoView.hidden = YES;
+    [self configureView];
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"QuickBlox VideoChat" message:@"User isn't answering. Please try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
 }
@@ -834,6 +828,12 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     callButton.enabled = YES;
     callButton.tag = 101;
+    
+    // Hide call
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.opponentVideoView.hidden = YES;
+    footerView.myVideoView.hidden = YES;
+    [self configureView];
     
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:@"QuickBlox VideoChat"
@@ -849,12 +849,10 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     callButton.enabled = YES;
     callButton.tag = 102;
+    callButton.title = @"Stop";
     
-    // Hide streaming
+    // Show call
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
-    footerView.userNameLabel.hidden = YES;
-    footerView.userProfilePicture.hidden = YES;
-    footerView.previewView.hidden = YES;
     footerView.opponentVideoView.hidden = NO;
     footerView.myVideoView.hidden = NO;
 }
@@ -869,21 +867,19 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         self.callAlert = nil;
         
     }else{
-        // Show streaming
-        RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
-        footerView.userNameLabel.hidden = NO;
-        footerView.userProfilePicture.hidden = NO;
-        footerView.previewView.hidden = NO;
-        footerView.opponentVideoView.hidden = YES;
-        footerView.myVideoView.hidden = YES;
-        
         callButton.tag = 101;
+        callButton.title = @"Call";
     }
+    
+    // Hide call
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    footerView.opponentVideoView.hidden = YES;
+    footerView.myVideoView.hidden = YES;
+    [self configureView];
     
     callButton.enabled = YES;
     
     // release video chat
-    //
     [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
     self.videoChat = nil;
 }
@@ -908,6 +904,8 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     // update UI
     callButton.enabled = YES;
+    
+    [self configureView];
 }
 
 - (void)accept {
@@ -915,9 +913,6 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     // Hide streaming
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
-    footerView.userNameLabel.hidden = YES;
-    footerView.userProfilePicture.hidden = YES;
-    footerView.previewView.hidden = YES;
     footerView.opponentVideoView.hidden = NO;
     footerView.myVideoView.hidden = NO;
     
@@ -937,6 +932,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 
     callButton.enabled = YES;
     callButton.tag = 102;
+    callButton.title = @"Stop";
 }
 
 #pragma mark UIAlertView
