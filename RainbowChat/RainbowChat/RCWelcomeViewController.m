@@ -79,10 +79,12 @@
     if ([[segue identifier] isEqualToString:@"presentSignupView"]) {
         RCSignupViewController *signupVC = [segue destinationViewController];
         signupVC.delegate = self;
+        signupVC.managedObjectContext = self.managedObjectContext;
         signupVC.ffInstance = self.ffInstance;
     } else if ([[segue identifier] isEqualToString:@"presentLoginView"]) {
         RCLoginViewController *loginVC = [segue destinationViewController];
         loginVC.delegate = self;
+        loginVC.managedObjectContext = self.managedObjectContext;
         loginVC.ffInstance = self.ffInstance;
     }
 }

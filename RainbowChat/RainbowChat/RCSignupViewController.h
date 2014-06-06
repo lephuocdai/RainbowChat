@@ -22,6 +22,8 @@
 @interface RCSignupViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, assign) id <RCSignupViewControllerDelegate> delegate;
+//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end

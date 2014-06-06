@@ -23,6 +23,8 @@
 @interface RCLoginViewController : UIViewController <UITextFieldDelegate, QBActionStatusDelegate, QBChatDelegate>
 
 @property (nonatomic, assign) id <RCLoginViewControllerDelegate> delegate;
+//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end

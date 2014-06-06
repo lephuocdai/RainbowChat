@@ -17,7 +17,7 @@
 
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
-//@property (nonatomic) NSNumber *lastRefreshTime;
+@property (nonatomic) NSNumber *lastRefreshTime;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
@@ -25,8 +25,31 @@
 
 @implementation RCMasterViewController
 
+@synthesize lastRefreshTime = _lastRefreshTime;
+
 - (void)awakeFromNib {
     [super awakeFromNib];
+}
+
+#pragma mark - User login
+
+- (NSNumber *)lastRefreshTime {
+    if (_lastRefreshTime)
+        return _lastRefreshTime;
+    
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    _lastRefreshTime = [d valueForKey:@"lastRefreshTime"];
+    if (! _lastRefreshTime) {
+        [self setLastRefreshTime:[NSNumber numberWithLongLong:0]];
+    }
+    return _lastRefreshTime;
+}
+
+- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime {
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    [d setValue:lastRefreshTime forKey:@"lastRefreshTime"];
+    _lastRefreshTime = lastRefreshTime;
+    [d synchronize];
 }
 
 #pragma mark - View lifecycle
@@ -36,7 +59,17 @@
     NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     
-	[self checkForAuthentication];
+	[self fetchFromCoreData];
+    [self fetchChangesFromBackEnd];
+    
+    /*
+     Reload the table view if the locale changes -- look at APLEventTableViewCell.m to see how the table view cells are redisplayed.
+     */
+    __weak UITableViewController *weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSCurrentLocaleDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -45,6 +78,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+//    [self checkForAuthentication];
 }
 
 - (void)checkForAuthentication {
@@ -150,25 +184,87 @@
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
         [[segue destinationViewController] setFfInstance:self.ffInstance];
+        [[segue destinationViewController] setManagedObjectContext:self
+         .managedObjectContext];
     }
 }
 
 #pragma mark - Data fetch
-
 - (void)fetchFromCoreData {
+    DBGMSG(@"%s", __func__);
 #warning Need to implement
     /*
      Fetch existing friends.
      Create a fetch request for the Event entity; add a sort descriptor; then execute the fetch.
      */
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCUser"];
+    [request setFetchBatchSize:20];
+    
+    // Order the events by creation date, most recent first.
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"userName" ascending:NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Execute the fetch.
+    NSError *error;
+    NSArray *fetchResults = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (fetchResults == nil) {
+        // Replace this implementation with code to handle the error appropriately.
+        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    
+    // Set self's events array to a mutable copy of the fetch results.
+    [self setFriends:[fetchResults mutableCopy]];
 }
 
 - (void)fetchChangesFromBackEnd {
+    DBGMSG(@"%s", __func__);
 #warning Need to implement
     // Fetch any friends that have been updated on the backend
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
+    
+    NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
+    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+    [[[self.ffInstance newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
+        NSArray *retrieved = response.objs;
+        
+        NSError *cdError;
+        [self.managedObjectContext save:&cdError];
+        if (cdError) {
+            NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+        }
+        
+        if (response.error) {
+            NSLog(@"Failed to retrieve from backend: %@", response.error.localizedDescription);
+        } else {
+            self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+            BOOL newAdditions = NO;
+            for (RCUser * friend in retrieved) {
+                BOOL foundLocally = NO;
+                for (RCUser *localFriend in self.friends) {
+                    if ([localFriend.userName isEqualToString:friend.userName]) {
+                        foundLocally = YES;
+                        break;
+                    }
+                }
+                if (foundLocally) {
+                    NSLog(@"   Friend with name %@ from backend found locally, not adding to local array", friend.userName);
+                } else {
+                    NSLog(@"   Adding new friend with name %@ from backend to local array", friend.userName);
+                    [self.friends addObject:friend];
+                    newAdditions = YES;
+                }
+            }
+            if (newAdditions) {
+                NSLog(@"   Got new stuff from backend; reloading data");
+                [self.tableView reloadData];
+            }
+        }
+    }];
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -235,6 +331,8 @@
     RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
     welcomeViewController.delegate = self;
     welcomeViewController.ffInstance = self.ffInstance;
+    welcomeViewController.managedObjectContext = self.managedObjectContext;
+    
     [self presentViewController:welcomeViewController animated:YES completion:nil];
 }
 
