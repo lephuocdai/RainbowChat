@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSData * data;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * ffUrl;
+@property (nonatomic) NSDate *createdAt;
 @property (nonatomic, retain) RCUser *fromUser;
 @property (nonatomic, retain) RCUser *toUser;
 @property (nonatomic, retain) NSSet *users;

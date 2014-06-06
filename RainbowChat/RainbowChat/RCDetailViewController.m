@@ -79,6 +79,8 @@ typedef enum {
 @interface RCDetailViewController ()
 @property (nonatomic) NSMutableArray *videos;
 @property (nonatomic) NSMutableArray *videoURLs;
+@property (nonatomic) NSNumber *lastRefreshTime;
+
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 @property (nonatomic) AVPlayer *avPlayer;
 @property (nonatomic) AVPlayerLayer *avPlayerLayer;
@@ -107,8 +109,30 @@ typedef enum {
     NSInteger currentSelectedCell;
 }
 
+@synthesize lastRefreshTime = _lastRefreshTime;
 @synthesize quickbloxID_currentuser;
 @synthesize quickbloxID_opponentID;
+
+#pragma mark - User login
+
+- (NSNumber *)lastRefreshTime {
+    if (_lastRefreshTime)
+        return _lastRefreshTime;
+    
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    _lastRefreshTime = [d valueForKey:@"lastRefreshTime"];
+    if (! _lastRefreshTime) {
+        [self setLastRefreshTime:[NSNumber numberWithLongLong:0]];
+    }
+    return _lastRefreshTime;
+}
+
+- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime {
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    [d setValue:lastRefreshTime forKey:@"lastRefreshTime"];
+    _lastRefreshTime = lastRefreshTime;
+    [d synchronize];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -146,7 +170,13 @@ typedef enum {
     
     [self setVideoMessageView];
     
-    [self refresh];
+//    [self refresh];
+    [self fetchFromCoreData];
+    
+    if ([self.ffInstance loggedInUser]) {
+        _currentUser = (RCUser*)[self.ffInstance loggedInUser];
+        [self fetchChangesFromBackEnd];
+    }
     
     useBackCamera = NO;
 }
@@ -529,6 +559,85 @@ typedef enum {
 }
 
 #pragma mark - Data fetch
+
+- (void)fetchFromCoreData {
+    DBGMSG(@"%s", __func__);
+    
+    /*
+     Fetch existing videos.
+     Create a fetch request for the RCVideo entity; add a sort descriptor; then execute the fetch.
+     */
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCVideo"];
+    [request setFetchBatchSize:20];
+    
+    // Order the events by creation date, most recent first.
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Execute the fetch.
+    NSError *error;
+    NSArray *fetchResults = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (fetchResults == nil) {
+        // Replace this implementation with code to handle the error appropriately.
+        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    
+    // Set self's events array to a mutable copy of the fetch results.
+    [self setVideos:[fetchResults mutableCopy]];
+}
+
+- (void)fetchChangesFromBackEnd {
+    __block BOOL blockComplete = NO;
+    [self.ffInstance getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        if (theObj) {
+            NSArray *retrieved = theObj;
+            NSError *cdError;
+            [self.managedObjectContext save:&cdError];
+            if (cdError) {
+                NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+            } else {
+                self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+                BOOL newAdditions = NO;
+                for (RCVideo *video in retrieved) {
+                    BOOL foundLocally = NO;
+                    for (RCVideo *localVideo in self.videos) {
+                        if ([localVideo.url isEqualToString:video.url]) {
+                            foundLocally = YES;
+                            break;
+                        }
+                    }
+                    if (foundLocally) {
+                        NSLog(@"   Friend with name %@ from backend found locally, not adding to local array", video.url);
+                    } else {
+                        NSLog(@"   Adding new friend with name %@ from backend to local array", video.url);
+                        [self.videos addObject:video];
+                        newAdditions = YES;
+                    }
+                }
+                if (newAdditions) {
+                    NSLog(@"   Got new stuff from backend; reloading data");
+                    [threadTableView reloadData];
+                    [self scrollToLastCell];
+                    
+                    [self setQuickbloxID];
+                }
+            }
+            blockComplete = YES;
+        }
+        if (theErr) {
+            NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
+        }
+    }];
+    while (!blockComplete) {
+        NSDate* cycle = [NSDate dateWithTimeIntervalSinceNow:0.001];
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                 beforeDate:cycle];
+    }
+}
 
 - (void)fetchFromBackend {
     DBGMSG(@"%s", __func__);

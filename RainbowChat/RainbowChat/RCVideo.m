@@ -17,6 +17,7 @@
 @dynamic data;
 @dynamic name;
 @dynamic ffUrl;
+@dynamic createdAt;
 @dynamic fromUser;
 @dynamic toUser;
 @dynamic users;

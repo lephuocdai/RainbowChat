@@ -15,6 +15,7 @@
         <userInfo/>
     </entity>
     <entity name="RCVideo" representedClassName="RCVideo" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -26,6 +27,6 @@
     </entity>
     <elements>
         <element name="RCUser" positionX="261" positionY="189" width="128" height="178"/>
-        <element name="RCVideo" positionX="261" positionY="225" width="128" height="163"/>
+        <element name="RCVideo" positionX="261" positionY="225" width="128" height="178"/>
     </elements>
 </model>

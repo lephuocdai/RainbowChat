@@ -54,10 +54,15 @@
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
+    DBGMSG(@"%s", __func__);
     [super viewDidLoad];
     
     NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
+    
+    self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
+    
+    NSLog(@"Current User = %@", self.currentUser);
     
 	[self fetchFromCoreData];
     [self fetchChangesFromBackEnd];
@@ -192,10 +197,9 @@
 #pragma mark - Data fetch
 - (void)fetchFromCoreData {
     DBGMSG(@"%s", __func__);
-#warning Need to implement
     /*
      Fetch existing friends.
-     Create a fetch request for the Event entity; add a sort descriptor; then execute the fetch.
+     Create a fetch request for the RCUser entity; add a sort descriptor; then execute the fetch.
      */
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCUser"];
     [request setFetchBatchSize:20];
@@ -231,38 +235,23 @@
     [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     [[[self.ffInstance newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
-        
+        if (response.error) {
+            NSLog(@"Failed to retrieve from backend: %@", response.error.localizedDescription);
+        } else {
+            // Clean friends array
+            if (self.friends) {
+                [self.friends removeAllObjects];
+                self.friends = nil;
+            }
+            self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+            self.friends = (NSMutableArray*)retrieved;
+            self.title = self.currentUser.nickname;
+            [self.tableView reloadData];
+        }
         NSError *cdError;
         [self.managedObjectContext save:&cdError];
         if (cdError) {
             NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-        }
-        
-        if (response.error) {
-            NSLog(@"Failed to retrieve from backend: %@", response.error.localizedDescription);
-        } else {
-            self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
-            BOOL newAdditions = NO;
-            for (RCUser * friend in retrieved) {
-                BOOL foundLocally = NO;
-                for (RCUser *localFriend in self.friends) {
-                    if ([localFriend.userName isEqualToString:friend.userName]) {
-                        foundLocally = YES;
-                        break;
-                    }
-                }
-                if (foundLocally) {
-                    NSLog(@"   Friend with name %@ from backend found locally, not adding to local array", friend.userName);
-                } else {
-                    NSLog(@"   Adding new friend with name %@ from backend to local array", friend.userName);
-                    [self.friends addObject:friend];
-                    newAdditions = YES;
-                }
-            }
-            if (newAdditions) {
-                NSLog(@"   Got new stuff from backend; reloading data");
-                [self.tableView reloadData];
-            }
         }
     }];
 }
@@ -288,7 +277,7 @@
     DBGMSG(@"%s", __func__);
     if ([self.ffInstance loggedInUser]) {
         self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
-        [self refreshTableAndLoadData];
+//        [self refreshTableAndLoadData];
     }
 }
 
@@ -314,7 +303,8 @@
     }];
 }
 - (IBAction)refreshButtonPressed:(id)sender {
-    [self refreshTableAndLoadData];
+//    [self refreshTableAndLoadData];
+    [self fetchChangesFromBackEnd];
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
