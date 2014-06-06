@@ -593,14 +593,11 @@ typedef enum {
 - (void)fetchChangesFromBackEnd {
     __block BOOL blockComplete = NO;
     [self.ffInstance getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-        if (theObj) {
-            NSArray *retrieved = theObj;
-            NSError *cdError;
-            [self.managedObjectContext save:&cdError];
-            if (cdError) {
-                NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-            } else {
-                self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+        if (theErr) {
+            NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
+        } else {
+            if (theObj) {
+                /*
                 BOOL newAdditions = NO;
                 for (RCVideo *video in retrieved) {
                     BOOL foundLocally = NO;
@@ -622,13 +619,27 @@ typedef enum {
                     NSLog(@"   Got new stuff from backend; reloading data");
                     [threadTableView reloadData];
                 }
+                 */
+                NSArray *retrieved = theObj;
+                
+                if (self.videos) {
+                    [self.videos removeAllObjects];
+                    self.videos = nil;
+                }
+                self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+                self.videos = (NSMutableArray*)retrieved;
+                [threadTableView reloadData];
+                
                 [self scrollToLastCell];
                 [self setQuickbloxID];
+
+                NSError *cdError;
+                [self.managedObjectContext save:&cdError];
+                if (cdError) {
+                    NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+                }
+                blockComplete = YES;
             }
-            blockComplete = YES;
-        }
-        if (theErr) {
-            NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
         }
     }];
     while (!blockComplete) {
