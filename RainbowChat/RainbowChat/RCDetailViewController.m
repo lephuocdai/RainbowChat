@@ -621,10 +621,9 @@ typedef enum {
                 if (newAdditions) {
                     NSLog(@"   Got new stuff from backend; reloading data");
                     [threadTableView reloadData];
-                    [self scrollToLastCell];
-                    
-                    [self setQuickbloxID];
                 }
+                [self scrollToLastCell];
+                [self setQuickbloxID];
             }
             blockComplete = YES;
         }
