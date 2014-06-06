@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Quickblox/Quickblox.h>
+#import "RCFatFractal.h"
 
 @class RCLoginViewController;
 
@@ -22,6 +23,7 @@
 @interface RCLoginViewController : UIViewController <UITextFieldDelegate, QBActionStatusDelegate, QBChatDelegate>
 
 @property (nonatomic, assign) id <RCLoginViewControllerDelegate> delegate;
+@property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end
 

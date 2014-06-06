@@ -25,7 +25,9 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
+    NSLog(@"[FatFractal main] = %@", [FatFractal main]);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,9 +79,11 @@
     if ([[segue identifier] isEqualToString:@"presentSignupView"]) {
         RCSignupViewController *signupVC = [segue destinationViewController];
         signupVC.delegate = self;
+        signupVC.ffInstance = self.ffInstance;
     } else if ([[segue identifier] isEqualToString:@"presentLoginView"]) {
         RCLoginViewController *loginVC = [segue destinationViewController];
         loginVC.delegate = self;
+        loginVC.ffInstance = self.ffInstance;
     }
 }
 

@@ -53,7 +53,6 @@ typedef enum {
 @synthesize userProfilePicture, videoView;
 @end
 
-
 @interface CurrentUserCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *userProfilePicture;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -73,32 +72,18 @@ typedef enum {
 @end
 
 @implementation RCCamPreviewFooter
-@synthesize userNameLabel, userProfilePicture, previewView;
+@synthesize userNameLabel, userProfilePicture, previewView, opponentVideoView, myVideoView;
 @end
 
 
-@interface RCDetailViewController () <QBActionStatusDelegate, QBChatDelegate,AVCaptureFileOutputRecordingDelegate> {
-    
-    IBOutlet UIBarButtonItem *callButton;
-    NSUInteger videoChatOpponentID;
-    enum QBVideoChatConferenceType videoChatConferenceType;
-    NSString *sessionID;
-    BOOL isCalling;
-}
-
-@property (strong, nonatomic) RCUser *currentUser;
+@interface RCDetailViewController ()
 @property (nonatomic) NSMutableArray *videos;
 @property (nonatomic) NSMutableArray *videoURLs;
 @property (nonatomic, getter = getNewVideo) RCVideo *newVideo;
 @property (nonatomic) AVPlayer *avPlayer;
 @property (nonatomic) AVPlayerLayer *avPlayerLayer;
-
-
 @property (strong, nonatomic) IBOutlet UISwitch *cameraSwitchButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
-
-- (void)configureView;
-
 
 // Utilities.
 #warning - Need to implement these properties
@@ -106,31 +91,19 @@ typedef enum {
 @property (nonatomic) id runtimeErrorHandlingObserver;
 @property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
 
-
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
 @property (nonatomic, readwrite) UploadState uploadState;
 @property (nonatomic, readwrite) UploadStateThumbnail uploadStateThumbnail;
 @property (nonatomic, readwrite) UploadStateVideo uploadStateVideo;
-
-
-@property (retain) NSNumber *quickbloxID_currentuser;
-@property (retain) NSNumber *quickbloxID_opponentID;
-@property (retain) QBVideoChat *videoChat;
-@property (retain) UIAlertView *callAlert;
-
-- (void)reject;
-- (void)accept;
-
 @end
 
-static inline double radians (double degrees) { return degrees * (M_PI / 180); }
+//static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 
 @implementation RCDetailViewController {
     IBOutlet UITableView *threadTableView;
     // Table view footer
     
     NSURL *outputFileURL;
-    BOOL isFrontCamera;
+    BOOL useBackCamera;
     NSInteger currentSelectedCell;
 }
 
@@ -153,7 +126,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
 	// Don't update the reference orientation when the device orientation is face up/down or unknown.
 	if ( UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation) )
-		[videoProcessor setReferenceOrientation:orientation];
+		[videoProcessor setReferenceOrientation:(AVCaptureVideoOrientation)orientation];
 }
 
 - (void)setToUser:(RCUser *)toUser {
@@ -161,7 +134,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         _toUser = toUser;
         
         // Update the view.
-        [self configureView];
+        [self setVideoMessageView];
     }
 }
 
@@ -169,17 +142,16 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
     currentSelectedCell = -1;
     
-    [self configureView];
+    [self setVideoMessageView];
     
     [self refresh];
     
-    isFrontCamera = YES;
+    useBackCamera = NO;
 }
 
-- (void)configureView {
+- (void)setVideoMessageView {
     DBGMSG(@"%s", __func__);
     if (_toUser)
         self.title = _toUser.firstName;
@@ -210,7 +182,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     oglView = [[RCPreviewView alloc] initWithFrame:footerView.previewView.bounds];
     // Force orientation to portrait
-    oglView.transform = [videoProcessor transformFromCurrentVideoOrientationToOrientation:UIInterfaceOrientationPortrait];
+    oglView.transform = [videoProcessor transformFromCurrentVideoOrientationToOrientation:(AVCaptureVideoOrientation)UIInterfaceOrientationPortrait];
     [((RCCamPreviewFooter*)threadTableView.tableFooterView).previewView addSubview:oglView];
     [footerView.previewView.layer setMasksToBounds:YES];
     
@@ -297,7 +269,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         
         // Set Audio & Video output
         self.videoChat.useHeadphone = NO;
-        self.videoChat.useBackCamera = !isFrontCamera;
+        self.videoChat.useBackCamera = useBackCamera;
         
         // Call user by ID
         [self.videoChat callUser:[quickbloxID_opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
@@ -314,7 +286,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         [self.videoChat finishCall];
         footerView.myVideoView.hidden = YES;
         footerView.opponentVideoView.hidden = YES;
-        [self configureView];
+        [self setVideoMessageView];
         
         // release video chat
         [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
@@ -395,7 +367,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
         
         // Initiate new video
         _newVideo = [[RCVideo alloc] init];
-        _newVideo.fromUser = (RCUser*)[[FatFractal main] loggedInUser];
+        _newVideo.fromUser = (RCUser*)[self.ffInstance loggedInUser];
         _newVideo.toUser = _toUser;
         _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
         _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
@@ -421,8 +393,8 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 #pragma mark - Public methods
 - (void)refresh {
     DBGMSG(@"%s", __func__);
-    if ([[FatFractal main] loggedInUser]) {
-        _currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+    if ([self.ffInstance loggedInUser]) {
+        _currentUser = (RCUser*)[self.ffInstance loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -444,18 +416,16 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 - (IBAction)switchCamera:(id)sender {
     DBGMSG(@"%s", __func__);
     
-    if (_cameraSwitchButton.isOn) {
-        isFrontCamera = YES;
-    }
-    else {
-        isFrontCamera = NO;
-    }
+    if (_cameraSwitchButton.isOn)
+        useBackCamera = NO;
+    else
+        useBackCamera = YES;
     
     if (isCalling) {
         if (self.videoChat != nil)
-            self.videoChat.useBackCamera = !isFrontCamera;
+            self.videoChat.useBackCamera = useBackCamera;
     } else
-        [videoProcessor toggleCameraIsFront:isFrontCamera];
+        [videoProcessor toggleCameraIsFront:useBackCamera];
 }
 
 #warning Need to implement
@@ -563,7 +533,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
 - (void)fetchFromBackend {
     DBGMSG(@"%s", __func__);
     __block BOOL blockComplete = NO;
-    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [self.ffInstance getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
             _videoURLs = [[NSMutableArray alloc] init];
@@ -750,16 +720,16 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     if (_uploadStateVideo == UploadStateVideoFinished && _uploadStateThumbnail == UploadStateThumbnailFinished) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [self.ffInstance createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr)
                 NSLog(@"%@", theErr);
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-            if (_backgroundRecordingID != UIBackgroundTaskInvalid)
-                [[UIApplication sharedApplication] endBackgroundTask:_backgroundRecordingID];
+            if (backgroundRecordingID != UIBackgroundTaskInvalid)
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
             
             NSError *error = nil;
-            [[FatFractal main] grabBagAdd:(RCUser*)[[FatFractal main] loggedInUser] to:theObj  grabBagName:@"users" error:&error];
-            [[FatFractal main] grabBagAdd:_toUser to:theObj grabBagName:@"users" error:&error];
+            [self.ffInstance grabBagAdd:(RCUser*)[self.ffInstance loggedInUser] to:theObj  grabBagName:@"users" error:&error];
+            [self.ffInstance grabBagAdd:_toUser to:theObj grabBagName:@"users" error:&error];
             if (error)
                 NSLog(@"Add grabbag error %@", error);
             [self fetchFromBackend];
@@ -825,7 +795,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
     footerView.opponentVideoView.hidden = YES;
     footerView.myVideoView.hidden = YES;
-    [self configureView];
+    [self setVideoMessageView];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"QuickBlox VideoChat" message:@"User isn't answering. Please try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
@@ -842,7 +812,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
     footerView.opponentVideoView.hidden = YES;
     footerView.myVideoView.hidden = YES;
-    [self configureView];
+    [self setVideoMessageView];
     
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle:@"QuickBlox VideoChat"
@@ -884,7 +854,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
     footerView.opponentVideoView.hidden = YES;
     footerView.myVideoView.hidden = YES;
-    [self configureView];
+    [self setVideoMessageView];
     
     callButton.enabled = YES;
     
@@ -914,7 +884,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     // update UI
     callButton.enabled = YES;
     
-    [self configureView];
+    [self setVideoMessageView];
 }
 
 - (void)accept {
@@ -934,7 +904,7 @@ static inline double radians (double degrees) { return degrees * (M_PI / 180); }
     
     // Set Audio & Video output
     self.videoChat.useHeadphone = NO;
-    self.videoChat.useBackCamera = !isFrontCamera;
+    self.videoChat.useBackCamera = useBackCamera;
     
     // Accept call
     [self.videoChat acceptCallWithOpponentID:videoChatOpponentID conferenceType:videoChatConferenceType];

@@ -81,7 +81,7 @@
     hud.dimBackground = YES;
     hud.yOffset = -77;
     
-    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     
     // Create new FFUser and registerUser then save to keychain if successful
     RCUser *newUser = [[RCUser alloc] init];
@@ -91,7 +91,7 @@
     newUser.place = place;
     newUser.nickname = fullname;
     
-    [[FatFractal main] registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [self.ffInstance registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr) {
             [self callAlertError:theErr];
             return;

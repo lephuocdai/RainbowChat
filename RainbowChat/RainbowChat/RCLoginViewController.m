@@ -37,6 +37,9 @@
     
     // Pop up the keyboard so users can typing immediately
     [_emailTextField becomeFirstResponder];
+    
+    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
+    NSLog(@"[FatFractal main] = %@", [FatFractal main]);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -88,7 +91,7 @@
         hud.yOffset = -77;
         
         // Login with FatFractal then save to keychain and handleSuccessfulLogin if successful
-        [[FatFractal main] loginWithUserName:email andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [self.ffInstance loginWithUserName:email andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error logging in from LoginViewController: %@", [theErr localizedDescription]);
                 [MBProgressHUD hideHUDForView:self.view animated:YES];

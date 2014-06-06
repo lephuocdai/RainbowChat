@@ -33,6 +33,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
+    NSLog(@"[FatFractal main] = %@", [FatFractal main]);
+    
 	[self checkForAuthentication];
 }
 
@@ -49,6 +52,7 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
         welcomeViewController.delegate = self;
+        welcomeViewController.ffInstance = self.ffInstance;
         [self presentViewController:welcomeViewController animated:YES completion:nil];
     } else {
         [self userIsAuthenticatedFromAppDelegateOnLaunch];
@@ -145,6 +149,7 @@
 //        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
+        [[segue destinationViewController] setFfInstance:self.ffInstance];
     }
 }
 
@@ -185,8 +190,8 @@
 
 - (void)userIsAuthenticatedFromAppDelegateOnLaunch {
     DBGMSG(@"%s", __func__);
-    if ([[FatFractal main] loggedInUser]) {
-        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+    if ([self.ffInstance loggedInUser]) {
+        self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -202,8 +207,8 @@
     // Load from backend
     NSString *uri = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
     _friends = [NSMutableArray array];
-    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
-    [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+    [self.ffInstance getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
             NSLog(@"first friend = %@", (RCUser*)[_friends firstObject]);
@@ -218,7 +223,7 @@
 
 - (IBAction)logoutButtonPressed:(id)sender {
     DBGMSG(@"%s", __func__);
-    [[FatFractal main] logout];
+    [self.ffInstance logout];
     // Clear keychain
     KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
     if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil) {
@@ -229,6 +234,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
     welcomeViewController.delegate = self;
+    welcomeViewController.ffInstance = self.ffInstance;
     [self presentViewController:welcomeViewController animated:YES completion:nil];
 }
 

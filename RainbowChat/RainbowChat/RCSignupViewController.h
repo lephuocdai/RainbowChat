@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RCFatFractal.h"
 
 @class RCSignupViewController;
 
@@ -21,5 +22,6 @@
 @interface RCSignupViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, assign) id <RCSignupViewControllerDelegate> delegate;
+@property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end

@@ -39,7 +39,7 @@
 - (id) init {
     if (self = [super init]) {
         previousSecondTimestamps = [[NSMutableArray alloc] init];
-        referenceOrientation = UIDeviceOrientationPortrait;
+        referenceOrientation = (AVCaptureVideoOrientation)UIDeviceOrientationPortrait;
         
         // The temporary path for the video before saving it to the photo album
         movieURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), @"Movie.MOV"]];
@@ -344,10 +344,10 @@
 	});
 }
 
-- (void)toggleCameraIsFront:(BOOL)isFront {
+- (void)toggleCameraIsFront:(BOOL)isBack {
     
 #warning - Need to change transform orientation
-    AVCaptureDevicePosition desiredPosition = (isFront) ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    AVCaptureDevicePosition desiredPosition = (isBack) ? AVCaptureDevicePositionBack : AVCaptureDevicePositionFront;
     AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:desiredPosition] error:nil];
     [captureSession beginConfiguration];
     [captureSession removeInput:videoDeviceInput];

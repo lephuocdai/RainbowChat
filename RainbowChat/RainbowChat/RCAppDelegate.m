@@ -22,30 +22,27 @@ static KeychainItemWrapper *_keychainItem;
 static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
 @interface RCAppDelegate ()
-
 @property RCWelcomeViewController *welcomeViewController;
 @property RCMasterViewController *masterViewController;
-
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-//@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
-
+@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
 @end
 
 
 @implementation RCAppDelegate
-
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize ffInstance = _ffInstance;
 
 #pragma mark - FatFractal
+/*
 + (RCFatFractal *) ffInstance {
     return _ffInstance;
 }
-
+*/
 + (BOOL)checkForAuthentication {
     if ([_ffInstance loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])){
         NSLog(@"checkForAuthentication: FFUser logged in.");
@@ -55,22 +52,26 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         return NO;
     }
 }
-/*
-@synthesize ffInstance = _ffInstance;
+
+
 - (RCFatFractal *) ffInstance {
     if (_ffInstance != nil) {
         return _ffInstance;
     }
     
-    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL];
-    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-    
+    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+#warning - Need to revise the usage of localstorage
+    //    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+#ifdef DEBUG
+    _ffInstance.debug = YES;
+#endif
     _ffInstance.managedObjectContext = self.managedObjectContext;
     _ffInstance.managedObjectModel = self.managedObjectModel;
     
     return _ffInstance;
 }
-*/
+
 
 + (KeychainItemWrapper*)keychainItem {
     return _keychainItem;
@@ -95,16 +96,15 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     
     
     // Initiate the RCFatFractal instance that your application will use
-    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
-#warning - Need to revise this line of code
-    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-#warning - Need to revise the usage of localstorage
-//    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-#ifdef DEBUG
-    _ffInstance.debug = YES;
-#endif
-    _ffInstance.managedObjectContext = self.managedObjectContext;
-    _ffInstance.managedObjectModel = self.managedObjectModel;
+//    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+//    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+//#warning - Need to revise the usage of localstorage
+////    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+//#ifdef DEBUG
+//    _ffInstance.debug = YES;
+//#endif
+//    _ffInstance.managedObjectContext = self.managedObjectContext;
+//    _ffInstance.managedObjectModel = self.managedObjectModel;
     
     
     // Create the KeychainItem singleton
@@ -119,7 +119,7 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
         
         // Login with FatFractal by initiating connection with server
-        [_ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [self.ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
                 // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
@@ -134,16 +134,11 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         }];
     }
     
-    
-    
     // Override point for customization after application launch.
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-//    RCMasterViewController *controller = (RCMasterViewController *)navigationController.topViewController;
-//    controller.managedObjectContext = self.managedObjectContext;
-//    controller.ffInstance = _ffInstance;
     self.masterViewController = (RCMasterViewController *)navigationController.topViewController;
     self.masterViewController.managedObjectContext = self.managedObjectContext;
-    self.masterViewController.ffInstance = _ffInstance;
+    self.masterViewController.ffInstance = self.ffInstance;
     
     return YES;
 }
@@ -224,7 +219,7 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"RainbowChat.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Presentice.RainbowChat"];
     
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

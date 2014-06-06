@@ -117,7 +117,7 @@
 /* Begin PBXFileReference section */
 		1B0DCF6B15064A5EAC9DC14B /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		55A0B03D680A4613B49E5F4C /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0688B91190CF1AA00E933F8 /* RainbowChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RainbowChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0688B91190CF1AA00E933F8 /* rainbowchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rainbowchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0688B94190CF1AA00E933F8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F0688B96190CF1AA00E933F8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F0688B98190CF1AA00E933F8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -283,7 +283,7 @@
 		F0688B92190CF1AA00E933F8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F0688B91190CF1AA00E933F8 /* RainbowChat.app */,
+				F0688B91190CF1AA00E933F8 /* rainbowchat.app */,
 				F0688BBA190CF1AB00E933F8 /* RainbowChatTests.xctest */,
 			);
 			name = Products;
@@ -506,7 +506,7 @@
 			);
 			name = RainbowChat;
 			productName = RainbowChat;
-			productReference = F0688B91190CF1AA00E933F8 /* RainbowChat.app */;
+			productReference = F0688B91190CF1AA00E933F8 /* rainbowchat.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F0688BB9190CF1AB00E933F8 /* RainbowChatTests */ = {
@@ -537,6 +537,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = lephuocdai;
 				TargetAttributes = {
+					F0688B90190CF1AA00E933F8 = {
+						DevelopmentTeam = FYF5789L32;
+					};
 					F0688BB9190CF1AB00E933F8 = {
 						TestTargetID = F0688B90190CF1AA00E933F8;
 					};
@@ -803,6 +806,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -823,7 +828,8 @@
 					"-lstdc++",
 					"-lxml2",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = rainbowchat;
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -834,6 +840,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -854,7 +862,8 @@
 					"-lstdc++",
 					"-lxml2",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = rainbowchat;
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

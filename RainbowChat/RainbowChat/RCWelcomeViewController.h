@@ -22,5 +22,6 @@
 @interface RCWelcomeViewController : UIViewController <RCSignupViewControllerDelegate, RCLoginViewControllerDelegate>
 
 @property (nonatomic, assign) id <WelcomeViewControllerDelegate> delegate;
+@property (strong, nonatomic) RCFatFractal *ffInstance;
 
 @end
