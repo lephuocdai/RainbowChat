@@ -95,23 +95,15 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Friends" id="tQt-TN-PWz">
-                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="lSG-bt-vIU">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="lSG-bt-vIU">
                             <connections>
-                                <action selector="refreshButtonPressed:" destination="pGg-6v-bdr" id="9vI-yZ-CBM"/>
+                                <action selector="logoutButtonPressed:" destination="pGg-6v-bdr" id="8c7-UG-erW"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="qBH-qQ-hwY">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ngk-Ds-dTE">
-                                <rect key="frame" x="233" y="5" width="71" height="33"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Log out">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="logoutButtonPressed:" destination="pGg-6v-bdr" eventType="touchUpInside" id="o0X-my-aON"/>
-                                </connections>
-                            </button>
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="refresh" id="qBH-qQ-hwY">
+                            <connections>
+                                <action selector="refreshButtonPressed:" destination="pGg-6v-bdr" id="1dM-j9-G6w"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
@@ -278,7 +270,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN"/>
+                    <navigationItem key="navigationItem" title="Detail" id="cra-N8-TIN">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="GFK-i5-YaI">
+                            <connections>
+                                <action selector="refreshButtonPushed:" destination="Ah7-4n-0Wa" id="l87-Q7-rDA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="callButton" destination="jTc-74-tmb" id="kZJ-G8-pv2"/>
                         <outlet property="cameraSwitchButton" destination="gtv-15-4lX" id="ERS-Z6-Zj6"/>

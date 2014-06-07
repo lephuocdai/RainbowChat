@@ -13,7 +13,7 @@
 
 @interface RCVideo : NSManagedObject
 
-@property (nonatomic) NSTimeInterval createdAt;
+@property (nonatomic) NSDate *createdAt;
 @property (nonatomic, retain) NSData * data;
 @property (nonatomic, retain) NSString * ffUrl;
 @property (nonatomic, retain) NSString * name;

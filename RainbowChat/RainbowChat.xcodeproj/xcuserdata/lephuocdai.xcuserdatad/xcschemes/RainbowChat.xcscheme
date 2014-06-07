@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F0688B90190CF1AA00E933F8"
-               BuildableName = "RainbowChat.app"
+               BuildableName = "rainbowchat.app"
                BlueprintName = "RainbowChat"
                ReferencedContainer = "container:RainbowChat.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0688B90190CF1AA00E933F8"
-            BuildableName = "RainbowChat.app"
+            BuildableName = "rainbowchat.app"
             BlueprintName = "RainbowChat"
             ReferencedContainer = "container:RainbowChat.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0688B90190CF1AA00E933F8"
-            BuildableName = "RainbowChat.app"
+            BuildableName = "rainbowchat.app"
             BlueprintName = "RainbowChat"
             ReferencedContainer = "container:RainbowChat.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0688B90190CF1AA00E933F8"
-            BuildableName = "RainbowChat.app"
+            BuildableName = "rainbowchat.app"
             BlueprintName = "RainbowChat"
             ReferencedContainer = "container:RainbowChat.xcodeproj">
          </BuildableReference>

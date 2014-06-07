@@ -23,10 +23,9 @@
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="fromUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RCUser" syncable="YES"/>
         <relationship name="toUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RCUser" syncable="YES"/>
-        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RCUser" syncable="YES"/>
     </entity>
     <elements>
         <element name="RCUser" positionX="261" positionY="189" width="128" height="178"/>
-        <element name="RCVideo" positionX="261" positionY="225" width="128" height="178"/>
+        <element name="RCVideo" positionX="261" positionY="225" width="128" height="163"/>
     </elements>
 </model>

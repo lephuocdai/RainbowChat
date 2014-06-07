@@ -177,6 +177,7 @@ typedef enum {
     }
     
     useBackCamera = NO;
+    [self setQuickbloxID];
 }
 
 - (void)setVideoMessageView {
@@ -606,7 +607,6 @@ typedef enum {
                 [threadTableView reloadData];
                 
                 [self scrollToLastCell];
-                [self setQuickbloxID];
 
                 NSError *cdError;
                 [self.managedObjectContext save:&cdError];
@@ -639,8 +639,6 @@ typedef enum {
 #warning - Need to add notification here, then execute the following 2 lines of code outside
             [threadTableView reloadData];
             [self scrollToLastCell];
-            
-            [self setQuickbloxID];
         }
         blockComplete = YES;
     }];
@@ -680,7 +678,6 @@ typedef enum {
         if(result.success){
             
             // Set QuickBlox Chat delegate
-            //
             [QBChat instance].delegate = self;
             
             QBUUser *user = [QBUUser user];

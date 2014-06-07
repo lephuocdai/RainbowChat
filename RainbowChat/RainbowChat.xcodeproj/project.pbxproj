@@ -62,10 +62,10 @@
 		F0C50077193EF45B00A3F63D /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */; };
 		F0C50079193EF46900A3F63D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50078193EF46800A3F63D /* libxml2.dylib */; };
 		F0C5007B193EF47A00A3F63D /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5007A193EF47A00A3F63D /* libresolv.dylib */; };
-		F0C502121941A87F00A3F63D /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C502111941A87F00A3F63D /* RCVideo.m */; };
-		F0C502131941A87F00A3F63D /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C502111941A87F00A3F63D /* RCVideo.m */; };
-		F0C502161941A87F00A3F63D /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C502151941A87F00A3F63D /* RCUser.m */; };
-		F0C502171941A87F00A3F63D /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C502151941A87F00A3F63D /* RCUser.m */; };
+		F0C728F919432AFB0093DD75 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C728F819432AFB0093DD75 /* RCUser.m */; };
+		F0C728FA19432AFB0093DD75 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C728F819432AFB0093DD75 /* RCUser.m */; };
+		F0C728FD19432AFC0093DD75 /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C728FC19432AFC0093DD75 /* RCVideo.m */; };
+		F0C728FE19432AFC0093DD75 /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C728FC19432AFC0093DD75 /* RCVideo.m */; };
 		F0D02F701920B76B005F3422 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0D02F6F1920B76B005F3422 /* AVFoundation.framework */; };
 		F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0688BB2190CF1AB00E933F8 /* RCDetailViewController.m */; };
 		F0FCCCD71921E97D00B9CF7D /* RCConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = F0FCCCD61921E97D00B9CF7D /* RCConstant.m */; };
@@ -179,10 +179,10 @@
 		F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		F0C50078193EF46800A3F63D /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F0C5007A193EF47A00A3F63D /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
-		F0C502101941A87F00A3F63D /* RCVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVideo.h; sourceTree = "<group>"; };
-		F0C502111941A87F00A3F63D /* RCVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVideo.m; sourceTree = "<group>"; };
-		F0C502141941A87F00A3F63D /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
-		F0C502151941A87F00A3F63D /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
+		F0C728F719432AFB0093DD75 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
+		F0C728F819432AFB0093DD75 /* RCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCUser.m; sourceTree = "<group>"; };
+		F0C728FB19432AFC0093DD75 /* RCVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVideo.h; sourceTree = "<group>"; };
+		F0C728FC19432AFC0093DD75 /* RCVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVideo.m; sourceTree = "<group>"; };
 		F0D02F6F1920B76B005F3422 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		F0FCCCD51921E97D00B9CF7D /* RCConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConstant.h; sourceTree = "<group>"; };
 		F0FCCCD61921E97D00B9CF7D /* RCConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConstant.m; sourceTree = "<group>"; };
@@ -371,11 +371,11 @@
 		F0688D0219125EFD00E933F8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F0C502101941A87F00A3F63D /* RCVideo.h */,
-				F0C502141941A87F00A3F63D /* RCUser.h */,
-				F0C502151941A87F00A3F63D /* RCUser.m */,
-				F0C502111941A87F00A3F63D /* RCVideo.m */,
 				F0688BAB190CF1AB00E933F8 /* RainbowChat.xcdatamodeld */,
+				F0C728FB19432AFC0093DD75 /* RCVideo.h */,
+				F0C728FC19432AFC0093DD75 /* RCVideo.m */,
+				F0C728F719432AFB0093DD75 /* RCUser.h */,
+				F0C728F819432AFB0093DD75 /* RCUser.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -639,8 +639,8 @@
 				F0FCCCDF1921EC0C00B9CF7D /* AmazonClientManager.m in Sources */,
 				F0FCCD161921FB6500B9CF7D /* ResponseHandler.m in Sources */,
 				F0FCCD001921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
-				F0C502121941A87F00A3F63D /* RCVideo.m in Sources */,
-				F0C502161941A87F00A3F63D /* RCUser.m in Sources */,
+				F0C728FD19432AFC0093DD75 /* RCVideo.m in Sources */,
+				F0C728F919432AFB0093DD75 /* RCUser.m in Sources */,
 				F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */,
 				F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */,
 				F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */,
@@ -679,12 +679,12 @@
 				F0FCCD091921FB6500B9CF7D /* GetTokenResponse.m in Sources */,
 				F0BB8FBF192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */,
 				F0688BC9190CF1AB00E933F8 /* RainbowChatTests.m in Sources */,
-				F0C502171941A87F00A3F63D /* RCUser.m in Sources */,
+				F0C728FA19432AFB0093DD75 /* RCUser.m in Sources */,
 				F0FCCCCF19211E4E00B9CF7D /* RCDetailViewController.m in Sources */,
 				F0FCCD011921FB6500B9CF7D /* AmazonKeyChainWrapper.m in Sources */,
 				F0FCCD151921FB6500B9CF7D /* Response.m in Sources */,
 				F0FCCCD81921E97D00B9CF7D /* RCConstant.m in Sources */,
-				F0C502131941A87F00A3F63D /* RCVideo.m in Sources */,
+				F0C728FE19432AFC0093DD75 /* RCVideo.m in Sources */,
 				F0FCCD031921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0FCCD071921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
 				F0BB8FC3192B1369001FCF16 /* RCPreviewView.m in Sources */,
