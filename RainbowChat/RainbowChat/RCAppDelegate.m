@@ -138,13 +138,17 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     self.masterViewController = (RCMasterViewController *)navigationController.topViewController;
     self.masterViewController.managedObjectContext = self.managedObjectContext;
-    self.masterViewController.ffInstance = self.ffInstance;
+//    self.masterViewController.ffInstance = self.ffInstance;
+    NSLog(@"self.masterViewController.ffInstance =%@", self.masterViewController.ffInstance);
     
     return YES;
 }
 
 #pragma mark - Helper Methods
 - (void)userSuccessfullyAuthenticated {
+    DBGMSG(@"%s", __func__);
+    [self.masterViewController setFfInstance:self.ffInstance];
+    [self.masterViewController setManagedObjectContext:self.managedObjectContext];
     [self.masterViewController userIsAuthenticatedFromAppDelegateOnLaunch];
 }
 							

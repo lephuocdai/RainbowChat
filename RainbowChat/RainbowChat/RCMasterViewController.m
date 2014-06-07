@@ -57,12 +57,13 @@
     DBGMSG(@"%s", __func__);
     [super viewDidLoad];
     
-    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
+    NSLog(@"MasterViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     
+    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
     
-    NSLog(@"Current User = %@", self.currentUser);
+    NSLog(@"Current User = %@  loggedInUser = %@", self.currentUser, [self.ffInstance loggedInUser]);
     
 	[self fetchFromCoreData];
     [self fetchChangesFromBackEnd];
@@ -221,6 +222,7 @@
     
     // Set self's events array to a mutable copy of the fetch results.
     [self setFriends:[fetchResults mutableCopy]];
+    [self.tableView reloadData];
 }
 
 - (void)fetchChangesFromBackEnd {
@@ -232,7 +234,6 @@
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
     
     NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
-    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     [[[self.ffInstance newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
         if (response.error) {
@@ -277,7 +278,7 @@
     DBGMSG(@"%s", __func__);
     if ([self.ffInstance loggedInUser]) {
         self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
-//        [self refreshTableAndLoadData];
+        [self fetchFromCoreData];
     }
 }
 

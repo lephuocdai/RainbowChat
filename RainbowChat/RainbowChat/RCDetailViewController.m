@@ -169,13 +169,11 @@ typedef enum {
     currentSelectedCell = -1;
     
     [self setVideoMessageView];
-    
-//    [self refresh];
     [self fetchFromCoreData];
     
     if ([self.ffInstance loggedInUser]) {
-        _currentUser = (RCUser*)[self.ffInstance loggedInUser];
-        [self fetchChangesFromBackEnd];
+        [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+        self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
     }
     
     useBackCamera = NO;
@@ -277,6 +275,9 @@ typedef enum {
 
 - (IBAction)recordButtonPushed:(id)sender {
     [self sendVideoMessage];
+}
+- (IBAction)refreshButtonPushed:(id)sender {
+    [self refresh];
 }
 
 - (IBAction)callButtonPushed:(id)sender {
@@ -396,12 +397,11 @@ typedef enum {
         NSData *thumbnailData = UIImagePNGRepresentation(img);
         
         // Initiate new video
-        _newVideo = [[RCVideo alloc] init];
-        _newVideo.fromUser = (RCUser*)[self.ffInstance loggedInUser];
+        _newVideo = (RCVideo*)[NSEntityDescription insertNewObjectForEntityForName:@"RCVideo" inManagedObjectContext:self.managedObjectContext];
+        _newVideo.fromUser = _currentUser;
         _newVideo.toUser = _toUser;
         _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
         _newVideo.thumbnailURL = [NSString stringWithFormat:@"%@_%@_%@.png", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
-        
 #warning - Need to send to AWS first
         dispatch_async(dispatch_get_main_queue(), ^{
             _uploadStateThumbnail = UploadStateThumbnailStarted;
@@ -438,7 +438,7 @@ typedef enum {
         [_videoURLs removeAllObjects];
         _videoURLs = nil;
     }
-    [self fetchFromBackend];
+    [self fetchChangesFromBackEnd];
 }
 
 
@@ -471,7 +471,7 @@ typedef enum {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    DBGMSG(@"%s videos.count = %d", __func__, _videos.count);
+    DBGMSG(@"%s videos.count = %lu", __func__, (unsigned long)_videos.count);
     return _videos.count;
 }
 
@@ -482,8 +482,6 @@ typedef enum {
     RCVideo *videoForCell = _videos[indexPath.row];
     BOOL isCurrentUser = [videoForCell.fromUser.guid isEqualToString:_currentUser.guid];
     cellIdentifier = (isCurrentUser) ? @"currentUserCell" : @"toUserCell";
-    
-    UITableViewCell *cell;
     
     if (isCurrentUser) {
         CurrentUserCell *cell = (CurrentUserCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -597,29 +595,6 @@ typedef enum {
             NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
         } else {
             if (theObj) {
-                /*
-                BOOL newAdditions = NO;
-                for (RCVideo *video in retrieved) {
-                    BOOL foundLocally = NO;
-                    for (RCVideo *localVideo in self.videos) {
-                        if ([localVideo.url isEqualToString:video.url]) {
-                            foundLocally = YES;
-                            break;
-                        }
-                    }
-                    if (foundLocally) {
-                        NSLog(@"   Friend with name %@ from backend found locally, not adding to local array", video.url);
-                    } else {
-                        NSLog(@"   Adding new friend with name %@ from backend to local array", video.url);
-                        [self.videos addObject:video];
-                        newAdditions = YES;
-                    }
-                }
-                if (newAdditions) {
-                    NSLog(@"   Got new stuff from backend; reloading data");
-                    [threadTableView reloadData];
-                }
-                 */
                 NSArray *retrieved = theObj;
                 
                 if (self.videos) {
@@ -841,17 +816,27 @@ typedef enum {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         [self.ffInstance createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr)
-                NSLog(@"%@", theErr);
+                NSLog(@"Save newVideo to Fatfractal error: %@", theErr);
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
             if (backgroundRecordingID != UIBackgroundTaskInvalid)
                 [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
             
             NSError *error = nil;
-            [self.ffInstance grabBagAdd:(RCUser*)[self.ffInstance loggedInUser] to:theObj  grabBagName:@"users" error:&error];
-            [self.ffInstance grabBagAdd:_toUser to:theObj grabBagName:@"users" error:&error];
+            [self.ffInstance grabBagAdd:self.currentUser to:_newVideo  grabBagName:@"users" error:&error];
+            [self.ffInstance grabBagAdd:_toUser to:_newVideo grabBagName:@"users" error:&error];
             if (error)
                 NSLog(@"Add grabbag error %@", error);
-            [self fetchFromBackend];
+            
+            [_videos addObject:_newVideo];
+            // Save the change.
+            NSError *cdError;
+            if (![self.managedObjectContext save:&cdError]) {
+                // Replace this implementation with code to handle the error appropriately.
+                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                NSLog(@"Unresolved error %@, %@", cdError, [cdError userInfo]);
+                abort();
+            }
+            [threadTableView reloadData];
         }];
     }
 }
