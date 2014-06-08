@@ -21,7 +21,7 @@ static KeychainItemWrapper *_keychainItem;
 // Keychain Identifier
 static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
-@interface RCAppDelegate ()
+@interface RCAppDelegate () <QBActionStatusDelegate>
 @property RCWelcomeViewController *welcomeViewController;
 @property RCMasterViewController *masterViewController;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -44,7 +44,9 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 }
 */
 + (BOOL)checkForAuthentication {
+    DBGMSG(@"%s - [_ffInstance loggedIn] = %hhd [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] = %@, [_keychainItem objectForKey:(__bridge id)(kSecValueData)] = %@", __func__, [_ffInstance loggedIn], [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)], [_keychainItem objectForKey:(__bridge id)(kSecValueData)]);
     if ([_ffInstance loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])){
+//    if ([_ffInstance loggedIn]) {
         NSLog(@"checkForAuthentication: FFUser logged in.");
         return YES;
     } else {
@@ -95,18 +97,6 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     [QBSettings setVideoChatConfiguration:videoChatConfiguration];
     
     
-    // Initiate the RCFatFractal instance that your application will use
-//    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
-//    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-//#warning - Need to revise the usage of localstorage
-////    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-//#ifdef DEBUG
-//    _ffInstance.debug = YES;
-//#endif
-//    _ffInstance.managedObjectContext = self.managedObjectContext;
-//    _ffInstance.managedObjectModel = self.managedObjectModel;
-    
-    
     // Create the KeychainItem singleton
     _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
     
@@ -129,7 +119,11 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
             }
             if (theObj) {
                 NSLog(@"Login from AppDelegate using keychain successful!");
-                [self userSuccessfullyAuthenticated];
+                
+                QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
+                extendedAuthRequest.userEmail = username;
+                extendedAuthRequest.userPassword = password;
+                [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
             }
         }];
     }
@@ -138,7 +132,7 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     self.masterViewController = (RCMasterViewController *)navigationController.topViewController;
     self.masterViewController.managedObjectContext = self.managedObjectContext;
-//    self.masterViewController.ffInstance = self.ffInstance;
+    self.masterViewController.ffInstance = self.ffInstance;
     NSLog(@"self.masterViewController.ffInstance =%@", self.masterViewController.ffInstance);
     
     return YES;
@@ -268,5 +262,26 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
+
+#pragma mark - QBActionStatusDelegate
+// QuickBlox API queries delegate
+- (void)completedWithResult:(Result *)result{
+    DBGMSG(@"%s - result = %@", __func__, result);
+    // QuickBlox session creation  result
+    if([result isKindOfClass:[QBAAuthSessionCreationResult class]]){
+        
+        // Success result
+        if(result.success){
+            
+            [self userSuccessfullyAuthenticated];
+            
+        }else{
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[[result errors] description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+}
+
 
 @end
