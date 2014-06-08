@@ -12,7 +12,12 @@
 #import "RCAppDelegate.h"
 #import "RCUser.h"
 
-@interface RCSignupViewController ()
+
+#define loginContext @"loginContext"
+#define registrationContext @"registrationContext"
+
+
+@interface RCSignupViewController ()  <UITextFieldDelegate, QBActionStatusDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
@@ -55,7 +60,7 @@
 }
 
 - (IBAction)onSignup:(id)sender {
-    
+    DBGMSG(@"%s", __func__);
     // Get text string from input text field
     NSString *fullname = _fullnameTextField.text;
     NSString *email = _emailTextField.text;
@@ -83,8 +88,8 @@
     
     [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     
-    // Create new FFUser and registerUser then save to keychain if successful
-    RCUser *newUser = [[RCUser alloc] init];
+    // Create new RCUser and registerUser then save to keychain if successful
+    RCUser *newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
     newUser.firstName = fullname;
     newUser.userName = [self usernameFromEmail:email];
     newUser.email = email;
@@ -97,13 +102,13 @@
             return;
         } else {
             if (theObj) {
-                [self saveUserCredentialsInKeyChain];
                 
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                
-                [self dismissViewControllerAnimated:YES completion:^{
-                    [self handleSuccessfulSignup];
-                }];
+                QBUUser *qbuser = [QBUUser user];
+                qbuser.login = [NSString stringWithFormat:@"rbc_%@", [[newUser.userName componentsSeparatedByString:@"@"] firstObject]];
+                qbuser.password = password;
+                qbuser.fullName = fullname;
+                qbuser.email = email;
+                [QBUsers signUp:qbuser delegate:self context:registrationContext];
             }
         }
     }];
@@ -164,5 +169,85 @@
         [self.delegate signupViewControllerDidSignupUser];
     }
 }
+
+#pragma mark - QBActionStatusDelegate
+
+// QuickBlox API queries delegate
+-(void)completedWithResult:(Result*)result context:(void *)contextInfo{
+     DBGMSG(@"%s - result = %@", __func__, result);
+    // QuickBlox User creation result
+    if([result isKindOfClass:[QBUUserResult class]]){
+        
+        // Success result
+		if(result.success){
+            
+            [self saveUserCredentialsInKeyChain];
+            
+            NSError *cdError;
+            [self.managedObjectContext save:&cdError];
+            if (cdError) {
+                NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+            }
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self handleSuccessfulSignup];
+            }];
+            
+        /*
+            if([((__bridge NSString *)contextInfo) isEqualToString:loginContext]){
+                
+                // Save current user
+                //
+                QBUUserLogInResult *res = (QBUUserLogInResult *)result;
+                res.user.password = self.passwordTextField.text;
+                [[LocalStorageService shared] setCurrentUser: res.user];
+                
+                
+                // Login to Chat
+                //
+                [[ChatService instance] loginWithUser:[LocalStorageService shared].currentUser completionBlock:^{
+                    
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"You have successfully logged in"
+                                                                    message:nil
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Ok"
+                                                          otherButtonTitles: nil];
+                    [alert show];
+                    //
+                    // hide alert after delay
+                    double delayInSeconds = 2.0;
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                        [alert dismissWithClickedButtonIndex:0 animated:YES];
+                    });
+                    
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                }];
+                
+            }else{
+                // Login to QuickBlox
+                //
+                [QBUsers logInWithUserLogin:self.loginTextField.text
+                                   password:self.passwordTextField.text
+                                   delegate:self context:loginContext];
+            }
+        */
+        // Errors
+        }else {
+            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
+            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Errors"
+                                                            message:errorMessage
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil, nil];
+            [alert show];
+		}
+	}
+}
+
 
 @end

@@ -144,14 +144,12 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-# warning - Need to send a specific class of toFriend ( maybe RCUser?)
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 //        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
         [[segue destinationViewController] setFfInstance:self.ffInstance];
-        [[segue destinationViewController] setManagedObjectContext:self
-         .managedObjectContext];
+        [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
     }
 }
 

@@ -19,7 +19,7 @@
 @end
 
 
-@interface RCSignupViewController : UIViewController <UITextFieldDelegate>
+@interface RCSignupViewController : UIViewController
 
 @property (nonatomic, assign) id <RCSignupViewControllerDelegate> delegate;
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;

@@ -28,6 +28,7 @@
     
     NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
+    [QBAuth createSessionWithDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {
