@@ -31,7 +31,6 @@
 		F0B2DAE6191A3FE000226963 /* RCWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE5191A3FE000226963 /* RCWelcomeViewController.m */; };
 		F0B2DAE9191A400900226963 /* RCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAE8191A400900226963 /* RCSignupViewController.m */; };
 		F0B2DAEC191A401D00226963 /* RCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAEB191A401D00226963 /* RCLoginViewController.m */; };
-		F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */; };
 		F0B2DAF6191CA2DE00226963 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */; };
 		F0BB8FB71929F700001FCF16 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0688BA8190CF1AB00E933F8 /* Main.storyboard */; };
 		F0BB8FBB192A5C57001FCF16 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FBA192A5C57001FCF16 /* MobileCoreServices.framework */; };
@@ -149,8 +148,6 @@
 		F0B2DAE8191A400900226963 /* RCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCSignupViewController.m; sourceTree = "<group>"; };
 		F0B2DAEA191A401D00226963 /* RCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCLoginViewController.h; sourceTree = "<group>"; };
 		F0B2DAEB191A401D00226963 /* RCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCLoginViewController.m; sourceTree = "<group>"; };
-		F0B2DAF0191B9AD100226963 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		F0B2DAF4191CA2DE00226963 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		F0BB8FB9192A01D8001FCF16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
@@ -450,8 +447,6 @@
 			children = (
 				F0B2DAF4191CA2DE00226963 /* KeychainItemWrapper.h */,
 				F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */,
-				F0B2DAF0191B9AD100226963 /* MBProgressHUD.h */,
-				F0B2DAF1191B9AD100226963 /* MBProgressHUD.m */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -653,7 +648,6 @@
 				F0FCCD0A1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
 				F0FCCD061921FB6500B9CF7D /* GetTokenRequest.m in Sources */,
 				F0FCCD121921FB6500B9CF7D /* RequestDelegate.m in Sources */,
-				F0B2DAF2191B9AD100226963 /* MBProgressHUD.m in Sources */,
 				F0FCCD101921FB6500B9CF7D /* RequestTVM.m in Sources */,
 				F0B2DAE0191A3A1300226963 /* RCFatFractal.m in Sources */,
 				F0FCCD081921FB6500B9CF7D /* GetTokenResponse.m in Sources */,

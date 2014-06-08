@@ -21,6 +21,5 @@
 + (NSString *)TVM_URL;
 + (BOOL) USE_SSL;
 
-+ (NSString *)getConstantbyClass:(NSString *)className forType:(NSString *)typeName withName:(NSString *)name;
 
 @end

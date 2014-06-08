@@ -16,6 +16,8 @@
     #import <CoreData/CoreData.h>
     #import <Availability.h>
     #import <FFEF/FatFractal.h>
+    #import <SystemConfiguration/SystemConfiguration.h>
+    #import <MobileCoreServices/MobileCoreServices.h>
 #endif
 
 #ifdef	DEBUG

@@ -314,7 +314,6 @@
 		
 		recordingWillBeStopped = YES;
 		
-		// recordingDidStop is called from saveMovieToCameraRoll
 		[self.delegate recordingWillStop];
         
         // Added by Le: http://stackoverflow.com/questions/14765875/avassetwriter-finishwritingwithcompletionhandler-error-with-unknown-error
@@ -328,9 +327,7 @@
                 assetWriter = nil;
                 readyToRecordVideo = NO;
                 readyToRecordAudio = NO;
-#warning Need to check this
-//                [self saveMovieToCameraRoll];
-//                [self saveToCloud];
+
                 [self.delegate recordingDidStopWithMovieURL:movieURL];
                 
             } else {

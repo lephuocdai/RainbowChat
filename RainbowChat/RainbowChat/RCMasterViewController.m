@@ -219,7 +219,6 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-# warning - Need to send a specific class of toFriend ( maybe RCUser?)
     RCUser *friend = (RCUser*)[_friends objectAtIndex:indexPath.row];
     cell.textLabel.text = friend.nickname;
 }
