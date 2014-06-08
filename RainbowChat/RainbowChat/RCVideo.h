@@ -2,7 +2,7 @@
 //  RCVideo.h
 //  RainbowChat
 //
-//  Created by レー フックダイ on 6/7/14.
+//  Created by レー フックダイ on 6/8/14.
 //  Copyright (c) 2014 lephuocdai. All rights reserved.
 //
 
@@ -13,7 +13,7 @@
 
 @interface RCVideo : NSManagedObject
 
-@property (nonatomic) NSDate *createdAt;
+@property (nonatomic) NSTimeInterval createdAt;
 @property (nonatomic, retain) NSData * data;
 @property (nonatomic, retain) NSString * ffUrl;
 @property (nonatomic, retain) NSString * name;

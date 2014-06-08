@@ -17,7 +17,9 @@
 #define registrationContext @"registrationContext"
 
 
-@interface RCSignupViewController ()  <UITextFieldDelegate, QBActionStatusDelegate>
+@interface RCSignupViewController ()  <UITextFieldDelegate, QBActionStatusDelegate> {
+    RCUser *newUser;
+}
 
 @property (strong, nonatomic) IBOutlet UITextField *fullnameTextField;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
@@ -40,7 +42,8 @@
 #pragma mark - View lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [self deleteAllObjects:@"RCUser"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,7 +92,7 @@
     [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
     
     // Create new RCUser and registerUser then save to keychain if successful
-    RCUser *newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
+    newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
     newUser.firstName = fullname;
     newUser.userName = [self usernameFromEmail:email];
     newUser.email = email;
@@ -104,7 +107,7 @@
             if (theObj) {
                 
                 QBUUser *qbuser = [QBUUser user];
-                qbuser.login = [NSString stringWithFormat:@"rbc_%@", [[newUser.userName componentsSeparatedByString:@"@"] firstObject]];
+                qbuser.login = newUser.userName;
                 qbuser.password = password;
                 qbuser.fullName = fullname;
                 qbuser.email = email;
@@ -150,17 +153,43 @@
 }
 
 - (NSString*)usernameFromEmail:(NSString*)email {
-#warning Need to implement
-    return email;
+    NSArray *emailComponents = [email componentsSeparatedByString:@"@"];
+    return [NSString stringWithFormat:@"rbc_%@_at_%@", [emailComponents firstObject], [emailComponents lastObject]];
 }
 
 - (BOOL)isEmailValid:(NSString*)email {
-#warning Need to implement
-    return YES;
+    NSString *emailRegex =
+    @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+    @"~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+    @"x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+    @"z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+    @"]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+    @"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+    @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES[c] %@", emailRegex];
+    
+    return [emailTest evaluateWithObject:email];
 }
 
 - (BOOL)isPassword:(NSString*)password validWithPasswordAgain:(NSString*)passwordAgain {
-#warning Need to implement
+//    // 1. Upper case.
+//    if (![[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[password characterAtIndex:0]])
+//        return NO;
+    
+    // 2. Length.
+    if ([password length] < 8)
+        return NO;
+    
+//    // 3. Special characters.
+//    // Change the specialCharacters string to whatever matches your requirements.
+//    NSString *specialCharacters = @"!#€%&/()[]=?$§*'";
+//    if ([[password componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:specialCharacters]] count] < 2)
+//        return NO;
+//    
+//    // 4. Numbers.
+//    if ([[password componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"0123456789"]] count] < 2)
+//        return NO;
+    
     return YES;
 }
 
@@ -188,6 +217,17 @@
             if (cdError) {
                 NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
             }
+            
+            QBUUserLogInResult *res = (QBUUserLogInResult *)result;
+            
+            newUser.quickbloxID = [NSString stringWithFormat:@"%d",res.user.ID];
+            [self.ffInstance updateObj:newUser onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+                if (theErr) {
+                    NSLog(@"quicbloxID update to Fatfractal error =%@", theErr);
+                }
+                NSLog(@"newUser = %@", theObj);
+            }];
+            
             
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             
@@ -247,6 +287,24 @@
             [alert show];
 		}
 	}
+}
+
+#pragma mark - Core Data
+- (void) deleteAllObjects: (NSString *) entityDescription  {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *items = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+
+    for (NSManagedObject *managedObject in items) {
+    	[self.managedObjectContext deleteObject:managedObject];
+    	NSLog(@"%@ object deleted",entityDescription);
+    }
+    if (![self.managedObjectContext save:&error]) {
+    	NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
+    }
 }
 
 

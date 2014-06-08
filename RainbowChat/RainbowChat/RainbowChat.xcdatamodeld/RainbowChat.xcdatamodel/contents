@@ -11,6 +11,7 @@
         <attribute name="profilePicture" optional="YES" attributeType="Binary">
             <userInfo/>
         </attribute>
+        <attribute name="quickbloxID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <userInfo/>
     </entity>
@@ -25,7 +26,7 @@
         <relationship name="toUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RCUser" syncable="YES"/>
     </entity>
     <elements>
-        <element name="RCUser" positionX="261" positionY="189" width="128" height="178"/>
+        <element name="RCUser" positionX="261" positionY="189" width="128" height="195"/>
         <element name="RCVideo" positionX="261" positionY="225" width="128" height="163"/>
     </elements>
 </model>
