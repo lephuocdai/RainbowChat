@@ -57,9 +57,9 @@
 	else
 		storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:mname];
 	
-	CoreDataStack* cds = [[[CoreDataStack alloc] initWithURL: storeURL
+	CoreDataStack* cds = [[CoreDataStack alloc] initWithURL: storeURL
 												   modelName: mname
-												   storeType: CDSStoreTypeUnknown] autorelease];
+												   storeType: CDSStoreTypeUnknown];
 	
 	return cds;
 }
@@ -71,7 +71,7 @@
 
 +(CoreDataStack*) coreDataStackWithDatabaseURL:(NSURL*) dburl modelName:(NSString *)mname
 {	
-	CoreDataStack* cds = [[[CoreDataStack alloc] initWithURL:dburl modelName:mname storeType:CDSStoreTypeUnknown] autorelease];
+	CoreDataStack* cds = [[CoreDataStack alloc] initWithURL:dburl modelName:mname storeType:CDSStoreTypeUnknown];
 	
 	return cds;
 }
@@ -121,19 +121,16 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
 	[self removeObserver:self forKeyPath:@"managedObjectContextConcurrencyType" context:nil];
 	
     self.threadThatOwnsThisStack = nil;
 	self.databaseURL = nil;
 	self.modelName = nil;
-	
-    [super dealloc];
+
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if( [@"managedObjectContextConcurrencyType" isEqualToString:keyPath])
 	{
 		NSAssert( _moc == nil, @"You cannot change the managedObjectContextConcurrencyType after you've started using the stack (you've already read the value of .managedObjectContext, I'm afraid) - that's going to make your app source code confused and broken and chaos");
@@ -142,8 +139,7 @@
 
 #pragma mark - Apple core objects / references
 
--(NSManagedObjectModel*) dataModel
-{
+-(NSManagedObjectModel*) dataModel {
 	if( _mom == nil )
 	{
 		NSString* momdPath = [[NSBundle mainBundle]pathForResource:self.modelName ofType:@"momd"];
