@@ -90,7 +90,7 @@
         hud.yOffset = -77;
         
         // Login with FatFractal then save to keychain and handleSuccessfulLogin if successful
-        [[FatFractal main] loginWithUserName:email andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [[FatFractal main] loginWithUserName:[RCUtility usernameFromEmail:email] andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error logging in from LoginViewController: %@", [theErr localizedDescription]);
                 [MBProgressHUD hideHUDForView:self.view animated:YES];

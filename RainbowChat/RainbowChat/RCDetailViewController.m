@@ -265,7 +265,7 @@ typedef enum {
         self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
     }
     
-    [self fetchChangesFromBackEnd];
+    [self fetchFromBackend];
     
     useBackCamera = NO;
     [self setQuickbloxID];
@@ -441,7 +441,7 @@ typedef enum {
         [_videoURLs removeAllObjects];
         _videoURLs = nil;
     }
-    [self fetchChangesFromBackEnd];
+    [self fetchFromBackend];
 }
 
 
@@ -609,13 +609,6 @@ typedef enum {
                 [threadTableView reloadData];
                 
                 [self scrollToLastCell];
-
-//                NSError *cdError;
-//                [self.managedObjectContext save:&cdError];
-//                if (cdError) {
-//                    NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-//                }
-//                blockComplete = YES;
             }
         }
     }];

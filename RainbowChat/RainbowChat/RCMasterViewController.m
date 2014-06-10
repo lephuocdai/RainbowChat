@@ -251,7 +251,7 @@
     DBGMSG(@"%s", __func__);
     if ([[FatFractal main] loggedInUser]) {
         self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
-//        [self fetchFromCoreData];
+        [self fetchChangesFromBackEnd];
     }
 }
 
