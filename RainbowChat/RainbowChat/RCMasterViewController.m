@@ -65,7 +65,7 @@
     
     NSLog(@"Current User = %@  loggedInUser = %@", self.currentUser, [self.ffInstance loggedInUser]);
     
-//	[self fetchFromCoreData];
+	[self fetchFromCoreData];
 //    [self fetchChangesFromBackEnd];
     
     /*
@@ -84,7 +84,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self checkForAuthentication];
+//    [self checkForAuthentication];
 }
 
 - (void)checkForAuthentication {
@@ -93,7 +93,6 @@
         RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
         welcomeViewController.delegate = self;
         welcomeViewController.ffInstance = self.ffInstance;
-        welcomeViewController.managedObjectContext = self.managedObjectContext;
         [self presentViewController:welcomeViewController animated:YES completion:nil];
     } else {
         [self userIsAuthenticatedFromAppDelegateOnLaunch];
@@ -192,7 +191,6 @@
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
     
-    NSLog(@"currentuser = %@", self.currentUser);
     NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
     [[[self.ffInstance newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
@@ -205,10 +203,7 @@
                 self.friends = nil;
             }
             self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
-            for (RCUser *friend in retrieved) {
-                [self.friends addObject:friend];
-            }
-//            self.friends = (NSMutableArray*)retrieved;
+            self.friends = (NSMutableArray*)retrieved;
             self.title = self.currentUser.nickname;
             [self.tableView reloadData];
         }
@@ -238,28 +233,12 @@
 
 - (void)userIsAuthenticatedFromAppDelegateOnLaunch {
     DBGMSG(@"%s", __func__);
-    NSLog(@"[self.ffInstance loggedInUser] = %@", [self.ffInstance loggedInUser]);
     if ([self.ffInstance loggedInUser]) {
-        self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
-        [self fetchFromCoreData];
-    } else {
-        KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
-        NSString *email = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-        [self.ffInstance loginWithUserName:[self usernameFromEmail:email] andPassword:password];
-        
         self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
         [self fetchFromCoreData];
     }
 }
 
-- (NSString*)usernameFromEmail:(NSString*)email {
-    NSArray *emailComponents = [email componentsSeparatedByString:@"@"];
-    return [NSString stringWithFormat:@"rbc_%@_at_%@", [emailComponents firstObject], [emailComponents lastObject]];
-}
-
-
-/*
 - (void)refreshTableAndLoadData {
     DBGMSG(@"%s", __func__);
     // Clean friends array
@@ -281,7 +260,6 @@
         }
     }];
 }
-*/
 - (IBAction)refreshButtonPressed:(id)sender {
     [self fetchChangesFromBackEnd];
 }

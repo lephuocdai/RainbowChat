@@ -13,7 +13,7 @@
 #import "RCUser.h"
 #import <Quickblox/Quickblox.h>
 #import "RCFatFractal.h"
-#import "KeychainItemWrapper.h"
+
 
 @interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RCVideoProcessorDelegate, QBActionStatusDelegate, QBChatDelegate> {
     

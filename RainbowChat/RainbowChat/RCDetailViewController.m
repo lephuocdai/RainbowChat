@@ -22,9 +22,6 @@
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
 
-// Keychain Identifier
-static NSString *keychainIdentifier = @"RainBowChatKeychain";
-
 typedef enum {
     UploadStateNotUpload,
     UploadStateUploading,
@@ -680,23 +677,15 @@ typedef enum {
         // Success result
         if(result.success){
             
-            KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
-            
-            NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
-            
-            
-            [self setQuickbloxID_currentuser:_currentUser.quickbloxID];
-            [self setQuickbloxID_opponentID:_toUser.quickbloxID];
-            
-            
             // Set QuickBlox Chat delegate
             [QBChat instance].delegate = self;
             
             QBUUser *user = [QBUUser user];
             user.ID = ((QBAAuthSessionCreationResult *)result).session.userID;
-            user.password = password;
+            user.password = @"12345678";
             
             // Login to QuickBlox Chat
+            //
             [[QBChat instance] loginWithUser:user];
         }else{
             

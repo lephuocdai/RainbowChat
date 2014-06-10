@@ -26,9 +26,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    [self deleteAllObjects:@"RCUser"];
+    [self deleteAllObjects:@"RCUser"];
     
-    NSLog(@"WelcomeViewController.ffInstance = %@", self.ffInstance);
+    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     [QBAuth createSessionWithDelegate:self];
 }
@@ -94,7 +94,6 @@
 
 #pragma mark - Core Data
 - (void) deleteAllObjects: (NSString *) entityDescription  {
-    DBGMSG(@"%s", __func__);
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];

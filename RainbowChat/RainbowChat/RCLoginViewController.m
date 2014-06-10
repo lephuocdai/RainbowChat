@@ -105,8 +105,8 @@
                 if (theObj) {
                     [self saveUserCredentialsInKeyChain];
                     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
-                    extendedAuthRequest.userEmail = email;
-                    extendedAuthRequest.userPassword = password;
+                    extendedAuthRequest.userLogin = ([email isEqualToString:@"test1@test.c"])? @"test1" : @"test2";
+                    extendedAuthRequest.userPassword = @"12345678";
                     [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
                 }
             }
