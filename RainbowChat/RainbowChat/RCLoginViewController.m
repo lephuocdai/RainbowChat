@@ -9,12 +9,11 @@
 #import "RCLoginViewController.h"
 #import "RCAppDelegate.h"
 #import "MBProgressHUD.h"
+#import "RCUtility.h"
 
 @interface RCLoginViewController ()
-
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
-
 @end
 
 
@@ -38,7 +37,7 @@
     // Pop up the keyboard so users can typing immediately
     [_emailTextField becomeFirstResponder];
     
-    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
+//    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
 }
 
@@ -91,7 +90,7 @@
         hud.yOffset = -77;
         
         // Login with FatFractal then save to keychain and handleSuccessfulLogin if successful
-        [self.ffInstance loginWithUserName:email andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [[FatFractal main] loginWithUserName:email andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error logging in from LoginViewController: %@", [theErr localizedDescription]);
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -105,8 +104,8 @@
                 if (theObj) {
                     [self saveUserCredentialsInKeyChain];
                     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
-                    extendedAuthRequest.userLogin = ([email isEqualToString:@"test1@test.c"])? @"test1" : @"test2";
-                    extendedAuthRequest.userPassword = @"12345678";
+                    extendedAuthRequest.userLogin = [RCUtility usernameFromEmail:email];
+                    extendedAuthRequest.userPassword = password;
                     [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
                 }
             }

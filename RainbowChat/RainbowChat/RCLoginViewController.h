@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Quickblox/Quickblox.h>
-#import "RCFatFractal.h"
+//#import "RCFatFractal.h"
 
 @class RCLoginViewController;
 
@@ -25,7 +25,7 @@
 @property (nonatomic, assign) id <RCLoginViewControllerDelegate> delegate;
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) RCFatFractal *ffInstance;
+//@property (strong, nonatomic) FatFractal *ffInstance;
 
 @end
 

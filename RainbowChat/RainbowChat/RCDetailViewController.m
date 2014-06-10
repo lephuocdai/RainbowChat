@@ -169,15 +169,7 @@ typedef enum {
     currentSelectedCell = -1;
     
     [self setVideoMessageView];
-    [self fetchFromCoreData];
-    
-    if ([self.ffInstance loggedInUser]) {
-        [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-        self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
-    }
-    
-    useBackCamera = NO;
-    [self setQuickbloxID];
+//    [self fetchFromCoreData];
 }
 
 - (void)setVideoMessageView {
@@ -267,6 +259,16 @@ typedef enum {
     // Start sending chat presence
     [QBChat instance].delegate = self;
     [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
+    
+    if ([[FatFractal main] loggedInUser]) {
+        [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+    }
+    
+    [self fetchChangesFromBackEnd];
+    
+    useBackCamera = NO;
+    [self setQuickbloxID];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -424,8 +426,8 @@ typedef enum {
 #pragma mark - Public methods
 - (void)refresh {
     DBGMSG(@"%s", __func__);
-    if ([self.ffInstance loggedInUser]) {
-        _currentUser = (RCUser*)[self.ffInstance loggedInUser];
+    if ([[FatFractal main] loggedInUser]) {
+        _currentUser = (RCUser*)[[FatFractal main] loggedInUser];
         [self refreshTableAndLoadData];
     }
 }
@@ -591,7 +593,7 @@ typedef enum {
 
 - (void)fetchChangesFromBackEnd {
     __block BOOL blockComplete = NO;
-    [self.ffInstance getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr) {
             NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
         } else {
@@ -608,12 +610,12 @@ typedef enum {
                 
                 [self scrollToLastCell];
 
-                NSError *cdError;
-                [self.managedObjectContext save:&cdError];
-                if (cdError) {
-                    NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-                }
-                blockComplete = YES;
+//                NSError *cdError;
+//                [self.managedObjectContext save:&cdError];
+//                if (cdError) {
+//                    NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+//                }
+//                blockComplete = YES;
             }
         }
     }];
@@ -627,7 +629,7 @@ typedef enum {
 - (void)fetchFromBackend {
     DBGMSG(@"%s", __func__);
     __block BOOL blockComplete = NO;
-    [self.ffInstance getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
             _videoURLs = [[NSMutableArray alloc] init];
@@ -811,7 +813,7 @@ typedef enum {
     
     if (_uploadStateVideo == UploadStateVideoFinished && _uploadStateThumbnail == UploadStateThumbnailFinished) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [self.ffInstance createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [[FatFractal main] createObj:_newVideo atUri:@"/RCVideo" onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr)
                 NSLog(@"Save newVideo to Fatfractal error: %@", theErr);
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
@@ -819,8 +821,8 @@ typedef enum {
                 [[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
             
             NSError *error = nil;
-            [self.ffInstance grabBagAdd:self.currentUser to:_newVideo  grabBagName:@"users" error:&error];
-            [self.ffInstance grabBagAdd:_toUser to:_newVideo grabBagName:@"users" error:&error];
+            [[FatFractal main] grabBagAdd:self.currentUser to:_newVideo  grabBagName:@"users" error:&error];
+            [[FatFractal main] grabBagAdd:_toUser to:_newVideo grabBagName:@"users" error:&error];
             if (error)
                 NSLog(@"Add grabbag error %@", error);
             

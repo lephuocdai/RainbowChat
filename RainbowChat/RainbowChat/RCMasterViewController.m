@@ -12,19 +12,19 @@
 #import "RCWelcomeViewController.h"
 #import "KeychainItemWrapper.h"
 #import "RCUser.h"
+//#import "CoreDataStack.h"
 
 @interface RCMasterViewController ()
 
+//@property (nonatomic) CoreDataStack *coreDataStack;
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
 @property (nonatomic) NSNumber *lastRefreshTime;
-
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
-@implementation RCMasterViewController
 
+@implementation RCMasterViewController
 @synthesize lastRefreshTime = _lastRefreshTime;
 
 - (void)awakeFromNib {
@@ -57,25 +57,27 @@
     DBGMSG(@"%s", __func__);
     [super viewDidLoad];
     
-    NSLog(@"MasterViewController.ffInstance = %@", self.ffInstance);
+//    _coreDataStack = [CoreDataStack coreDataStackWithModelName:@"RainbowChat"];
+    
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     
-    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-    self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
+    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+    self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
     
-    NSLog(@"Current User = %@  loggedInUser = %@", self.currentUser, [self.ffInstance loggedInUser]);
+    NSLog(@"Current User = %@  loggedInUser = %@", self.currentUser, [[FatFractal main] loggedInUser]);
     
-	[self fetchFromCoreData];
-//    [self fetchChangesFromBackEnd];
+//	[self fetchFromCoreData];
+    [self fetchChangesFromBackEnd];
     
     /*
      Reload the table view if the locale changes -- look at APLEventTableViewCell.m to see how the table view cells are redisplayed.
-     */
+     
     __weak UITableViewController *weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserverForName:NSCurrentLocaleDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
         [weakSelf.tableView reloadData];
     }];
+     */
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -84,7 +86,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    [self checkForAuthentication];
+    [self checkForAuthentication];
 }
 
 - (void)checkForAuthentication {
@@ -92,7 +94,6 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
         welcomeViewController.delegate = self;
-        welcomeViewController.ffInstance = self.ffInstance;
         [self presentViewController:welcomeViewController animated:YES completion:nil];
     } else {
         [self userIsAuthenticatedFromAppDelegateOnLaunch];
@@ -148,39 +149,42 @@
 //        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
-        [[segue destinationViewController] setFfInstance:self.ffInstance];
-        [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
+//        [[segue destinationViewController] setFfInstance:self.ffInstance];
+//        [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
     }
 }
 
 #pragma mark - Data fetch
 - (void)fetchFromCoreData {
     DBGMSG(@"%s", __func__);
-    /*
-     Fetch existing friends.
-     Create a fetch request for the RCUser entity; add a sort descriptor; then execute the fetch.
-     */
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCUser"];
-    [request setFetchBatchSize:20];
-    
-    // Order the events by creation date, most recent first.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"userName" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Execute the fetch.
-    NSError *error;
-    NSArray *fetchResults = [self.managedObjectContext executeFetchRequest:request error:&error];
-    if (fetchResults == nil) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    
-    // Set self's events array to a mutable copy of the fetch results.
-    [self setFriends:[fetchResults mutableCopy]];
-    [self.tableView reloadData];
+//    /*
+//     Fetch existing friends.
+//     Create a fetch request for the RCUser entity; add a sort descriptor; then execute the fetch.
+//     */
+//    
+//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCUser"];
+//    [request setFetchBatchSize:20];
+//    
+//    // Order the events by creation date, most recent first.
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"userName" ascending:NO];
+//    NSArray *sortDescriptors = @[sortDescriptor];
+//    [request setSortDescriptors:sortDescriptors];
+//    
+//    
+//    
+//    // Execute the fetch.
+//    NSError *error;
+//    NSArray *fetchResults = [_coreDataStack.managedObjectContext executeFetchRequest:request error:&error];
+//    if (fetchResults == nil) {
+//        // Replace this implementation with code to handle the error appropriately.
+//        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//    
+//    // Set self's events array to a mutable copy of the fetch results.
+//    [self setFriends:[fetchResults mutableCopy]];
+//    [self.tableView reloadData];
 }
 
 - (void)fetchChangesFromBackEnd {
@@ -190,9 +194,10 @@
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
-    
+    self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+    NSLog(@"self.currentUser = %@ guid = %@", self.currentUser, self.currentUser.guid);
     NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
-    [[[self.ffInstance newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
+    [[[[FatFractal main] newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
         if (response.error) {
             NSLog(@"Failed to retrieve from backend: %@", response.error.localizedDescription);
@@ -207,11 +212,11 @@
             self.title = self.currentUser.nickname;
             [self.tableView reloadData];
         }
-        NSError *cdError;
-        [self.managedObjectContext save:&cdError];
-        if (cdError) {
-            NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-        }
+//        NSError *cdError;
+//        [_coreDataStack.managedObjectContext save:&cdError];
+//        if (cdError) {
+//            NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
+//        }
     }];
 }
 
@@ -231,11 +236,22 @@
     DBGMSG(@"%s", __func__);
 }
 
+- (void)userAuthenticationFailedFromAppDelegateOnLaunch {
+    DBGMSG(@"%s", __func__);
+    [[RCAppDelegate keychainItem] resetKeychainItem];
+    // Navigate to Welcome View Controller
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
+    welcomeViewController.delegate = self;
+    
+    [self presentViewController:welcomeViewController animated:YES completion:nil];
+}
+
 - (void)userIsAuthenticatedFromAppDelegateOnLaunch {
     DBGMSG(@"%s", __func__);
-    if ([self.ffInstance loggedInUser]) {
-        self.currentUser = (RCUser*)[self.ffInstance loggedInUser];
-        [self fetchFromCoreData];
+    if ([[FatFractal main] loggedInUser]) {
+        self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
+//        [self fetchFromCoreData];
     }
 }
 
@@ -250,8 +266,8 @@
     // Load from backend
     NSString *uri = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
     _friends = [NSMutableArray array];
-    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-    [self.ffInstance getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+    [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _friends = (NSMutableArray*)theObj;
             NSLog(@"first friend = %@", (RCUser*)[_friends firstObject]);
@@ -261,122 +277,31 @@
     }];
 }
 - (IBAction)refreshButtonPressed:(id)sender {
+    DBGMSG(@"%s", __func__);
     [self fetchChangesFromBackEnd];
 }
 
 - (IBAction)logoutButtonPressed:(id)sender {
-    DBGMSG(@"%s", __func__);
-    [self.ffInstance logout];
+    DBGMSG(@"%s - loggedin user guid = %@", __func__, [[FatFractal main] loggedInUserGuid]);
+//    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
+    [[FatFractal main] logout];
+    
     // Clear keychain
-    KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
-    if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil) {
-        [keychainItem setObject:nil forKey:(__bridge id)(kSecAttrAccount)];
-        [keychainItem setObject:nil forKey:(__bridge id)(kSecValueData)];
-    }
+    [[RCAppDelegate keychainItem] resetKeychainItem];
+//    KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
+//    [keychainItem resetKeychainItem];
+//    if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil) {
+//        [keychainItem setObject:nil forKey:(__bridge id)(kSecAttrAccount)];
+//        [keychainItem setObject:nil forKey:(__bridge id)(kSecValueData)];
+//    }
+    
     // Navigate to Welcome View Controller
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
     welcomeViewController.delegate = self;
-    welcomeViewController.ffInstance = self.ffInstance;
-    welcomeViewController.managedObjectContext = self.managedObjectContext;
     
     [self presentViewController:welcomeViewController animated:YES completion:nil];
 }
-
-
-/* We do not need a fetchedResultsController since we have the managedObjectContext
-- (NSFetchedResultsController *)fetchedResultsController {
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
-    }
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    
-    // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
-    
-    // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
-    
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
-	     // Replace this implementation with code to handle the error appropriately.
-	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
-    return _fetchedResultsController;
-}    
-
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
-    UITableView *tableView = self.tableView;
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView endUpdates];
-}
- */
-/*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
-}
- */
-
 
 
 @end

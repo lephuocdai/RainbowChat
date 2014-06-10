@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-#import "RCFatFractal.h"
+//#import "RCFatFractal.h"
 #import "RCWelcomeViewController.h"
 #import <Quickblox/Quickblox.h>
 
@@ -16,9 +16,10 @@
 @interface RCMasterViewController : UITableViewController <WelcomeViewControllerDelegate>
 
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) RCFatFractal *ffInstance;
+//@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (strong, nonatomic) RCFatFractal *ffInstance;
 
 -(void)userIsAuthenticatedFromAppDelegateOnLaunch;
+-(void)userAuthenticationFailedFromAppDelegateOnLaunch;
 
 @end

@@ -12,7 +12,7 @@
 #import "RCVideoProcessor.h"
 #import "RCUser.h"
 #import <Quickblox/Quickblox.h>
-#import "RCFatFractal.h"
+//#import "RCFatFractal.h"
 
 
 @interface RCDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RCVideoProcessorDelegate, QBActionStatusDelegate, QBChatDelegate> {
@@ -34,7 +34,7 @@
 // Fatfractal
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) RCFatFractal *ffInstance;
+//@property (strong, nonatomic) FatFractal *ffInstance;
 @property (strong, nonatomic) RCUser *currentUser;
 @property (strong, nonatomic) RCUser *toUser;
 

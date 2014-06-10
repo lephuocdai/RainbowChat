@@ -25,4 +25,9 @@
     }
 }
 
++ (NSString*)usernameFromEmail:(NSString*)email {
+    NSArray *emailComponents = [email componentsSeparatedByString:@"@"];
+    return [NSString stringWithFormat:@"rbc_%@_at_%@", [emailComponents firstObject], [emailComponents lastObject]];
+}
+
 @end
