@@ -129,11 +129,11 @@
 
 #pragma mark - Helper
 -(void)saveUserCredentialsInKeyChain {
-    NSString *username = [RCUtility usernameFromEmail:_emailTextField.text];;
+    NSString *email = _emailTextField.text;
     NSString *password = _passwordAgainTextField.text;
     
     KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
-    [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
+    [keychainItem setObject:email forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     
     NSLog(@"Successfully saved user %@ to keychain after signup in SignupViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);

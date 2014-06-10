@@ -170,7 +170,6 @@ typedef enum {
     currentSelectedCell = -1;
     
     [self setVideoMessageView];
-//    [self fetchFromCoreData];
 }
 
 - (void)setVideoMessageView {
@@ -278,6 +277,7 @@ typedef enum {
 }
 
 - (IBAction)recordButtonPushed:(id)sender {
+    DBGMSG(@"%s", __func__);
     [self sendVideoMessage];
 }
 - (IBAction)refreshButtonPushed:(id)sender {
@@ -331,6 +331,7 @@ typedef enum {
 }
 
 - (void)sendVideoMessage {
+    DBGMSG(@"%s", __func__);
     if ( [videoProcessor isRecording] ) {
 		// The recordingWill/DidStop delegate methods will fire asynchronously in response to this call
 		[videoProcessor stopRecording];
@@ -344,6 +345,7 @@ typedef enum {
 #pragma mark - RCVideoProcessorDelegate
 
 - (void)recordingWillStart {
+    DBGMSG(@"%s", __func__);
     dispatch_async(dispatch_get_main_queue(), ^{
         [_recordButton setEnabled:NO];
         
@@ -357,6 +359,7 @@ typedef enum {
 }
 
 - (void)recordingDidStart {
+    DBGMSG(@"%s", __func__);
     dispatch_async(dispatch_get_main_queue(), ^{
         [_recordButton setEnabled:YES];
         [_recordButton setTintColor:[UIColor redColor]];
@@ -364,6 +367,7 @@ typedef enum {
 }
 
 - (void)recordingWillStop {
+    DBGMSG(@"%s", __func__);
     dispatch_async(dispatch_get_main_queue(), ^{
 		// Disable until saving to the camera roll is complete
 		[_recordButton setEnabled:NO];
@@ -375,6 +379,7 @@ typedef enum {
 }
 
 - (void)recordingDidStopWithMovieURL:(NSURL *)movieURL {
+    DBGMSG(@"%s", __func__);
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[_recordButton setEnabled:YES];
 		[_recordButton setTintColor:[UIColor blueColor]];
@@ -401,7 +406,8 @@ typedef enum {
         NSData *thumbnailData = UIImagePNGRepresentation(img);
         
         // Initiate new video
-        _newVideo = (RCVideo*)[NSEntityDescription insertNewObjectForEntityForName:@"RCVideo" inManagedObjectContext:self.managedObjectContext];
+//        _newVideo = (RCVideo*)[NSEntityDescription insertNewObjectForEntityForName:@"RCVideo" inManagedObjectContext:self.managedObjectContext];
+        _newVideo = [[RCVideo alloc] init];
         _newVideo.fromUser = _currentUser;
         _newVideo.toUser = _toUser;
         _newVideo.url = [NSString stringWithFormat:@"%@_%@_%@.mov", _currentUser.firstName, _toUser.firstName, [[self dateFormatter] stringFromDate:[NSDate date]]];
@@ -626,11 +632,13 @@ typedef enum {
     [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/getVideos?guids=%@,%@",_currentUser.guid, _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theObj) {
             _videos = (NSMutableArray*)theObj;
-            _videoURLs = [[NSMutableArray alloc] init];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                _videoURLs = [[NSMutableArray alloc] init];
+                for (RCVideo *video in _videos) {
+                    [_videoURLs addObject:[self s3URLForVideo:video]];
+                }
+            });
             
-            for (RCVideo *video in _videos) {
-                [_videoURLs addObject:[self s3URLForVideo:video]];
-            }
             NSLog(@"Videos = %@ \n videoURLs = %@", _videos, _videoURLs);
 #warning - Need to add notification here, then execute the following 2 lines of code outside
             [threadTableView reloadData];
@@ -819,14 +827,7 @@ typedef enum {
                 NSLog(@"Add grabbag error %@", error);
             
             [_videos addObject:_newVideo];
-            // Save the change.
-            NSError *cdError;
-            if (![self.managedObjectContext save:&cdError]) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                NSLog(@"Unresolved error %@, %@", cdError, [cdError userInfo]);
-                abort();
-            }
+            
             [threadTableView reloadData];
         }];
     }

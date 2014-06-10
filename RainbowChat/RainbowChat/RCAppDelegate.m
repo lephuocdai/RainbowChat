@@ -10,6 +10,7 @@
 #import "RCWelcomeViewController.h"
 #import "RCMasterViewController.h"
 #import "RCUser.h"
+#import "RCUtility.h"
 //#import "CoreDataStack.h"
 
 static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
@@ -115,16 +116,15 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
         NSLog(@"_keychainItem username exists, attempting login in background.");
         
-        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *email = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
         NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
         
         // Login with FatFractal by initiating connection with server
-        [_ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [_ffInstance loginWithUserName:[RCUtility usernameFromEmail:email] andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
                 // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
                 // Better error handling can be done in a production application
-//                [_keychainItem resetKeychainItem];
                 [self userAuthenticationFailed];
                 return;
             }

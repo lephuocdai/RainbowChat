@@ -123,11 +123,11 @@
 
 -(void)saveUserCredentialsInKeyChain {
     DBGMSG(@"%s", __func__);
-    NSString *username = _emailTextField.text;
+    NSString *email = _emailTextField.text;
     NSString *password = _passwordTextField.text;
     
     KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
-    [keychainItem setObject:username forKey:(__bridge id)(kSecAttrAccount)];
+    [keychainItem setObject:email forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     NSLog(@"Successfully saved user %@ to keychain after authentication in LoginViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
 }
