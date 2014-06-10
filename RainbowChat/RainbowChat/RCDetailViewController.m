@@ -18,6 +18,7 @@
 #import <AWSS3/AWSS3.h>
 #import "AmazonClientManager.h"
 #import "MBProgressHUD.h"
+#import "RCAppDelegate.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
@@ -647,19 +648,17 @@ typedef enum {
 
 - (void)setQuickbloxID {
     
+    NSString *password = [[RCAppDelegate keychainItem] objectForKey:(__bridge id)(kSecValueData)];
+    
     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
-    extendedAuthRequest.userLogin = ([_currentUser.userName isEqualToString:@"test1@test.c"]) ? @"test1" : @"test2";
-    extendedAuthRequest.userPassword = @"12345678";
+    extendedAuthRequest.userLogin = self.currentUser.userName;
+    extendedAuthRequest.userPassword = password;
     [QBAuth createSessionWithExtendedRequest:extendedAuthRequest delegate:self];
     
-    
-    if ([_currentUser.userName isEqualToString:@"test1@test.c"]) {
-        [self setQuickbloxID_currentuser:@1180746];
-        [self setQuickbloxID_opponentID:@1180748];
-    } else {
-        [self setQuickbloxID_currentuser:@1180748];
-        [self setQuickbloxID_opponentID:@1180746];
-    }
+    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+    [f setNumberStyle:NSNumberFormatterDecimalStyle];
+    [self setQuickbloxID_currentuser:[f numberFromString:self.currentUser.quickbloxID]];
+    [self setQuickbloxID_opponentID:[f numberFromString:self.toUser.quickbloxID]];
 }
 
 #pragma mark - QBActionStatusDelegate
@@ -677,7 +676,7 @@ typedef enum {
             
             QBUUser *user = [QBUUser user];
             user.ID = ((QBAAuthSessionCreationResult *)result).session.userID;
-            user.password = @"12345678";
+            user.password = [[RCAppDelegate keychainItem] objectForKey:(__bridge id)(kSecValueData)];
             
             // Login to QuickBlox Chat
             //
