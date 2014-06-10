@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RCFatFractal.h"
+//#import "RCFatFractal.h"
 
 @class RCSignupViewController;
 
@@ -23,7 +23,7 @@
 
 @property (nonatomic, assign) id <RCSignupViewControllerDelegate> delegate;
 //@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) RCFatFractal *ffInstance;
+//@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (strong, nonatomic) FatFractal *ffInstance;
 
 @end

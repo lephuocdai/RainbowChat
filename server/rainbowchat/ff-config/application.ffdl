@@ -2,8 +2,8 @@
 # Application configuration
 #
 SET ActivateUsersOnReg          true
-SET AllowAnonymousGets 			true
-SET AllowAutoRegistration       true
+SET AllowAnonymousGets 			false
+SET AllowAutoRegistration       false
 SET AllowNewCollections         true
 SET AllowNewObjectTypes         true
 SET AllowNewMembers             true

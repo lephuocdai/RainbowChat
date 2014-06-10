@@ -10,7 +10,7 @@
 
 @interface RCFatFractal : FatFractal
 
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+//@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 @end

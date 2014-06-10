@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "KeychainItemWrapper.h"
-#import "RCFatFractal.h"
+//#import "RCFatFractal.h"
 #import <Quickblox/Quickblox.h>
 
 @interface RCAppDelegate : UIResponder <UIApplicationDelegate>
@@ -17,7 +17,8 @@
 
 // The static method for the KeychainItemWrapper class
 + (KeychainItemWrapper *)keychainItem;
-+ (RCFatFractal *)ffInstance;
+//+ (RCFatFractal *)ffInstance;
++ (FatFractal*)ffInstance;
 + (BOOL)checkForAuthentication;
 
 - (void)saveContext;

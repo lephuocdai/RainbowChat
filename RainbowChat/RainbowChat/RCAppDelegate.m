@@ -10,10 +10,11 @@
 #import "RCWelcomeViewController.h"
 #import "RCMasterViewController.h"
 #import "RCUser.h"
+//#import "CoreDataStack.h"
 
 static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
 static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
-static RCFatFractal *_ffInstance;
+static FatFractal *_ffInstance;
 
 // Instantiating KeychainItemWrapper class as a singleton through AppDelegate
 static KeychainItemWrapper *_keychainItem;
@@ -22,27 +23,26 @@ static KeychainItemWrapper *_keychainItem;
 static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
 @interface RCAppDelegate ()
-@property RCWelcomeViewController *welcomeViewController;
 @property RCMasterViewController *masterViewController;
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
+//@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+//@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+//@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
 @end
 
 
 @implementation RCAppDelegate
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-@synthesize ffInstance = _ffInstance;
+//@synthesize managedObjectContext = _managedObjectContext;
+//@synthesize managedObjectModel = _managedObjectModel;
+//@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+//@synthesize ffInstance = _ffInstance;
 
 #pragma mark - FatFractal
-/*
-+ (RCFatFractal *) ffInstance {
+
++ (FatFractal *) ffInstance {
     return _ffInstance;
 }
-*/
+
 + (BOOL)checkForAuthentication {
     if ([_ffInstance loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])){
         NSLog(@"checkForAuthentication: FFUser logged in.");
@@ -54,23 +54,23 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 }
 
 
-- (RCFatFractal *) ffInstance {
-    if (_ffInstance != nil) {
-        return _ffInstance;
-    }
-    
-    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
-    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-#warning - Need to revise the usage of localstorage
-    //    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-#ifdef DEBUG
-    _ffInstance.debug = YES;
-#endif
-    _ffInstance.managedObjectContext = self.managedObjectContext;
-    _ffInstance.managedObjectModel = self.managedObjectModel;
-    
-    return _ffInstance;
-}
+//- (RCFatFractal *) ffInstance {
+//    if (_ffInstance != nil) {
+//        return _ffInstance;
+//    }
+//    
+//    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+//    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+//#warning - Need to revise the usage of localstorage
+//    //    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+//#ifdef DEBUG
+//    _ffInstance.debug = YES;
+//#endif
+////    _ffInstance.managedObjectContext = self.managedObjectContext;
+////    _ffInstance.managedObjectModel = self.managedObjectModel;
+//    
+//    return _ffInstance;
+//}
 
 
 + (KeychainItemWrapper*)keychainItem {
@@ -96,15 +96,13 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     
     
     // Initiate the RCFatFractal instance that your application will use
-//    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
-//    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-//#warning - Need to revise the usage of localstorage
-////    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-//#ifdef DEBUG
-//    _ffInstance.debug = YES;
-//#endif
-//    _ffInstance.managedObjectContext = self.managedObjectContext;
-//    _ffInstance.managedObjectModel = self.managedObjectModel;
+    _ffInstance = [[FatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
+    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+#warning - Need to revise the usage of localstorage
+//    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
+#ifdef DEBUG
+    _ffInstance.debug = YES;
+#endif
     
     
     // Create the KeychainItem singleton
@@ -112,6 +110,8 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     
     
     // If Keychain item exists, attempt login
+    NSLog(@"_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] = %@", [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
+    
     if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
         NSLog(@"_keychainItem username exists, attempting login in background.");
         
@@ -119,12 +119,13 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
         
         // Login with FatFractal by initiating connection with server
-        [self.ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        [_ffInstance loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
             if (theErr) {
                 NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
                 // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
                 // Better error handling can be done in a production application
-                [_keychainItem resetKeychainItem];
+//                [_keychainItem resetKeychainItem];
+                [self userAuthenticationFailed];
                 return;
             }
             if (theObj) {
@@ -137,9 +138,6 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
     // Override point for customization after application launch.
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     self.masterViewController = (RCMasterViewController *)navigationController.topViewController;
-    self.masterViewController.managedObjectContext = self.managedObjectContext;
-//    self.masterViewController.ffInstance = self.ffInstance;
-    NSLog(@"self.masterViewController.ffInstance =%@", self.masterViewController.ffInstance);
     
     return YES;
 }
@@ -147,9 +145,12 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 #pragma mark - Helper Methods
 - (void)userSuccessfullyAuthenticated {
     DBGMSG(@"%s", __func__);
-    [self.masterViewController setFfInstance:self.ffInstance];
-    [self.masterViewController setManagedObjectContext:self.managedObjectContext];
     [self.masterViewController userIsAuthenticatedFromAppDelegateOnLaunch];
+}
+
+- (void)userAuthenticationFailed {
+    DBGMSG(@"%s", __func__);
+    [self.masterViewController userAuthenticationFailedFromAppDelegateOnLaunch];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -176,97 +177,99 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 }
 
 - (void)saveContext {
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        } 
-    }
+//    NSError *error = nil;
+//    CoreDataStack *coreDataStack = [CoreDataStack coreDataStackWithModelName:@"RainbowChat"];
+//    NSManagedObjectContext *managedObjectContext = coreDataStack.managedObjectContext;
+//    
+//    if (managedObjectContext != nil) {
+//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
+//             // Replace this implementation with code to handle the error appropriately.
+//             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//            abort();
+//        } 
+//    }
 }
 
 #pragma mark - Core Data stack
 
-// Returns the managed object context for the application.
-// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext {
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    return _managedObjectContext;
-}
-
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RainbowChat" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
-}
-
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Presentice.RainbowChat"];
-    
-    NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    
-    // Allow inferred migration from the original version of the application.
-    NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @YES, NSInferMappingModelAutomaticallyOption : @YES };
-    
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-         Typical reasons for an error here include:
-         * The persistent store is not accessible;
-         * The schema for the persistent store is incompatible with current managed object model.
-         Check the error message to determine what the actual problem was.
-         
-         
-         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
-         
-         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
-         * Simply deleting the existing store:
-         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
-         
-         * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
-         @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES}
-         
-         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
-         
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }    
-    
-    return _persistentStoreCoordinator;
-}
-
-#pragma mark - Application's Documents directory
-
-// Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
+//// Returns the managed object context for the application.
+//// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+//- (NSManagedObjectContext *)managedObjectContext {
+//    if (_managedObjectContext != nil) {
+//        return _managedObjectContext;
+//    }
+//    
+//    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+//    if (coordinator != nil) {
+//        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+//        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+//    }
+//    return _managedObjectContext;
+//}
+//
+//// Returns the managed object model for the application.
+//// If the model doesn't already exist, it is created from the application's model.
+//- (NSManagedObjectModel *)managedObjectModel {
+//    if (_managedObjectModel != nil) {
+//        return _managedObjectModel;
+//    }
+//    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"RainbowChat" withExtension:@"momd"];
+//    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+//    return _managedObjectModel;
+//}
+//
+//// Returns the persistent store coordinator for the application.
+//// If the coordinator doesn't already exist, it is created and the application's store added to it.
+//- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+//    if (_persistentStoreCoordinator != nil) {
+//        return _persistentStoreCoordinator;
+//    }
+//    
+//    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Presentice.RainbowChat"];
+//    
+//    NSError *error = nil;
+//    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+//    
+//    // Allow inferred migration from the original version of the application.
+//    NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @YES, NSInferMappingModelAutomaticallyOption : @YES };
+//    
+//    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
+//        /*
+//         Replace this implementation with code to handle the error appropriately.
+//         
+//         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+//         
+//         Typical reasons for an error here include:
+//         * The persistent store is not accessible;
+//         * The schema for the persistent store is incompatible with current managed object model.
+//         Check the error message to determine what the actual problem was.
+//         
+//         
+//         If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
+//         
+//         If you encounter schema incompatibility errors during development, you can reduce their frequency by:
+//         * Simply deleting the existing store:
+//         [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
+//         
+//         * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
+//         @{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES}
+//         
+//         Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
+//         
+//         */
+//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        abort();
+//    }    
+//    
+//    return _persistentStoreCoordinator;
+//}
+//
+//#pragma mark - Application's Documents directory
+//
+//// Returns the URL to the application's Documents directory.
+//- (NSURL *)applicationDocumentsDirectory {
+//    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//}
 
 @end

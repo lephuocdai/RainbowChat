@@ -11,6 +11,7 @@
 #import "KeychainItemWrapper.h"
 #import "RCAppDelegate.h"
 #import "RCUser.h"
+#import "RCUtility.h"
 
 
 #define loginContext @"loginContext"
@@ -43,7 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self deleteAllObjects:@"RCUser"];
+//    [self deleteAllObjects:@"RCUser"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,23 +90,25 @@
     hud.dimBackground = YES;
     hud.yOffset = -77;
     
-    [self.ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
+    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
     
     // Create new RCUser and registerUser then save to keychain if successful
-    newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
+//    newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
+    newUser = [[RCUser alloc] init];
     newUser.firstName = fullname;
-    newUser.userName = [self usernameFromEmail:email];
+    newUser.userName = [RCUtility usernameFromEmail:email];
     newUser.email = email;
     newUser.place = place;
     newUser.nickname = fullname;
     
-    [self.ffInstance registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+    [[FatFractal main] registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             [self callAlertError:theErr];
             return;
         } else {
+            NSLog(@"Fatfractal registration succeeded");
             if (theObj) {
-                
                 QBUUser *qbuser = [QBUUser user];
                 qbuser.login = newUser.userName;
                 qbuser.password = password;
@@ -126,7 +129,7 @@
 
 #pragma mark - Helper
 -(void)saveUserCredentialsInKeyChain {
-    NSString *username = [self usernameFromEmail:_emailTextField.text];;
+    NSString *username = [RCUtility usernameFromEmail:_emailTextField.text];;
     NSString *password = _passwordAgainTextField.text;
     
     KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
@@ -149,12 +152,15 @@
 }
 
 - (void)callAlertError:(NSError*)error {
+    NSString *errorMessage = [[error description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
     
-}
-
-- (NSString*)usernameFromEmail:(NSString*)email {
-    NSArray *emailComponents = [email componentsSeparatedByString:@"@"];
-    return [NSString stringWithFormat:@"rbc_%@_at_%@", [emailComponents firstObject], [emailComponents lastObject]];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Errors"
+                                                    message:errorMessage
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 - (BOOL)isEmailValid:(NSString*)email {
@@ -212,24 +218,16 @@
             
             [self saveUserCredentialsInKeyChain];
             
-            NSError *cdError;
-            [self.managedObjectContext save:&cdError];
-            if (cdError) {
-                NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-            }
-            
             QBUUserLogInResult *res = (QBUUserLogInResult *)result;
             
-            newUser.quickbloxID = [NSString stringWithFormat:@"%d",res.user.ID];
-            [self.ffInstance updateObj:newUser onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+            newUser.quickbloxID = [NSString stringWithFormat:@"%lu",(unsigned long)res.user.ID];
+            [[FatFractal main] updateObj:newUser onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
                 if (theErr) {
                     NSLog(@"quicbloxID update to Fatfractal error =%@", theErr);
                 }
                 NSLog(@"newUser = %@", theObj);
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
             }];
-            
-            
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
             [self dismissViewControllerAnimated:YES completion:^{
                 [self handleSuccessfulSignup];
@@ -276,19 +274,13 @@
         */
         // Errors
         }else {
-            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
-            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Errors"
-                                                            message:errorMessage
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Ok"
-                                                  otherButtonTitles:nil, nil];
-            [alert show];
+            [self callAlertError:result.errors.firstObject];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
 		}
 	}
 }
 
+/*
 #pragma mark - Core Data
 - (void) deleteAllObjects: (NSString *) entityDescription  {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -306,6 +298,6 @@
     	NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
     }
 }
-
+*/
 
 @end

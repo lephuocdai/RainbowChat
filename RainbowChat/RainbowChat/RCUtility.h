@@ -12,5 +12,6 @@
 
 + (void)putNewVideoWithData:(NSData*)recordedVideoData fileName:(NSString*)uploadFileName toBucket:(NSString*)bucket delegate:(id)delegate;
 
++ (NSString*)usernameFromEmail:(NSString*)email;
 
 @end

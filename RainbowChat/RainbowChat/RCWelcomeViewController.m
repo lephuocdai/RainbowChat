@@ -26,9 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self deleteAllObjects:@"RCUser"];
+//    [self deleteAllObjects:@"RCUser"];
     
-    NSLog(@"LoginViewController.ffInstance = %@", self.ffInstance);
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     [QBAuth createSessionWithDelegate:self];
 }
@@ -82,16 +81,17 @@
     if ([[segue identifier] isEqualToString:@"presentSignupView"]) {
         RCSignupViewController *signupVC = [segue destinationViewController];
         signupVC.delegate = self;
-        signupVC.managedObjectContext = self.managedObjectContext;
-        signupVC.ffInstance = self.ffInstance;
+//        signupVC.managedObjectContext = self.managedObjectContext;
+//        signupVC.ffInstance = self.ffInstance;
     } else if ([[segue identifier] isEqualToString:@"presentLoginView"]) {
         RCLoginViewController *loginVC = [segue destinationViewController];
         loginVC.delegate = self;
-        loginVC.managedObjectContext = self.managedObjectContext;
-        loginVC.ffInstance = self.ffInstance;
+//        loginVC.managedObjectContext = self.managedObjectContext;
+//        loginVC.ffInstance = self.ffInstance;
     }
 }
 
+/*
 #pragma mark - Core Data
 - (void) deleteAllObjects: (NSString *) entityDescription  {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -109,6 +109,6 @@
     	NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
     }
 }
-
+*/
 
 @end

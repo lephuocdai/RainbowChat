@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="RCChat" syncable="YES">
+        <attribute name="currentUserguid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toUserguid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="videos" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="RCVideo" syncable="YES"/>
+    </entity>
     <entity name="RCUser" representedClassName="RCUser">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -28,5 +33,6 @@
     <elements>
         <element name="RCUser" positionX="261" positionY="189" width="128" height="195"/>
         <element name="RCVideo" positionX="261" positionY="225" width="128" height="163"/>
+        <element name="RCChat" positionX="270" positionY="279" width="128" height="90"/>
     </elements>
 </model>
