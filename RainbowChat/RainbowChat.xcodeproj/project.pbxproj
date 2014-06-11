@@ -61,8 +61,6 @@
 		F0C50077193EF45B00A3F63D /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */; };
 		F0C50079193EF46900A3F63D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50078193EF46800A3F63D /* libxml2.dylib */; };
 		F0C5007B193EF47A00A3F63D /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5007A193EF47A00A3F63D /* libresolv.dylib */; };
-		F0C729341945B9D00093DD75 /* CoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C729331945B9D00093DD75 /* CoreDataStack.m */; };
-		F0C729351945B9D00093DD75 /* CoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C729331945B9D00093DD75 /* CoreDataStack.m */; };
 		F0C729381946B5CD0093DD75 /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C729371946B5CD0093DD75 /* RCVideo.m */; };
 		F0C729391946B5CD0093DD75 /* RCVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C729371946B5CD0093DD75 /* RCVideo.m */; };
 		F0C7293C1946B5CD0093DD75 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C7293B1946B5CD0093DD75 /* RCUser.m */; };
@@ -178,8 +176,6 @@
 		F0C50076193EF45B00A3F63D /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		F0C50078193EF46800A3F63D /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F0C5007A193EF47A00A3F63D /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
-		F0C729321945B9D00093DD75 /* CoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataStack.h; sourceTree = "<group>"; };
-		F0C729331945B9D00093DD75 /* CoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataStack.m; sourceTree = "<group>"; };
 		F0C729361946B5CD0093DD75 /* RCVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCVideo.h; sourceTree = "<group>"; };
 		F0C729371946B5CD0093DD75 /* RCVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCVideo.m; sourceTree = "<group>"; };
 		F0C7293A1946B5CD0093DD75 /* RCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCUser.h; sourceTree = "<group>"; };
@@ -407,7 +403,6 @@
 		F0B2DADD191A39F800226963 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				F0C729311945B9A90093DD75 /* CoreDataStack */,
 				F0FCCCE71921FB5000B9CF7D /* TVM */,
 				F0FCCCDD1921EC0C00B9CF7D /* AmazonClientManager.h */,
 				F0FCCCDE1921EC0C00B9CF7D /* AmazonClientManager.m */,
@@ -454,15 +449,6 @@
 				F0B2DAF5191CA2DE00226963 /* KeychainItemWrapper.m */,
 			);
 			name = External;
-			sourceTree = "<group>";
-		};
-		F0C729311945B9A90093DD75 /* CoreDataStack */ = {
-			isa = PBXGroup;
-			children = (
-				F0C729321945B9D00093DD75 /* CoreDataStack.h */,
-				F0C729331945B9D00093DD75 /* CoreDataStack.m */,
-			);
-			name = CoreDataStack;
 			sourceTree = "<group>";
 		};
 		F0FCCCE71921FB5000B9CF7D /* TVM */ = {
@@ -642,7 +628,6 @@
 				F0FCCD021921FB6500B9CF7D /* AmazonTVMClient.m in Sources */,
 				F0688BA3190CF1AB00E933F8 /* main.m in Sources */,
 				F0688BA7190CF1AB00E933F8 /* RCAppDelegate.m in Sources */,
-				F0C729341945B9D00093DD75 /* CoreDataStack.m in Sources */,
 				F0BB8FBE192A5F9E001FCF16 /* RCVideoProcessor.m in Sources */,
 				F0688BAD190CF1AB00E933F8 /* RainbowChat.xcdatamodeld in Sources */,
 				F0688BB3190CF1AB00E933F8 /* RCDetailViewController.m in Sources */,
@@ -684,7 +669,6 @@
 				F0FCCD171921FB6500B9CF7D /* ResponseHandler.m in Sources */,
 				F0FCCD0B1921FB6500B9CF7D /* GetTokenResponseHandler.m in Sources */,
 				F0BB8FC91930A316001FCF16 /* ShaderUtilities.c in Sources */,
-				F0C729351945B9D00093DD75 /* CoreDataStack.m in Sources */,
 				F0C7293D1946B5CD0093DD75 /* RCUser.m in Sources */,
 				F0FCCD051921FB6500B9CF7D /* Crypto.m in Sources */,
 				F0FCCD111921FB6500B9CF7D /* RequestTVM.m in Sources */,

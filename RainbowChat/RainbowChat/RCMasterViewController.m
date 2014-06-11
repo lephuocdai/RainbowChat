@@ -57,8 +57,6 @@
     DBGMSG(@"%s", __func__);
     [super viewDidLoad];
     
-//    _coreDataStack = [CoreDataStack coreDataStackWithModelName:@"RainbowChat"];
-    
     NSLog(@"[FatFractal main] = %@", [FatFractal main]);
     
     [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
@@ -66,7 +64,6 @@
     
     NSLog(@"Current User = %@  loggedInUser = %@", self.currentUser, [[FatFractal main] loggedInUser]);
     
-//	[self fetchFromCoreData];
     [self fetchChangesFromBackEnd];
     
     /*
@@ -113,7 +110,6 @@
 #pragma mark - Table View data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return [[self.fetchedResultsController sections] count];
     return 1;
 }
 
@@ -146,45 +142,14 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-//        NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
-//        [[segue destinationViewController] setFfInstance:self.ffInstance];
-//        [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
     }
 }
 
 #pragma mark - Data fetch
 - (void)fetchFromCoreData {
     DBGMSG(@"%s", __func__);
-//    /*
-//     Fetch existing friends.
-//     Create a fetch request for the RCUser entity; add a sort descriptor; then execute the fetch.
-//     */
-//    
-//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"RCUser"];
-//    [request setFetchBatchSize:20];
-//    
-//    // Order the events by creation date, most recent first.
-//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"userName" ascending:NO];
-//    NSArray *sortDescriptors = @[sortDescriptor];
-//    [request setSortDescriptors:sortDescriptors];
-//    
-//    
-//    
-//    // Execute the fetch.
-//    NSError *error;
-//    NSArray *fetchResults = [_coreDataStack.managedObjectContext executeFetchRequest:request error:&error];
-//    if (fetchResults == nil) {
-//        // Replace this implementation with code to handle the error appropriately.
-//        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//        abort();
-//    }
-//    
-//    // Set self's events array to a mutable copy of the fetch results.
-//    [self setFriends:[fetchResults mutableCopy]];
-//    [self.tableView reloadData];
 }
 
 - (void)fetchChangesFromBackEnd {
@@ -212,11 +177,6 @@
             self.title = self.currentUser.nickname;
             [self.tableView reloadData];
         }
-//        NSError *cdError;
-//        [_coreDataStack.managedObjectContext save:&cdError];
-//        if (cdError) {
-//            NSLog(@"Saved managedObjectContext - error was %@", [cdError localizedDescription]);
-//        }
     }];
 }
 
@@ -283,17 +243,10 @@
 
 - (IBAction)logoutButtonPressed:(id)sender {
     DBGMSG(@"%s - loggedin user guid = %@", __func__, [[FatFractal main] loggedInUserGuid]);
-//    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
     [[FatFractal main] logout];
     
     // Clear keychain
     [[RCAppDelegate keychainItem] resetKeychainItem];
-//    KeychainItemWrapper *keychainItem = [RCAppDelegate keychainItem];
-//    [keychainItem resetKeychainItem];
-//    if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil) {
-//        [keychainItem setObject:nil forKey:(__bridge id)(kSecAttrAccount)];
-//        [keychainItem setObject:nil forKey:(__bridge id)(kSecValueData)];
-//    }
     
     // Navigate to Welcome View Controller
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

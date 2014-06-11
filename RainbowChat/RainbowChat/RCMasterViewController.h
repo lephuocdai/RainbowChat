@@ -15,10 +15,6 @@
 #warning - We do not need a fetchedResultsController since we have the managedObjectContext
 @interface RCMasterViewController : UITableViewController <WelcomeViewControllerDelegate>
 
-//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-//@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-//@property (strong, nonatomic) RCFatFractal *ffInstance;
-
 -(void)userIsAuthenticatedFromAppDelegateOnLaunch;
 -(void)userAuthenticationFailedFromAppDelegateOnLaunch;
 
