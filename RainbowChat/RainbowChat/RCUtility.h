@@ -14,4 +14,6 @@
 
 + (NSString*)usernameFromEmail:(NSString*)email;
 
++ (void)askForPushNotification;
+
 @end

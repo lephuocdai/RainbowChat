@@ -12,7 +12,6 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "RCVideo.h"
-#import "RCUtility.h"
 #import "RCConstant.h"
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSS3/AWSS3.h>

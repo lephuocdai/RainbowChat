@@ -12,7 +12,6 @@
 #import "RCWelcomeViewController.h"
 #import "KeychainItemWrapper.h"
 #import "RCUser.h"
-//#import "CoreDataStack.h"
 
 @interface RCMasterViewController ()
 
@@ -144,6 +143,27 @@
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
+        
+        [[FatFractal main] getObjFromUrl:[NSString stringWithFormat:@"/ff/ext/call?guid=%@", toFriend.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+            if (theErr) {
+                NSLog(@"StatsViewController getStats failed: %@", [theErr localizedDescription]);
+                return;
+            } else {
+                NSString *message = (NSString*)theObj;
+                NSLog(@"message = %@", message);
+            }
+        }];
+        
+//        [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/call?guid=%@", toFriend.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+//            if (theErr) {
+//                NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
+//            } else {
+//                if (theObj) {
+//                    NSArray *retrieved = theObj;
+//                    NSLog(@"message = %@", (NSString*)retrieved.firstObject);
+//                }
+//            }
+//        }];
     }
 }
 
@@ -238,6 +258,7 @@
 }
 - (IBAction)refreshButtonPressed:(id)sender {
     DBGMSG(@"%s", __func__);
+    [RCUtility askForPushNotification];
     [self fetchChangesFromBackEnd];
 }
 

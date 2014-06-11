@@ -10,10 +10,10 @@ SET AllowNewMembers             true
 SET AllowSystemUserToLogin      true
 SET AllowInsecureAuth 			true
 SET AndroidPushAuthToken        YOUR_ANDROID_AUTH_TOKEN_GOES_HERE
-SET ApplePushKeystorePassword   YOUR_KEYSTORE_PASSWORD_GOES_HERE
+SET ApplePushKeystorePassword   tras*6UDEb?2
 SET ApplePushUsingProduction    false
 SET LogLevel                    INFO
-SET PushIsInactive              true
+SET PushIsInactive              false
 SET ETaggingEnabled             true
 # Remove the following CORS setting if you don't wish to be able to use the data browser from the FatFractal Console
 SET CORS https://system.fatfractal.com
@@ -41,10 +41,11 @@ CREATE COLLECTION /RCVideo OBJECTTYPE RCVideo
 # Event Handlers
 #
 
+
+
 #
 # Extension Resources
 #
-
 CREATE EXTENSION /getVideos UNSECURED AS javascript:require('scripts/GetVideosExtensions.js').getVideos();
-
+CREATE EXTENSION /call UNSECURED AS javascript:require('scripts/Call.js').call();
 

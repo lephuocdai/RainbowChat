@@ -10,8 +10,6 @@
 #import "RCWelcomeViewController.h"
 #import "RCMasterViewController.h"
 #import "RCUser.h"
-#import "RCUtility.h"
-//#import "CoreDataStack.h"
 
 static NSString *baseURL = @"http://presentice.fatfractal.com/rainbowchat";
 static NSString *sslURL = @"https://presentice.fatfractal.com/rainbowchat";
@@ -22,21 +20,12 @@ static KeychainItemWrapper *_keychainItem;
 
 // Keychain Identifier
 static NSString *keychainIdentifier = @"RainBowChatKeychain";
-
 @interface RCAppDelegate ()
 @property RCMasterViewController *masterViewController;
-//@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-//@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-//@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-//@property (readonly, strong, nonatomic) RCFatFractal *ffInstance;
 @end
 
 
 @implementation RCAppDelegate
-//@synthesize managedObjectContext = _managedObjectContext;
-//@synthesize managedObjectModel = _managedObjectModel;
-//@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-//@synthesize ffInstance = _ffInstance;
 
 #pragma mark - FatFractal
 
@@ -53,25 +42,6 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
         return NO;
     }
 }
-
-
-//- (RCFatFractal *) ffInstance {
-//    if (_ffInstance != nil) {
-//        return _ffInstance;
-//    }
-//    
-//    _ffInstance = [[RCFatFractal alloc] initWithBaseUrl:baseURL sslUrl:sslURL];
-//    [_ffInstance registerClass:[RCUser class] forClazz:@"FFUser"];
-//#warning - Need to revise the usage of localstorage
-//    //    _ffInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"RainbowChatFFStorage"];
-//#ifdef DEBUG
-//    _ffInstance.debug = YES;
-//#endif
-////    _ffInstance.managedObjectContext = self.managedObjectContext;
-////    _ffInstance.managedObjectModel = self.managedObjectModel;
-//    
-//    return _ffInstance;
-//}
 
 
 + (KeychainItemWrapper*)keychainItem {
@@ -104,7 +74,6 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 #ifdef DEBUG
     _ffInstance.debug = YES;
 #endif
-    
     
     // Create the KeychainItem singleton
     _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
@@ -151,6 +120,25 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 - (void)userAuthenticationFailed {
     DBGMSG(@"%s", __func__);
     [self.masterViewController userAuthenticationFailedFromAppDelegateOnLaunch];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    DBGMSG(@"%s deviceToken = %@", __func__, deviceToken);
+    [[FatFractal main] registerNotificationID:[deviceToken description]];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    DBGMSG(@"%s error = %@", __func__, error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    DBGMSG(@"%s userInfo = %@", __func__, userInfo);
+    UIAlertView *prompt = [[UIAlertView alloc] initWithTitle:@"Been outdone!"
+                                                     message:[userInfo valueForKeyPath:@"aps.alert"]
+                                                    delegate:nil
+                                           cancelButtonTitle:@"Okie Dokie"
+                                           otherButtonTitles:nil];
+    [prompt show];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {

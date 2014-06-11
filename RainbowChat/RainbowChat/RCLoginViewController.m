@@ -9,7 +9,6 @@
 #import "RCLoginViewController.h"
 #import "RCAppDelegate.h"
 #import "MBProgressHUD.h"
-#import "RCUtility.h"
 
 @interface RCLoginViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;

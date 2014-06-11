@@ -11,7 +11,6 @@
 #import "KeychainItemWrapper.h"
 #import "RCAppDelegate.h"
 #import "RCUser.h"
-#import "RCUtility.h"
 
 
 #define loginContext @"loginContext"
