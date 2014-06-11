@@ -16,6 +16,8 @@
 @property (strong, nonatomic) FFGeoLocation *place;
 @property (strong, nonatomic) NSString *nickname;
 @property (strong, nonatomic) NSString * quickbloxID;
+@property (nonatomic) BOOL isTeacher;
+
 //@property (nonatomic, retain) NSString * email;
 //@property (nonatomic, retain) NSString * ffUrl;
 //@property (nonatomic, retain) NSString * firstName;

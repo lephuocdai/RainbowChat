@@ -26,6 +26,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (strong, nonatomic) IBOutlet UITextField *passwordAgainTextField;
+@property (strong, nonatomic) IBOutlet UISwitch *isTeacher;
 
 @end
 
@@ -58,7 +59,13 @@
     return NO;
 }
 
-#pragma mark - NavigationX
+#pragma mark - Navigation
+
+- (IBAction)switched:(id)sender {
+    
+}
+
+
 - (IBAction)cancelButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -93,13 +100,13 @@
     [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
     
     // Create new RCUser and registerUser then save to keychain if successful
-//    newUser = (RCUser*)[NSEntityDescription insertNewObjectForEntityForName:@"RCUser" inManagedObjectContext:self.managedObjectContext];
     newUser = [[RCUser alloc] init];
     newUser.firstName = fullname;
     newUser.userName = [RCUtility usernameFromEmail:email];
     newUser.email = email;
     newUser.place = place;
     newUser.nickname = fullname;
+    newUser.isTeacher = _isTeacher.on;
     
     [[FatFractal main] registerUser:newUser password:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
         if (theErr) {
