@@ -32,11 +32,10 @@
 }
 
 // Fatfractal
-//@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-//@property (strong, nonatomic) FatFractal *ffInstance;
 @property (strong, nonatomic) RCUser *currentUser;
 @property (strong, nonatomic) RCUser *toUser;
+@property (nonatomic) BOOL isReceivedCallNotification;
 
 // Quickblox
 @property (retain) NSNumber *quickbloxID_currentuser;

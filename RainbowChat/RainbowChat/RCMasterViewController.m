@@ -144,18 +144,10 @@
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         RCUser *toFriend = [_friends objectAtIndex:indexPath.row];
         [[segue destinationViewController] setToUser:toFriend];
-        
-        [[FatFractal main] getObjFromUrl:[NSString stringWithFormat:@"/ff/ext/call?guid=%@", toFriend.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-            if (theErr) {
-                NSLog(@"StatsViewController getStats failed: %@", [theErr localizedDescription]);
-                return;
-            } else {
-                NSString *message = (NSString*)theObj;
-                NSLog(@"Sent message = %@", message);
-            }
-        }];
+        [[segue destinationViewController] setIsReceivedCallNotification:NO];
     } else if ([[segue identifier] isEqualToString:@"showDetailFromNotification"]) {
         [[segue destinationViewController] setToUser:_calledUser];
+        [[segue destinationViewController] setIsReceivedCallNotification:YES];
     }
 }
 
@@ -174,6 +166,8 @@
     self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
     NSLog(@"self.currentUser = %@ guid = %@", self.currentUser, self.currentUser.guid);
     NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@' and isTeacher eq true)", self.currentUser.guid];
+//    NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
+    
     [[[[FatFractal main] newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
         if (response.error) {
@@ -193,7 +187,6 @@
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    //    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     RCUser *friend = (RCUser*)[_friends objectAtIndex:indexPath.row];
     cell.textLabel.text = friend.nickname;
 }
@@ -242,27 +235,7 @@
     }
 }
 
-- (void)refreshTableAndLoadData {
-    DBGMSG(@"%s", __func__);
-    // Clean friends array
-    if (_friends) {
-        [_friends removeAllObjects];
-        _friends = nil;
-    }
-    
-    // Load from backend
-    NSString *uri = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
-    _friends = [NSMutableArray array];
-    [[FatFractal main] registerClass:[RCUser class] forClazz:@"FFUser"];
-    [[FatFractal main] getArrayFromUri:uri onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-        if (theObj) {
-            _friends = (NSMutableArray*)theObj;
-            NSLog(@"first friend = %@", (RCUser*)[_friends firstObject]);
-            self.title = self.currentUser.nickname;
-            [self.tableView reloadData];
-        }
-    }];
-}
+
 - (IBAction)refreshButtonPressed:(id)sender {
     DBGMSG(@"%s", __func__);
     [RCUtility askForPushNotification];

@@ -253,6 +253,7 @@ typedef enum {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    DBGMSG(@"%s", __func__);
     [super viewDidAppear:animated];
     
     // Start sending chat presence
@@ -282,8 +283,42 @@ typedef enum {
 - (IBAction)refreshButtonPushed:(id)sender {
     [self refresh];
 }
-
 - (IBAction)callButtonPushed:(id)sender {
+    DBGMSG(@"%s", __func__);
+    RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
+    
+    // Call
+    if(callButton.tag == 101){
+        callButton.tag = 102;
+        
+        // Show call
+        footerView.opponentVideoView.hidden = NO;
+        footerView.myVideoView.hidden = NO;
+        
+        [self sendCallNotification];
+        
+        callButton.enabled = NO;
+        callButton.title = @"Calling";
+        
+        isCalling = YES;
+        // Finish
+    }else{
+        callButton.tag = 101;
+        
+        // Finish call
+        [self.videoChat finishCall];
+        footerView.myVideoView.hidden = YES;
+        footerView.opponentVideoView.hidden = YES;
+        [self setVideoMessageView];
+        
+        // release video chat
+        [[QBChat instance] unregisterVideoChatInstance:self.videoChat];
+        self.videoChat = nil;
+        isCalling = NO;
+    }
+}
+
+- (void)callOrStop {
     DBGMSG(@"%s", __func__);
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
     // Call
@@ -306,16 +341,17 @@ typedef enum {
         self.videoChat.useBackCamera = useBackCamera;
         
         // Call user by ID
+        NSLog(@"quickbloxID_opponentID = %@", quickbloxID_opponentID);
         [self.videoChat callUser:[quickbloxID_opponentID integerValue] conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
         
         callButton.enabled = NO;
         callButton.title = @"Calling";
-    
+        
         isCalling = YES;
-    // Finish
+        // Finish
     }else{
         callButton.tag = 101;
-    
+        
         // Finish call
         [self.videoChat finishCall];
         footerView.myVideoView.hidden = YES;
@@ -339,6 +375,25 @@ typedef enum {
 		// The recordingWill/DidStart delegate methods will fire asynchronously in response to this call
         [videoProcessor startRecording];
 	}
+}
+
+- (void)sendCallNotification {
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.labelText = @"Calling...";
+    hud.dimBackground = YES;
+    hud.yOffset = -77;
+    
+    [[FatFractal main] getObjFromUrl:[NSString stringWithFormat:@"/ff/ext/call?guid=%@", _toUser.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+        if (theErr) {
+            NSLog(@"StatsViewController getStats failed: %@", [theErr localizedDescription]);
+            return;
+        } else {
+            NSString *message = (NSString*)theObj;
+            NSLog(@"Sent message = %@", message);
+        }
+    }];
 }
 
 #pragma mark - RCVideoProcessorDelegate
@@ -405,7 +460,6 @@ typedef enum {
         NSData *thumbnailData = UIImagePNGRepresentation(img);
         
         // Initiate new video
-//        _newVideo = (RCVideo*)[NSEntityDescription insertNewObjectForEntityForName:@"RCVideo" inManagedObjectContext:self.managedObjectContext];
         _newVideo = [[RCVideo alloc] init];
         _newVideo.fromUser = _currentUser;
         _newVideo.toUser = _toUser;
@@ -654,7 +708,7 @@ typedef enum {
 }
 
 - (void)setQuickbloxID {
-    
+    DBGMSG(@"%s currentUser = %@, toUser =%@", __func__, self.currentUser, self.toUser);
     NSString *password = [[RCAppDelegate keychainItem] objectForKey:(__bridge id)(kSecValueData)];
     
     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
@@ -853,25 +907,47 @@ typedef enum {
 
 #pragma mark - QBChatDelegate 
 
+- (void)chatDidLogin {
+    DBGMSG(@"%s", __func__);
+    if (_isReceivedCallNotification) {
+        if ([MBProgressHUD allHUDsForView:self.view] == 0) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.mode = MBProgressHUDModeIndeterminate;
+            hud.labelText = @"Calling...";
+            hud.dimBackground = YES;
+            hud.yOffset = -77;
+        }
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Routing. Please wait!";
+        hud.dimBackground = YES;
+        hud.yOffset = -77;
+        [self callOrStop];
+    }
+}
+
 -(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString *)_sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType{
-    NSLog(@"chatDidReceiveCallRequestFromUser %lu", (unsigned long)userID);
+    DBGMSG(@"%s - userID = %lu, sessionID = %@", __func__, (unsigned long)userID, sessionID);
     
     // save  opponent data
     videoChatOpponentID = userID;
     videoChatConferenceType = conferenceType;
     sessionID = _sessionID;
-    
     NSLog(@"receive sessionID = %@", sessionID);
     
-    // show call alert
-    if (self.callAlert == nil) {
-        NSString *message = [NSString stringWithFormat:@"%@ is calling. Would you like to answer?", [self.currentUser.userName isEqualToString:@"test1@test.c"] ? @"Test Jiro" : @"Test Taro"];
-        self.callAlert = [[UIAlertView alloc] initWithTitle:@"Call"
-                                                    message:message
-                                                   delegate:self
-                                          cancelButtonTitle:@"Decline"
-                                          otherButtonTitles:@"Accept", nil];
-        [self.callAlert show];
+    if (isCalling) {
+        [self accept];
+    } else {
+        // show call alert
+        if (self.callAlert == nil) {
+            NSString *message = [NSString stringWithFormat:@"%@ is calling. Would you like to answer?", [self.currentUser.userName isEqualToString:@"test1@test.c"] ? @"Test Jiro" : @"Test Taro"];
+            self.callAlert = [[UIAlertView alloc] initWithTitle:@"Call"
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Decline"
+                                              otherButtonTitles:@"Accept", nil];
+            [self.callAlert show];
+        }
     }
     
     // hide call alert if opponent has canceled call
@@ -881,7 +957,7 @@ typedef enum {
 }
 
 -(void) chatCallUserDidNotAnswer:(NSUInteger)userID{
-    NSLog(@"chatCallUserDidNotAnswer %lu", (unsigned long)userID);
+    DBGMSG(@"%s - userID = %lu", __func__, (unsigned long)userID);
     
     callButton.enabled = YES;
     callButton.tag = 101;
@@ -898,7 +974,7 @@ typedef enum {
 
 
 -(void) chatCallDidRejectByUser:(NSUInteger)userID{
-    NSLog(@"chatCallDidRejectByUser %lu", (unsigned long)userID);
+    DBGMSG(@"%s - userID = %lu", __func__, (unsigned long)userID);
     
     callButton.enabled = YES;
     callButton.tag = 101;
@@ -919,7 +995,7 @@ typedef enum {
 }
 
 -(void) chatCallDidAcceptByUser:(NSUInteger)userID{
-    NSLog(@"chatCallDidAcceptByUser %lu", (unsigned long)userID);
+    DBGMSG(@"%s - userID = %lu", __func__, (unsigned long)userID);
     
     callButton.enabled = YES;
     callButton.tag = 102;
@@ -932,7 +1008,7 @@ typedef enum {
 }
 
 -(void) chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status{
-    NSLog(@"chatCallDidStopByUser %lu purpose %@", (unsigned long)userID, status);
+    DBGMSG(@"%s - userID = %lu - status = %@", __func__, (unsigned long)userID, status);
     
     if([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]){
         
@@ -958,16 +1034,17 @@ typedef enum {
     self.videoChat = nil;
 }
 
-- (void)chatCallDidStartWithUser:(NSUInteger)userID sessionID:(NSString *)sessionID{
-    NSLog(@"chatCallDidAcceptByUser %lu", (unsigned long)userID);
+- (void)chatCallDidStartWithUser:(NSUInteger)userID sessionID:(NSString *)aSessionID{
+    DBGMSG(@"%s - userID = %lu, sessionID = %@", __func__, (unsigned long)userID, aSessionID);
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 - (void)didStartUseTURNForVideoChat{
-    //    NSLog(@"_____TURN_____TURN_____");
+    DBGMSG(@"%s", __func__);
 }
 
 - (void)reject {
-    // Reject call
+    DBGMSG(@"%s", __func__);
     if(self.videoChat == nil){
         self.videoChat = [[QBChat instance] createAndRegisterVideoChatInstanceWithSessionID:sessionID];
     }
@@ -983,7 +1060,7 @@ typedef enum {
 }
 
 - (void)accept {
-    NSLog(@"accept");
+    DBGMSG(@"%s", __func__);
     
     // Hide streaming
     RCCamPreviewFooter *footerView = (RCCamPreviewFooter*)threadTableView.tableFooterView;
@@ -1029,6 +1106,7 @@ typedef enum {
 }
 
 - (void)hideCallAlert{
+    DBGMSG(@"%s", __func__);
     [self.callAlert dismissWithClickedButtonIndex:-1 animated:YES];
     self.callAlert = nil;
     callButton.enabled = YES;
