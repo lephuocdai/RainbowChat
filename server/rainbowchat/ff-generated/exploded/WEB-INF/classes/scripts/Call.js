@@ -12,6 +12,17 @@ exports.call = function () {
         throw "You must supply a guid parameter";
 
     var messageString = "Your are called by " + fromUserGUID;
-    ff.sendPushNotifications ([toUserGUID], messageString);
+
+    var ios_content = {
+    	"aps" : {
+    		"alert" : {
+    			"body" : messageString,
+    			"action-loc-key" : "PLAY"
+    		},
+    		"badge" : 1
+    	},
+    	"fromUser" : fromUserGUID
+    };
+    ff.sendPushNotifications ([toUserGUID], {ios:ios_content}, false);
     ff.response().result = messageString;
 }

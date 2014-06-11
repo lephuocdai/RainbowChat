@@ -13,9 +13,10 @@
 #import <Quickblox/Quickblox.h>
 
 #warning - We do not need a fetchedResultsController since we have the managedObjectContext
-@interface RCMasterViewController : UITableViewController <WelcomeViewControllerDelegate>
+@interface RCMasterViewController : UITableViewController <WelcomeViewControllerDelegate, UIAlertViewDelegate>
 
 -(void)userIsAuthenticatedFromAppDelegateOnLaunch;
 -(void)userAuthenticationFailedFromAppDelegateOnLaunch;
+-(void)didReceiveNotificationFromAppDelegateOnLaunch:(NSDictionary*)userInfo;
 
 @end

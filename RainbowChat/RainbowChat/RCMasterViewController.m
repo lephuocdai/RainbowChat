@@ -16,6 +16,7 @@
 @interface RCMasterViewController ()
 
 //@property (nonatomic) CoreDataStack *coreDataStack;
+@property (strong, nonatomic) RCUser *calledUser;
 @property (strong, nonatomic) RCUser *currentUser;
 @property (nonatomic) NSMutableArray *friends;
 @property (nonatomic) NSNumber *lastRefreshTime;
@@ -150,20 +151,11 @@
                 return;
             } else {
                 NSString *message = (NSString*)theObj;
-                NSLog(@"message = %@", message);
+                NSLog(@"Sent message = %@", message);
             }
         }];
-        
-//        [[FatFractal main] getArrayFromExtension:[NSString stringWithFormat:@"/call?guid=%@", toFriend.guid] onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-//            if (theErr) {
-//                NSLog(@"Failed to retrieve from backend: %@", theErr.localizedDescription);
-//            } else {
-//                if (theObj) {
-//                    NSArray *retrieved = theObj;
-//                    NSLog(@"message = %@", (NSString*)retrieved.firstObject);
-//                }
-//            }
-//        }];
+    } else if ([[segue identifier] isEqualToString:@"showDetailFromNotification"]) {
+        [[segue destinationViewController] setToUser:_calledUser];
     }
 }
 
@@ -212,14 +204,29 @@
 }
 
 #pragma mark - Public Methods
-- (void)refresh {
-    DBGMSG(@"%s", __func__);
+
+- (void)didReceiveNotificationFromAppDelegateOnLaunch:(NSDictionary*)userInfo{
+    DBGMSG(@"%s, userInfo = %@", __func__, userInfo);
+    
+    NSString *fromUserGUID = [userInfo valueForKey:@"fromUser"];
+    _calledUser = (RCUser*)[[FatFractal main] getObjFromUri:[NSString stringWithFormat:@"/FFUser/%@",fromUserGUID]];
+    
+    NSLog(@"fromUser = %@",_calledUser);
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incoming call"
+                                                        message:[NSString stringWithFormat:@"Called by %@", _calledUser.firstName]
+                                                       delegate:self
+                                              cancelButtonTitle:@"Decline"
+                                              otherButtonTitles:@"Accept", nil];
+    alertView.tag = 101;
+    [alertView show];
 }
+
 
 - (void)userAuthenticationFailedFromAppDelegateOnLaunch {
     DBGMSG(@"%s", __func__);
     [[RCAppDelegate keychainItem] resetKeychainItem];
-    // Navigate to Welcome View Controller
+    // Navigate to WelcomeViewController
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     RCWelcomeViewController *welcomeViewController = [storyboard instantiateViewControllerWithIdentifier:@"WelcomeViewController"];
     welcomeViewController.delegate = self;
@@ -275,6 +282,16 @@
     welcomeViewController.delegate = self;
     
     [self presentViewController:welcomeViewController animated:YES completion:nil];
+}
+
+#pragma UIAletViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == 101) {
+        if (buttonIndex == 1) {
+            // Navigate to DetailViewController
+            [self performSegueWithIdentifier:@"showDetailFromNotification" sender:self];
+        }
+    }
 }
 
 

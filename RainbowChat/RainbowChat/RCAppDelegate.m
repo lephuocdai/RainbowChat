@@ -133,12 +133,8 @@ static NSString *keychainIdentifier = @"RainBowChatKeychain";
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     DBGMSG(@"%s userInfo = %@", __func__, userInfo);
-    UIAlertView *prompt = [[UIAlertView alloc] initWithTitle:@"Been outdone!"
-                                                     message:[userInfo valueForKeyPath:@"aps.alert"]
-                                                    delegate:nil
-                                           cancelButtonTitle:@"Okie Dokie"
-                                           otherButtonTitles:nil];
-    [prompt show];
+    
+    [self.masterViewController didReceiveNotificationFromAppDelegateOnLaunch:(NSDictionary*)userInfo];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application {
