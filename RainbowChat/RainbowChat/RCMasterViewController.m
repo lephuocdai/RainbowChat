@@ -161,7 +161,7 @@
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
     self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
     NSLog(@"self.currentUser = %@ guid = %@", self.currentUser, self.currentUser.guid);
-    NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@')", self.currentUser.guid];
+    NSString *queryString = [NSString stringWithFormat:@"/FFUser/(userName ne 'anonymous' and userName ne 'system' and guid ne '%@' and isTeacher eq true)", self.currentUser.guid];
     [[[[FatFractal main] newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         NSArray *retrieved = response.objs;
         if (response.error) {
