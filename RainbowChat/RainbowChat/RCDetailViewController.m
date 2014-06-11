@@ -265,6 +265,14 @@ typedef enum {
         self.currentUser = (RCUser*)[[FatFractal main] loggedInUser];
     }
     
+    if (_isReceivedCallNotification) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.labelText = @"Routing. Please wait!";
+        hud.dimBackground = YES;
+        hud.yOffset = -77;
+    }
+    
     [self fetchFromBackend];
     
     useBackCamera = NO;
@@ -917,11 +925,6 @@ typedef enum {
             hud.dimBackground = YES;
             hud.yOffset = -77;
         }
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeIndeterminate;
-        hud.labelText = @"Routing. Please wait!";
-        hud.dimBackground = YES;
-        hud.yOffset = -77;
         [self callOrStop];
     }
 }
