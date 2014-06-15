@@ -21,13 +21,13 @@ SET CORS https://system.fatfractal.com
 #
 # Object Types
 #
-CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID, profilePicture BYTEARRAY, place GEOLOCATION, nickname STRING, quickbloxID STRING, isTeacher BOOLEAN)
+CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID, profilePicture BYTEARRAY, place GEOLOCATION, nickname STRING, quickbloxID STRING, isTeacher BOOLEAN, teacherProfile REFERENCE /RCTeacherProfile)
 CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
 
 CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
 CREATE OBJECTTYPE RCVideo (url STRING, thumbnailURL STRING, data BYTEARRAY, fromUser REFERENCE /FFUser, toUser REFERENCE /FFUser, users GRABBAG /FFUser, userNameList STRING[])
-
+CREATE OBJECTTYPE RCTeacherProfile (education STRING, teachingExperience STRING, vietnamese STRING, japanese STRING, english STRING, other STRING, interests STRING, introVideoURL STRING)
 
 #
 # Collection Resources
@@ -36,12 +36,11 @@ CREATE COLLECTION /FFUser OBJECTTYPE FFUser
 CREATE COLLECTION /FFUserGroup OBJECTTYPE FFUserGroup
 CREATE COLLECTION /FFNotificationID OBJECTTYPE FFNotificationID
 CREATE COLLECTION /RCVideo OBJECTTYPE RCVideo
+CREATE COLLECTION /RCTeacherProfile OBJECTTYPE RCTeacherProfile
 
 #
 # Event Handlers
 #
-
-
 
 #
 # Extension Resources
