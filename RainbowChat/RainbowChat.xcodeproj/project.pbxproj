@@ -52,7 +52,6 @@
 		F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0BB8FD81930A66A001FCF16 /* MediaPlayer.framework */; };
 		F0C50068193EF3BB00A3F63D /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50067193EF3BB00A3F63D /* Quickblox.framework */; };
 		F0C50069193EF3BB00A3F63D /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50067193EF3BB00A3F63D /* Quickblox.framework */; };
-		F0C5006B193EF3E500A3F63D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006A193EF3E500A3F63D /* CFNetwork.framework */; };
 		F0C5006D193EF3EF00A3F63D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006C193EF3EF00A3F63D /* SystemConfiguration.framework */; };
 		F0C5006F193EF40900A3F63D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C5006E193EF40900A3F63D /* CoreLocation.framework */; };
 		F0C50071193EF41F00A3F63D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0C50070193EF41F00A3F63D /* AudioToolbox.framework */; };
@@ -228,7 +227,6 @@
 				F0C50071193EF41F00A3F63D /* AudioToolbox.framework in Frameworks */,
 				F0C5006F193EF40900A3F63D /* CoreLocation.framework in Frameworks */,
 				F0C5006D193EF3EF00A3F63D /* SystemConfiguration.framework in Frameworks */,
-				F0C5006B193EF3E500A3F63D /* CFNetwork.framework in Frameworks */,
 				F0BB8FD91930A66A001FCF16 /* MediaPlayer.framework in Frameworks */,
 				F0BB8FD71930A61C001FCF16 /* CoreVideo.framework in Frameworks */,
 				F0BB8FD51930A611001FCF16 /* CoreMedia.framework in Frameworks */,
