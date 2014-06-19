@@ -28,6 +28,7 @@ CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
 CREATE OBJECTTYPE RCVideo (url STRING, thumbnailURL STRING, data BYTEARRAY, fromUser REFERENCE /FFUser, toUser REFERENCE /FFUser, users GRABBAG /FFUser, userNameList STRING[])
 CREATE OBJECTTYPE RCTeacherProfile (education STRING, teachingExperience STRING, vietnamese STRING, japanese STRING, english STRING, other STRING, interests STRING, introVideoURL STRING)
+CREATE OBJECTTYPE ActivationRequest (userGuid STRING)
 
 #
 # Collection Resources
@@ -37,14 +38,21 @@ CREATE COLLECTION /FFUserGroup OBJECTTYPE FFUserGroup
 CREATE COLLECTION /FFNotificationID OBJECTTYPE FFNotificationID
 CREATE COLLECTION /RCVideo OBJECTTYPE RCVideo
 CREATE COLLECTION /RCTeacherProfile OBJECTTYPE RCTeacherProfile
+CREATE COLLECTION /ActivationRequest OBJECTTYPE ActivationRequest
+
+#
+# Permit
+#
+PERMIT read:none write:none ON /ActivationRequest
 
 #
 # Event Handlers
 #
+CREATE HANDLER validateUser POST ON /FFUser CREATE AS javascript:require ('scripts/EventHandlers.js').validateUser();
 
 #
 # Extension Resources
 #
 CREATE EXTENSION /getVideos UNSECURED AS javascript:require('scripts/GetVideosExtensions.js').getVideos();
 CREATE EXTENSION /call UNSECURED AS javascript:require('scripts/Call.js').call();
-
+CREATE EXTENSION /verifyRegistration UNSECURED AS javascript:require('scripts/ServerExtensions.js').verifyRegistration();
